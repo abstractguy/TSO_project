@@ -3,15 +3,18 @@
 # For:         Myself and possibly others like school.
 # Description: Pseudocode for TSO_project.
 
-center_threshold = 0.5
-overlap_threshold = 0.5
-speed = 100
-
 import math
 import numpy as np
 import pyuarm
 import camera
 import vision
+
+center_threshold = 0.5
+overlap_threshold = 0.5
+speed = 100
+
+image = camera.take_picture()
+x_size, y_size = image.shape
 
 arm = pyuarm.get_uarm()
 arm.connect()
@@ -39,10 +42,11 @@ def weigh_center(x_size, y_size, x1, y1, x2, y2):
 
 while True:
     arm.reset()
-    image = camera.take_picture()
-    x1, y1, x2, y2 = vision.predict(image)
-    x_size, y_size = image.shape
-    if weigh_center(x_size, y_size, x1, y1, x2, y2) < center_threshold:
-        arm.set_position((x2 - x1) // 2, (y2 - y1) // 2, z_surface, speed=speed)
-    if calculate_overlap(x_size, y_size, x1, y1, x2, y2) > overlap_threshold:
-        arm.set_pump(True)
+    while True:
+        image = camera.take_picture()
+        x1, y1, x2, y2 = vision.predict(image)
+        if weigh_center(x_size, y_size, x1, y1, x2, y2) < center_threshold:
+            arm.set_position(x=(x2 - x1) // 2, y=(y2 - y1) // 2, z=0, speed=speed)
+        if calculate_overlap(x_size, y_size, x1, y1, x2, y2) > overlap_threshold:
+            arm.set_pump(True)
+            break
