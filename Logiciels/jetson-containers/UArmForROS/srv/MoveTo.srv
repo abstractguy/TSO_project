@@ -1,0 +1,27 @@
+# Request
+geometry_msgs/Point position # Desired movement position
+float32 eef_orientation # desired orientation
+int32 move_mode # ABSOLUTE_MOVEMENT or RELATIVE_MOVEMENT
+duration movement_duration  # Time for moving to the desired position
+bool ignore_orientation
+int32 interpolation_type
+bool check_limits # Whether to check for joint limits or not
+
+# Move modes
+int32 ABSOLUTE_MOVEMENT = 0 # position is absolute in the robot frame
+int32 RELATIVE_MOVEMENT = 1 # position is w.r.t the current end effector position
+
+# Interpolation types for arm movement (ease_type)
+#
+# No interpolation = the target angles are directly sent to the servos, duration has no effect
+# Linear interpolation = constant velocity, duration determines velocity
+# Cubic interpolation = starts slowly and slows down at the end, duration determines velocity
+int32 NO_INTERPOLATION = 0
+int32 CUBIC_INTERPOLATION = 1
+int32 LINEAR_INTERPOLATION = 2
+
+---
+# Response
+geometry_msgs/Point position # actual arm position after execution of the request
+duration elapsed # ammount of time to execute request
+bool error # if true, an error has been detected and no movement was produced

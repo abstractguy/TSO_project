@@ -1,0 +1,48 @@
+!_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
+attach_all_servos	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def attach_all_servos(self):$/;"	m	language:Python	class:KTHUarm
+calibrate	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def calibrate(self, file_name=None):$/;"	m	language:Python	class:KTHUarm
+CALIBRATION_CONFIG	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    CALIBRATION_CONFIG = [45.0, 130.0, -4.83, 0.0]$/;"	v	language:Python	class:KTHUarm
+CUBIC_INTERPOLATION	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    CUBIC_INTERPOLATION = 'Cubic'$/;"	v	language:Python	class:KTHUarm
+DEFAULT_EXECUTION_SLEEP_TIME	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    DEFAULT_EXECUTION_SLEEP_TIME = 0.1$/;"	v	language:Python	class:KTHUarm
+detach_all_servos	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def detach_all_servos(self):$/;"	m	language:Python	class:KTHUarm
+forward_kinematics	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def forward_kinematics(self, j0=0.0, j1=0.0, j2=0.0, j3=0.0, config=None):$/;"	m	language:Python	class:KTHUarm
+get_configuration	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def get_configuration(self):$/;"	m	language:Python	class:KTHUarm
+get_pose	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def get_pose(self):$/;"	m	language:Python	class:KTHUarm
+get_position	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def get_position(self):$/;"	m	language:Python	class:KTHUarm
+has_uarm	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def has_uarm(self):$/;"	m	language:Python	class:KTHUarm
+inverse_kinematics	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def inverse_kinematics(self, x, y, z, theta, check_limits=True):$/;"	m	language:Python	class:KTHUarm
+in_joint_limits	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def in_joint_limits(self, j0, j1, j2, j3):$/;"	m	language:Python	class:KTHUarm
+is_calibrated	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def is_calibrated(self):$/;"	m	language:Python	class:KTHUarm
+is_sucking	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def is_sucking(self):$/;"	m	language:Python	class:KTHUarm
+J2_J1_MAX_LIMIT_OFFSET	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    J2_J1_MAX_LIMIT_OFFSET = 153.0$/;"	v	language:Python	class:KTHUarm
+J2_J1_MIN_LIMIT_OFFSET	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    J2_J1_MIN_LIMIT_OFFSET= 18.5$/;"	v	language:Python	class:KTHUarm
+JOINT_NAMES	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    JOINT_NAMES = ['j0', 'j1', 'j2', 'j3']$/;"	v	language:Python	class:KTHUarm
+KTHUarm	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^class KTHUarm(object):$/;"	c	language:Python
+L1	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    L1 = 10.645$/;"	v	language:Python	class:KTHUarm
+L2	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    L2 = 2.117$/;"	v	language:Python	class:KTHUarm
+L3	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    L3 = 14.825$/;"	v	language:Python	class:KTHUarm
+L4	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    L4 = 16.02$/;"	v	language:Python	class:KTHUarm
+L5	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    L5 = 3.3$/;"	v	language:Python	class:KTHUarm
+L6	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    L6 = 5.9$/;"	v	language:Python	class:KTHUarm
+LINEAR_INTERPOLATION	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    LINEAR_INTERPOLATION = 'Linear'$/;"	v	language:Python	class:KTHUarm
+load_calibration	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def load_calibration(self, file_name):$/;"	m	language:Python	class:KTHUarm
+LOWER_LIMITS	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    LOWER_LIMITS = [0.0, -4.9, -4.83, -65.0]$/;"	v	language:Python	class:KTHUarm
+MAXIMAL_NUM_INTERPOLATION_STEPS	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    MAXIMAL_NUM_INTERPOLATION_STEPS = 80.0$/;"	v	language:Python	class:KTHUarm
+move	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def move(self, j0, j1, j2, j3, interpolation_type=None, duration=None, check_limits=True):$/;"	m	language:Python	class:KTHUarm
+move_cartesian	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def move_cartesian(self, x=None, y=None, z=None, theta=None, interpolation_type=None, duration=None,$/;"	m	language:Python	class:KTHUarm
+move_cartesian_relative	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def move_cartesian_relative(self, dx=0.0, dy=0.0, dz=0.0, dtheta=0.0, interpolation_type=None,$/;"	m	language:Python	class:KTHUarm
+move_relative	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def move_relative(self, dj0=0.0, dj1=0.0, dj2=0.0, dj3=0.0, interpolation_type=None,$/;"	m	language:Python	class:KTHUarm
+NO_INTERPOLATION	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    NO_INTERPOLATION = 'None'$/;"	v	language:Python	class:KTHUarm
+NUM_JOINTS	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    NUM_JOINTS = 4$/;"	v	language:Python	class:KTHUarm
+pump	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def pump(self, pump_status):$/;"	m	language:Python	class:KTHUarm
+recordJointValues	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^def recordJointValues(arm, timeout):$/;"	f	language:Python
+uarm	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    uarm = KTHUarm('test_calibration.yaml')$/;"	v	language:Python
+UPPER_LIMITS	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    UPPER_LIMITS = [180.0, 130.0, 123.8, 40.0]$/;"	v	language:Python	class:KTHUarm
+_check_calibration	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def _check_calibration(self):$/;"	m	language:Python	class:KTHUarm
+_check_connection	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def _check_connection(self):$/;"	m	language:Python	class:KTHUarm
+_cubic_interpolation	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def _cubic_interpolation(self, start_value, distance, t):$/;"	m	language:Python	class:KTHUarm
+_interpolate	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def _interpolate(self, start_values, target_values, num_steps, interpolation_type='Linear'):$/;"	m	language:Python	class:KTHUarm
+_linear_interpolation	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def _linear_interpolation(self, start_value, distance, t):$/;"	m	language:Python	class:KTHUarm
+_move_servos	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def _move_servos(self, config):$/;"	m	language:Python	class:KTHUarm
+_to_raw_arm_configuration	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def _to_raw_arm_configuration(self, values):$/;"	m	language:Python	class:KTHUarm
+__init__	/home/joshua/projects/RAS2016/src/UArmForROS/python/ros_kth_uarm/kth_uarm.py	/^    def __init__(self, calibration_file_name=None):$/;"	m	language:Python	class:KTHUarm

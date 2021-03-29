@@ -1,0 +1,5 @@
+joint_state_topic_name: /uarm/joint_state
+uarm_calibration_file: test_calibration.yaml
+uarm_frame_name: uarm
+eef_frame_name: eef
+state_publishing_frequency: 10

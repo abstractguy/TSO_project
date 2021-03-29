@@ -1,0 +1,6 @@
+# Request
+bool pump_status # True = on, False = off
+
+---
+# Response
+bool pump_status

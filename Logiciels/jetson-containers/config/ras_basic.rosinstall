@@ -1,0 +1,1 @@
+- git: {local-name: ras_msgs, uri: 'https://github.com/KTH-RAS/ras_msgs.git', version: kinetic-2018}

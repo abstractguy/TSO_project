@@ -1,0 +1,4 @@
+<launch>
+  <rosparam command="load" file="$(find uarm)/config/kth_uarm_core_config.yaml" />
+  <node name="kth_uarm_core" pkg="uarm" type="kth_uarm_core.py" output="screen" />
+</launch>

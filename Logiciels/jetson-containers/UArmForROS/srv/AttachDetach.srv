@@ -1,0 +1,6 @@
+# Request
+bool attach # True for attach, False for detach
+
+---
+# Response
+bool attach # status after service execution

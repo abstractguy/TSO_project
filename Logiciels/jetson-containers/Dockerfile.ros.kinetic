@@ -1,0 +1,175 @@
+# File:          Dockerfile
+# By:            Samuel Duclos
+# For            Myself
+# Description:   This Dockerfile installs UArmForROS.
+# Build usage:   cd ${HOME}/school/Projets/Final/jetson-containers && sudo -H nvidia-docker build -t uarm -f Dockerfile .
+# Run usage:     cd ${HOME}/school/Projets/Final/jetson-containers && xhost + && sudo docker run -it --rm --runtime nvidia --network host -e DISPLAY=$DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix -v $(pwd):/app uarm
+# Notes:         Make sure you have nvidia-runtime enabled in docker config.
+
+FROM arm64v8/ros:kinetic-perception
+#FROM arm64v8/ubuntu:16.04
+
+ENV NVIDIA_VISIBLE_DEVICES \
+    ${NVIDIA_VISIBLE_DEVICES:-all}
+
+ENV NVIDIA_DRIVER_CAPABILITIES \
+    ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
+
+# Ensure apt-get won't prompt for selecting options
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Set missing environment variable needed to run Qt applications.
+ENV QT_X11_NO_MITSHM 1
+
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+# Install ROS.
+RUN touch 10periodic && \
+    echo 'APT::Periodic::Update-Package-Lists "0";' >> 10periodic && \
+    echo 'APT::Periodic::Download-Upgradeable-Packages "0";' >> 10periodic && \
+    echo 'APT::Periodic::AutocleanInterval "0";' >> 10periodic
+
+#RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" >> /etc/apt/sources.list.d/ros-latest.list' && \
+#           apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-key 0xB01FA116
+
+RUN apt update && \
+    apt install -y --no-install-recommends apt-utils \
+                                           avrdude \
+                                           bash-completion \
+                                           build-essential \
+                                           cmake \
+                                           curl \
+                                           g++ \
+                                           gcc \
+                                           git \
+                                           gfortran \
+                                           initramfs-tools \
+                                           ipython \
+                                           ipython-notebook \
+                                           libatlas-base-dev \
+                                           libblas-dev \
+                                           libboost-random1.58-dev \
+                                           libcurl4-openssl-dev \
+                                           libdevmapper-dev \
+                                           libglu1 \
+                                           liblapack-dev \
+                                           libopenblas-base \
+                                           libopenblas-dev \
+                                           libpython-dev \
+                                           libseccomp-dev \
+                                           libssl-dev \
+                                           libusb-dev \
+                                           nano \
+                                           psmisc \
+                                           python-catkin-tools \
+                                           python-dev \
+                                           python-matplotlib \
+                                           python-nose \
+                                           python-numpy \
+                                           python-pandas \
+                                           python-pip \
+                                           python-scipy \
+                                           python-seaborn \
+                                           python-sympy \
+                                           python-rosdep \
+                                           python-rosinstall \
+                                           python-rosinstall-generator \
+                                           python-setuptools \
+                                           python-wheel \
+                                           python-wstool \
+                                           qtcreator \
+                                           ros-kinetic-camera-info-manager \
+                                           ros-kinetic-cmake-modules \
+                                           ros-kinetic-desktop-full \
+                                           ros-kinetic-hector-gazebo-plugins \
+                                           ros-kinetic-imu-filter* \
+                                           ros-kinetic-kdl-conversions \
+                                           ros-kinetic-kobuki-keyop \
+                                           ros-kinetic-kobuki-soft \
+                                           ros-kinetic-navigation \
+                                           ros-kinetic-phidgets-imu \
+                                           ros-kinetic-heron-viz \
+                                           ros-kinetic-rgbd-launch \
+                                           ros-kinetic-roscpp-tutorials \
+                                           ros-kinetic-rqt-graph \
+                                           ros-kinetic-rtt-ros \
+                                           ros-kinetic-rqt-gui \
+                                           ros-kinetic-rqt-plot \
+                                           ros-kinetic-sound-play \
+                                           ros-kinetic-tf-conversions \
+                                           software-properties-common \
+                                           ssh \
+                                           sudo \
+                                           udev \
+                                           wget && \
+    pip install --upgrade 'pip<21.0' && \
+    pip install bokeh rosbag_pandas tornado wstool && \
+    pip cache purge && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+#                                           openjdk-7-jre \
+#                                           ros-kinetic-librealsense \
+
+RUN curl -o /usr/bin/sudo https://github.com/0ex/fake-sudo/raw/master/fake-sudo.py && \
+    chmod +x /usr/bin/sudo
+
+RUN rosdep update -y
+
+RUN source /opt/ros/kinetic/setup.bash && \
+    mkdir -p ~/src && \
+    cd ~/src && \
+    catkin_init_workspace && \
+    wstool init
+
+RUN source /opt/ros/kinetic/setup.bash && \
+    cd ~ && \
+    catkin_make && \
+    echo "source ~/devel/setup.bash" >> ~/.bashrc && \
+    source ~/devel/setup.bash && \
+    source ~/.bashrc
+
+COPY config/ras_basic.rosinstall /root/src
+COPY config/ras.rosinstall /root/src
+
+RUN cd ~/src && \
+    wstool merge ras_basic.rosinstall && \
+    wstool update
+
+# Create udev rule for arm.
+RUN touch ttyUSB.rules && \
+    echo 'KERNEL=="ttyUSB*", MODE="0666"' >> ttyUSB.rules && \
+    mv ttyUSB.rules /etc/udev/rules.d
+
+# Install pyuarm.
+RUN cd ~ && \
+    git clone https://github.com/KTH-RAS/pyuarm.git && \
+    cd ~/pyuarm && \
+    python setup.py install
+
+# Merge rosinstall files.
+RUN cd ~/src && \
+    wstool merge ras.rosinstall && \
+    wstool update
+
+# Add user to dialout group.
+RUN gpasswd -a root dialout && \
+    gpasswd -a root audio && \
+    gpasswd -a root video && \
+    gpasswd -a root input
+
+RUN source /opt/ros/kinetic/setup.bash && \
+    cd $HOME && \
+    catkin_make && \
+    catkin_make install
+
+RUN cd /opt/ros/kinetic && \
+    rosdep update
+
+EXPOSE 11345
+COPY ./packages/ros_entrypoint.sh /ros_entrypoint.sh
+RUN echo 'source /opt/ros/kinetic/setup.bash' >> /root/.bashrc
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
+WORKDIR /
+

@@ -1,0 +1,1 @@
+- git: {local-name: ras_uarm, uri: 'https://github.com/KTH-RAS/UArmForROS.git', version: master}

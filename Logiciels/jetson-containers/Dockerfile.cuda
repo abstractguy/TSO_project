@@ -1,0 +1,30 @@
+FROM docker://arm64v8/ubuntu:18.04
+#FROM docker://registry.me:5000/ubuntu:18.04
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates \
+                                               gnupg2
+
+COPY jetson-ota-public.key /etc/jetson-ota-public.key
+RUN apt-key add /etc/jetson-ota-public.key
+
+RUN echo "deb https://repo.download.nvidia.com/jetson/common $RELEASE main" >> /etc/apt/sources.list
+
+ARG CUDA=invalid
+ARG RELEASE=invalid
+
+RUN CUDAPKG=$(echo $CUDA | sed 's/\./-/'); \
+    apt-get update && apt-get install -y --no-install-recommends \
+	cuda-libraries-$CUDAPKG \
+	cuda-nvtx-$CUDAPKG \
+	cuda-libraries-dev-$CUDAPKG \
+	cuda-minimal-build-$CUDAPKG \
+	cuda-license-$CUDAPKG \
+	cuda-command-line-tools-$CUDAPKG && \
+	ln -s /usr/local/cuda-$CUDA /usr/local/cuda && \
+	rm -rf /var/lib/apt/lists/*
+
+ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
+
+CMD [ "/bin/bash" ]
+

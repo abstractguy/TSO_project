@@ -1,0 +1,6 @@
+# Empty request
+---
+# Response
+
+geometry_msgs/Point position # actual arm position
+float32[] angles # joint angles
