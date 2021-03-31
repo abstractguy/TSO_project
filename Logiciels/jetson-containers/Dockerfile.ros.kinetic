@@ -103,13 +103,14 @@ RUN apt update && \
                                            udev \
                                            wget && \
     pip install --upgrade 'pip<21.0' && \
-    pip install bokeh rosbag_pandas tornado wstool && \
+    pip install bokeh rosbag_pandas tornado v4l2 wstool && \
     pip cache purge && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
 #                                           openjdk-7-jre \
 #                                           ros-kinetic-librealsense \
+#RUN wget https://bootstrap.pypa.io/get-pip.py && \
+#    python get-pip.py
 
 RUN curl -o /usr/bin/sudo https://github.com/0ex/fake-sudo/raw/master/fake-sudo.py && \
     chmod +x /usr/bin/sudo
@@ -151,6 +152,11 @@ RUN cd ~ && \
 RUN cd ~/src && \
     wstool merge ras.rosinstall && \
     wstool update
+
+RUN git clone https://github.com/ArduCAM/Camarray_HAT.git && \
+    cp -r Camarray_HAT/Jetson/ROS/arducam_stereo_camera ~/catkin_ws/src && \
+    cd ~/catkin_ws/ && \
+    catkin_make
 
 # Add user to dialout group.
 RUN gpasswd -a root dialout && \

@@ -50,6 +50,50 @@ firmware force
 rosrun uarm kth_uarm_core.py
 ```
 
+##### Modify camera launch parameters before running the camera.
+```bash
+nano ~/catkin_ws/src/arducam_stereo_camera/launch/arducam_stereo_camera.launch
+```
+
+##### Optionally view existing resolution and pixelformat.
+```bash
+v4l2-ctl --list-formats-ext
+```
+
+##### Launch camera.
+```bash
+roslaunch arducam_stereo_camera arducam_stereo_camera.launch
+```
+
+##### Example camera calibration (http://wiki.ros.org/camera_calibration/Tutorials/StereoCalibration).
+```bash
+rosrun camera_calibration cameracalibrator.py --approximate 0.1 --size 11x8 --square 0.02 right:=/arducam/right/image_raw left:=/arducam/left/image_raw right_camera:=/arducam/right left_camera:=/arducam/left
+```
+
+##### Open one terminal and run stereo image proc.
+```bash
+ROS_NAMESPACE=arducam rosrun stereo_image_proc stereo_image_proc
+```
+
+##### Open another terminal and run image_view.
+```bash
+rosrun image_view stereo_view stereo:=/arducam image:=image_rect
+```
+
+##### Open another terminal and run image_view.
+```bash
+rosrun rqt_reconfigure rqt_reconfigure
+```
+
+##### Choose good stereo parameters.
+http://wiki.ros.org/stereo_image_proc/Tutorials/ChoosingGoodStereoParameters#Start_the_stereo_processing_node
+
+##### Configure the multiple cameras.
+https://www.arducam.com/docs/camera-for-jetson-nano/multiple-cameras-on-the-jetson-nano/camarray-arducam-1mp-quadrascopic-camera-bundle-kit/#97-use-with-arducam-usb30-32b-camera-shield
+
+##### Take a look at Logiciels/ArduCAM_USB_Camera_Shield.
+
+
 #### See jetson-containers/UArmForROS/README.md for the rest.
 
 #### The rest of this README.md is from the original jetson-containers.
