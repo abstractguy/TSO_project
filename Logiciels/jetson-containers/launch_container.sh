@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
-#docker build -f Dockerfile.ros.kinetic -t jetson/ros:kinetic .
-#./launch_container.sh
-#roscore
+#sudo docker build -f Dockerfile.ros.kinetic -t jetson/ros:kinetic .
+#sudo ./launch_container.sh
+#roscore &
 
 XSOCK=/tmp/.X11-unix
 XAUTH=/tmp/.docker.xauth

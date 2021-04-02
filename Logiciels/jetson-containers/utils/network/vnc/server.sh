@@ -5,7 +5,7 @@
 
 cd ~
 sudo apt update
-sudo apt install tigervnc-standalone-server tigervnc-viewer
+sudo apt install -y tigervnc-standalone-server vino
 #vncserver :1
 #tigervncserver -xstartup /usr/bin/xterm
 #sudo tigervncserver -xstartup /usr/bin/xterm
@@ -34,15 +34,36 @@ sudo systemctl enable vinostartup.service
 sudo systemctl start vinostartup.service
 
 cd /usr/lib/systemd/user/graphical-session.target.wants/
-sudo ln -s ../vino-server.service ./.
+sudo ln -fs ../vino-server.service ./.
 gsettings set org.gnome.Vino prompt-enabled false
 gsettings set org.gnome.Vino require-encryption false
 gsettings set org.gnome.Vino authentication-methods "['vnc']"
 gsettings set org.gnome.Vino vnc-password $(echo -n '12345sam12345' | base64)
-sudo reboot
 
-#vncserver -interface 192.168.55.1
-#xtigervncviewer -SecurityTypes VncAuth -passwd /home/sam/.vnc/passwd :1
+#sudo nano /usr/share/glib-2.0/schemas/org.gnome.Vino.gschema.xml
+## Paste this in...
+#    <key name='enabled' type='b'>
+#      <summary>Enable remote desktop access</summary>
+#      <description>
+#        If true, allows remote access to the desktop via the RFB protocol. Users on remote machines may then connect to the desktop using a VNC viewer.
+#      </description>
+#      <default>true</default>
+#    </key>
+#sudo glib-compile-schemas /usr/share/glib-2.0/schemas
+
+# desktop sharing
+# startup applications->add
+# Name: Vino
+# Command: /usr/lib/vino/vino-server
+# save
+
+gsettings set org.gnome.Vino prompt-enabled false
+gsettings set org.gnome.Vino require-encryption false
+
+#sudo reboot
+
+vncserver -interface 192.168.55.1
+xtigervncviewer -SecurityTypes VncAuth -passwd /home/sam/.vnc/passwd :1
 vncserver -kill :3
 vncserver -kill :2
 vncserver -kill :1

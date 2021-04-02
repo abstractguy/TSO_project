@@ -3,7 +3,7 @@
 
 cd ~
 sudo apt update
-sudo apt install gvncviewer tigervnc-viewer remmina
+sudo apt install -y gvncviewer tigervnc-viewer remmina
 
 gsettings set org.gnome.Vino require-encryption false
 dbus-launch gsettings set org.gnome.Vino authentication-methods "['vnc']"
@@ -13,10 +13,10 @@ dbus-launch gsettings set org.gnome.Vino use-alternative-port true
 
 rm -rf ~/.vnc
 mkdir -p ~/.vnc
-ln -s /etc/ssl/certs/ca-certificates.crt ~/.vnc/x509_ca.pem
+ln -fs /etc/ssl/certs/ca-certificates.crt ~/.vnc/x509_ca.pem
 
 mkdir -p ~/.pki/CA
-ln -s /etc/ssl/certs/ca-certificates.crt ~/.pki/CA/cacert.pem
+ln -fs /etc/ssl/certs/ca-certificates.crt ~/.pki/CA/cacert.pem
 
 ifconfig
 
