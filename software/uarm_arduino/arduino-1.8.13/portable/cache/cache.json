@@ -1,0 +1,55 @@
+{
+  "files" : [ {
+    "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.gz",
+    "localPath" : "/home/samuel/school/Projets/Final/contrat/arduino-1.8.13/portable/cache/downloads.arduino.cc/libraries/library_index.json.gz",
+    "eTag" : "b087d74e882f4591abd7a1c2efcd0cb4",
+    "md5" : "MD5:b087d74e882f4591abd7a1c2efcd0cb4",
+    "createdAt" : "2021-03-04T12:49:55.697",
+    "cacheControl" : {
+      "maxAge" : 14400,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2021-03-04T16:49:55.697"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json.sig",
+    "localPath" : "/home/samuel/school/Projets/Final/contrat/arduino-1.8.13/portable/cache/downloads.arduino.cc/packages/package_index.json.sig",
+    "eTag" : "9b35d2bf92a1f5c3bc6e5ef626a57384",
+    "md5" : "MD5:9b35d2bf92a1f5c3bc6e5ef626a57384",
+    "createdAt" : "2021-03-04T13:55:09.881",
+    "cacheControl" : {
+      "maxAge" : 3600,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2021-03-04T14:55:09.881"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.sig",
+    "localPath" : "/home/samuel/school/Projets/Final/contrat/arduino-1.8.13/portable/cache/downloads.arduino.cc/libraries/library_index.json.sig",
+    "eTag" : "5b07aee673299b0a979f208aa4593420",
+    "md5" : "MD5:5b07aee673299b0a979f208aa4593420",
+    "createdAt" : "2021-03-04T12:49:56.051",
+    "cacheControl" : {
+      "maxAge" : 14400,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2021-03-04T16:49:56.051"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json",
+    "localPath" : "/home/samuel/school/Projets/Final/contrat/arduino-1.8.13/portable/cache/downloads.arduino.cc/packages/package_index.json",
+    "eTag" : "fc625a5bd4d954726c3c8074c6c83195",
+    "md5" : "MD5:fc625a5bd4d954726c3c8074c6c83195",
+    "createdAt" : "2021-03-04T13:55:09.701",
+    "cacheControl" : {
+      "maxAge" : 3600,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2021-03-04T14:55:09.701"
+  } ]
+}
