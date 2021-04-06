@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-# File:        simple_opencv_detection.py
+# File:        software/simple_opencv_detection.py
 # By:          Samuel Duclos
 # For:         Myself
-# Usage:       python3 simple_opencv_detection.py --image doc/valid_test.jpg
+# Usage:       python3 simple_opencv_detection.py --image doc/valid_test.png
 # Description: This file implements software plan A for TSO_project.
 
 from cvlib.object_detection import draw_bbox
@@ -19,21 +19,22 @@ def parse_args():
     return args
 
 def add_inference_args(parser):
-    parser.add_argument('--image', metavar='<image>', type=str, required=False, default='/home/samuel/school/Projets/TSO_project/Logiciels/doc/valid_test.png', help='Path of input image.')
+    parser.add_argument('--image', metavar='<image>', type=str, required=False, default='/home/samuel/school/Projets/Final/TSO_project/software/doc/valid_test.png', help='Path of input image.')
     return parser
 
-def detect(image):
-    image = cv2.imread(image)
-    bbox, label, conf = cvlib.detect_common_objects(image)
-    output_image = draw_bbox(image, bbox, label, conf)
+def detect(image_filename):
+    image_bgr = cv2.imread(image_filename)
+    image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+    bbox, label, conf = cvlib.detect_common_objects(image_rgb)
+    output_image = draw_bbox(image_rgb, bbox, label, conf)
     plt.imshow(output_image)
-    plt.show
+    plt.show()
 
 def main():
     args = parse_args()
 
     try:
-        detect(image=args.image)
+        detect(image_filename=args.image)
 
     except Exception as e:
         print(e)
