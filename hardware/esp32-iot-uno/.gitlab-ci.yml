@@ -1,0 +1,10 @@
+stages:
+  - deploy
+
+push_to_github:
+  stage: deploy
+  only: 
+    - master
+  script:
+    - git pull origin master
+    - git push --mirror https://$GITHUB_TOKEN@github.com/$GITHUB_REPO.git
