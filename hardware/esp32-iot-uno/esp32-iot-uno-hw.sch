@@ -102,17 +102,6 @@ F 3 "" H 9600 8850 50  0000 C CNN
 	0    -1   1    0   
 $EndComp
 $Comp
-L usb_mini_b:usb_mini_b U1
-U 1 1 5888B18B
-P 1300 5400
-F 0 "U1" H 1250 6097 60  0000 C CNN
-F 1 "usb_mini_b" H 1250 5991 60  0000 C CNN
-F 2 "Connectors:USB_Micro-B" H 300 5850 60  0001 C CNN
-F 3 "" H 300 5850 60  0000 C CNN
-	1    1300 5400
-	1    0    0    -1  
-$EndComp
-$Comp
 L esp32-iot-uno-hw-rescue:R_Small R1
 U 1 1 5888B18C
 P 5550 5600
@@ -402,9 +391,6 @@ F 3 "" H 14850 8950 50  0000 C CNN
 	1    14850 8950
 	1    0    0    -1  
 $EndComp
-NoConn ~ 750  5100
-NoConn ~ 750  5200
-NoConn ~ 750  5300
 $Comp
 L esp32-iot-uno-hw-rescue:BARREL_JACK CON1
 U 1 1 5888B1B7
@@ -975,17 +961,6 @@ Text GLabel 13200 6150 0    60   Input ~ 0
 EN
 Text GLabel 6200 3800 2    60   Input ~ 0
 CLK/GPIO6
-$Comp
-L CP2102:CP2102 U3
-U 1 1 5893B91A
-P 2550 7100
-F 0 "U3" H 2550 7200 50  0000 C CNN
-F 1 "CP2102" H 2550 7100 50  0000 C CNN
-F 2 "Housings_DFN_QFN:QFN-28-1EP_5x5mm_Pitch0.5mm" H 2550 7100 60  0001 C CNN
-F 3 "" H 2550 7100 60  0001 C CNN
-	1    2550 7100
-	1    0    0    -1  
-$EndComp
 Text GLabel 1100 6750 0    60   Input ~ 0
 D-
 Text GLabel 1100 6650 0    60   Input ~ 0
@@ -1035,17 +1010,6 @@ F 1 "1uF" H 3342 6155 50  0000 L CNN
 F 2 "footprint:C_0603" H 3250 6200 50  0001 C CNN
 F 3 "" H 3250 6200 50  0000 C CNN
 	1    3250 6200
-	1    0    0    -1  
-$EndComp
-$Comp
-L esp32-iot-uno-hw-rescue:C_Small C20
-U 1 1 5893EAD9
-P 3550 6200
-F 0 "C20" H 3642 6246 50  0000 L CNN
-F 1 "10uF" H 3642 6155 50  0000 L CNN
-F 2 "footprint:C_0603" H 3550 6200 50  0001 C CNN
-F 3 "" H 3550 6200 50  0000 C CNN
-	1    3550 6200
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1875,8 +1839,6 @@ Wire Wire Line
 	14850 9450 14850 9500
 Wire Wire Line
 	12925 9450 12925 9650
-Wire Wire Line
-	750  5000 700  5000
 Connection ~ 1250 5550
 Wire Wire Line
 	700  5000 700  5550
@@ -2249,13 +2211,7 @@ Wire Wire Line
 	3000 6050 3100 6050
 Connection ~ 3000 6050
 Wire Wire Line
-	3550 6050 3550 6100
-Connection ~ 3250 6050
-Wire Wire Line
 	3250 6300 3250 6350
-Wire Wire Line
-	3250 6350 3550 6350
-Connection ~ 3550 6350
 Wire Wire Line
 	2900 5300 2900 5800
 Wire Wire Line
@@ -2379,8 +2335,6 @@ Wire Wire Line
 	13250 5650 13200 5650
 Wire Wire Line
 	3900 6350 3900 6400
-Wire Wire Line
-	3550 6300 3550 6350
 Wire Wire Line
 	12750 1400 12750 1425
 Wire Wire Line
@@ -2744,10 +2698,6 @@ Wire Wire Line
 Wire Wire Line
 	3000 6050 3000 6150
 Wire Wire Line
-	3250 6050 3550 6050
-Wire Wire Line
-	3550 6350 3900 6350
-Wire Wire Line
 	3100 6050 3250 6050
 Wire Wire Line
 	2900 5800 2900 6150
@@ -2829,4 +2779,54 @@ Wire Wire Line
 	6150 9950 6150 10050
 Wire Wire Line
 	7550 9950 8000 9950
+Wire Wire Line
+	750  5000 700  5000
+NoConn ~ 750  5300
+NoConn ~ 750  5200
+NoConn ~ 750  5100
+$Comp
+L usb_mini_b:usb_mini_b U1
+U 1 1 5888B18B
+P 1300 5400
+F 0 "U1" H 1250 6097 60  0000 C CNN
+F 1 "usb_mini_b" H 1250 5991 60  0000 C CNN
+F 2 "Connectors:USB_Micro-B" H 300 5850 60  0001 C CNN
+F 3 "" H 300 5850 60  0000 C CNN
+	1    1300 5400
+	1    0    0    -1  
+$EndComp
+Connection ~ 3550 6350
+Wire Wire Line
+	3550 6350 3900 6350
+Wire Wire Line
+	3250 6350 3550 6350
+Connection ~ 3250 6050
+Wire Wire Line
+	3250 6050 3550 6050
+Wire Wire Line
+	3550 6300 3550 6350
+Wire Wire Line
+	3550 6050 3550 6100
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C20
+U 1 1 5893EAD9
+P 3550 6200
+F 0 "C20" H 3642 6246 50  0000 L CNN
+F 1 "10uF" H 3642 6155 50  0000 L CNN
+F 2 "footprint:C_0603" H 3550 6200 50  0001 C CNN
+F 3 "" H 3550 6200 50  0000 C CNN
+	1    3550 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L CP2102:CP2102 U3
+U 1 1 5893B91A
+P 2550 7100
+F 0 "U3" H 2550 7200 50  0000 C CNN
+F 1 "CP2109" H 2550 7100 50  0000 C CNN
+F 2 "Housings_DFN_QFN:QFN-28-1EP_5x5mm_Pitch0.5mm" H 2550 7100 60  0001 C CNN
+F 3 "" H 2550 7100 60  0001 C CNN
+	1    2550 7100
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

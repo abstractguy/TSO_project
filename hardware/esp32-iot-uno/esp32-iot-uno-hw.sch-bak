@@ -1,50 +1,5 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:esp-uno
-LIBS:w_device
-LIBS:usb_mini_b
-LIBS:usb-b
-LIBS:open-project
-LIBS:microsd_spi_cd
-LIBS:microsd_socket
-LIBS:esp32-wrover-v3
-LIBS:dc-dc
-LIBS:MOSFET-P
-LIBS:MOSFET-N
-LIBS:ESP8266
-LIBS:CP2102
-LIBS:tom_kicad
-LIBS:tc1264
-LIBS:esp32-iot-uno-hw-cache
-EELAYER 26 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
@@ -59,7 +14,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L R_Small R14
+L esp32-iot-uno-hw-rescue:R_Small R14
 U 1 1 5888B17D
 P 1250 2150
 F 0 "R14" H 1309 2196 50  0000 L CNN
@@ -70,7 +25,7 @@ F 3 "" H 1250 2150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L LED_Small D3
+L esp32-iot-uno-hw-rescue:LED_Small D3
 U 1 1 5888B17E
 P 1250 2500
 F 0 "D3" V 1296 2432 50  0000 R CNN
@@ -81,7 +36,7 @@ F 3 "" V 1250 2500 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L +3.3V #PWR01
+L power:+3.3V #PWR01
 U 1 1 5888B181
 P 1250 1900
 F 0 "#PWR01" H 1250 1750 50  0001 C CNN
@@ -92,7 +47,7 @@ F 3 "" H 1250 1900 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR02
+L power:GND #PWR02
 U 1 1 5888B182
 P 12925 9650
 F 0 "#PWR02" H 12925 9400 50  0001 C CNN
@@ -103,7 +58,7 @@ F 3 "" H 12925 9650 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3.3V #PWR03
+L power:+3.3V #PWR03
 U 1 1 5888B183
 P 8000 9850
 F 0 "#PWR03" H 8000 9700 50  0001 C CNN
@@ -114,7 +69,7 @@ F 3 "" H 8000 9850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L D_Schottky_Small D4
+L esp32-iot-uno-hw-rescue:D_Schottky_Small D4
 U 1 1 5888B185
 P 9850 8850
 F 0 "D4" H 9850 8645 50  0000 C CNN
@@ -125,7 +80,7 @@ F 3 "" V 9850 8850 50  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L +5V #PWR04
+L power:+5V #PWR04
 U 1 1 5888B186
 P 10050 8850
 F 0 "#PWR04" H 10050 8700 50  0001 C CNN
@@ -136,7 +91,7 @@ F 3 "" H 10050 8850 50  0000 C CNN
 	0    1    -1   0   
 $EndComp
 $Comp
-L VCC #PWR05
+L power:VCC #PWR05
 U 1 1 5888B187
 P 9600 8850
 F 0 "#PWR05" H 9600 8700 50  0001 C CNN
@@ -147,7 +102,7 @@ F 3 "" H 9600 8850 50  0000 C CNN
 	0    -1   1    0   
 $EndComp
 $Comp
-L usb_mini_b U1
+L usb_mini_b:usb_mini_b U1
 U 1 1 5888B18B
 P 1300 5400
 F 0 "U1" H 1250 6097 60  0000 C CNN
@@ -158,7 +113,7 @@ F 3 "" H 300 5850 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R1
+L esp32-iot-uno-hw-rescue:R_Small R1
 U 1 1 5888B18C
 P 5550 5600
 F 0 "R1" H 5491 5554 50  0000 R CNN
@@ -169,7 +124,7 @@ F 3 "" H 5550 5600 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R2
+L esp32-iot-uno-hw-rescue:R_Small R2
 U 1 1 5888B18D
 P 5950 5600
 F 0 "R2" H 5891 5554 50  0000 R CNN
@@ -184,7 +139,7 @@ D-
 Text GLabel 1800 5150 2    60   Input ~ 0
 D+
 $Comp
-L VCC #PWR06
+L power:VCC #PWR06
 U 1 1 5888B18F
 P 1850 4850
 F 0 "#PWR06" H 1850 4700 50  0001 C CNN
@@ -199,7 +154,7 @@ IO0
 Text GLabel 6250 6550 2    60   Input ~ 0
 EN
 $Comp
-L GND #PWR07
+L power:GND #PWR07
 U 1 1 5888B192
 P 1250 5550
 F 0 "#PWR07" H 1250 5300 50  0001 C CNN
@@ -211,7 +166,7 @@ F 3 "" H 1250 5550 50  0000 C CNN
 $EndComp
 NoConn ~ 1750 5250
 $Comp
-L GND #PWR08
+L power:GND #PWR08
 U 1 1 5888B195
 P 14850 9650
 F 0 "#PWR08" H 14850 9400 50  0001 C CNN
@@ -222,7 +177,7 @@ F 3 "" H 14850 9650 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R11
+L esp32-iot-uno-hw-rescue:R_Small R11
 U 1 1 5888B196
 P 8000 10150
 F 0 "R11" H 8059 10196 50  0000 L CNN
@@ -233,7 +188,7 @@ F 3 "" H 8000 10150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L LED_Small D2
+L esp32-iot-uno-hw-rescue:LED_Small D2
 U 1 1 5888B197
 P 8000 10550
 F 0 "D2" V 8046 10482 50  0000 R CNN
@@ -244,7 +199,7 @@ F 3 "" V 8000 10550 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CONN_01X10 P4
+L esp32-iot-uno-hw-rescue:CONN_01X10 P4
 U 1 1 5888B198
 P 15250 6300
 F 0 "P4" H 15328 6341 50  0000 L CNN
@@ -255,7 +210,7 @@ F 3 "" H 15250 6300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X08 P1
+L esp32-iot-uno-hw-rescue:CONN_01X08 P1
 U 1 1 5888B19A
 P 13450 6300
 F 0 "P1" H 13528 6341 50  0000 L CNN
@@ -266,7 +221,7 @@ F 3 "" H 13450 6300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X04 P5
+L esp32-iot-uno-hw-rescue:CONN_01X04 P5
 U 1 1 5888B19B
 P 14300 7875
 F 0 "P5" H 14378 7916 50  0000 L CNN
@@ -277,7 +232,7 @@ F 3 "" H 14300 7875 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3.3V #PWR09
+L power:+3.3V #PWR09
 U 1 1 5888B19C
 P 14000 7625
 F 0 "#PWR09" H 14000 7475 50  0001 C CNN
@@ -288,7 +243,7 @@ F 3 "" H 14000 7625 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR010
+L power:GND #PWR010
 U 1 1 5888B19D
 P 13300 7825
 F 0 "#PWR010" H 13300 7575 50  0001 C CNN
@@ -299,7 +254,7 @@ F 3 "" H 13300 7825 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3.3V #PWR011
+L power:+3.3V #PWR011
 U 1 1 5888B19F
 P 12600 5900
 F 0 "#PWR011" H 12600 5750 50  0001 C CNN
@@ -310,7 +265,7 @@ F 3 "" H 12600 5900 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR012
+L power:GND #PWR012
 U 1 1 5888B1A1
 P 12600 6650
 F 0 "#PWR012" H 12600 6400 50  0001 C CNN
@@ -327,7 +282,7 @@ BUTTON
 Text Notes 13250 4850 0    157  ~ 31
 HEADER GPIO
 $Comp
-L C_Small C2
+L esp32-iot-uno-hw-rescue:C_Small C2
 U 1 1 5888B1A3
 P 2350 10200
 F 0 "C2" H 2400 10300 50  0000 L CNN
@@ -338,7 +293,7 @@ F 3 "" H 2350 10200 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C1
+L esp32-iot-uno-hw-rescue:C_Small C1
 U 1 1 5888B1A4
 P 2000 10200
 F 0 "C1" H 2050 10300 50  0000 L CNN
@@ -349,7 +304,7 @@ F 3 "" H 2000 10200 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C4
+L esp32-iot-uno-hw-rescue:C_Small C4
 U 1 1 5888B1A5
 P 2700 10300
 F 0 "C4" H 2792 10346 50  0000 L CNN
@@ -360,7 +315,7 @@ F 3 "" H 2700 10300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C5
+L esp32-iot-uno-hw-rescue:C_Small C5
 U 1 1 5888B1A6
 P 3950 9800
 F 0 "C5" H 4042 9846 50  0000 L CNN
@@ -371,7 +326,7 @@ F 3 "" H 3950 9800 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R4
+L esp32-iot-uno-hw-rescue:R_Small R4
 U 1 1 5888B1A8
 P 4600 10100
 F 0 "R4" H 4659 10146 50  0000 L CNN
@@ -382,7 +337,7 @@ F 3 "" H 4600 10100 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R5
+L esp32-iot-uno-hw-rescue:R_Small R5
 U 1 1 5888B1A9
 P 4600 10450
 F 0 "R5" H 4659 10496 50  0000 L CNN
@@ -393,7 +348,7 @@ F 3 "" H 4600 10450 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C7
+L esp32-iot-uno-hw-rescue:C_Small C7
 U 1 1 5888B1AA
 P 5000 10250
 F 0 "C7" V 4900 10150 50  0000 L CNN
@@ -404,7 +359,7 @@ F 3 "" H 5000 10250 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C8
+L esp32-iot-uno-hw-rescue:C_Small C8
 U 1 1 5888B1AB
 P 5350 10250
 F 0 "C8" V 5250 10150 50  0000 L CNN
@@ -415,7 +370,7 @@ F 3 "" H 5350 10250 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR013
+L power:GND #PWR013
 U 1 1 5888B1AC
 P 3150 10650
 F 0 "#PWR013" H 3150 10400 50  0001 C CNN
@@ -426,7 +381,7 @@ F 3 "" H 3150 10650 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +5V #PWR014
+L power:+5V #PWR014
 U 1 1 5888B1AD
 P 5350 9900
 F 0 "#PWR014" H 5350 9750 50  0001 C CNN
@@ -437,7 +392,7 @@ F 3 "" H 5350 9900 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R19
+L esp32-iot-uno-hw-rescue:R_Small R19
 U 1 1 5888B1AE
 P 14850 8950
 F 0 "R19" H 14909 8996 50  0000 L CNN
@@ -451,7 +406,7 @@ NoConn ~ 750  5100
 NoConn ~ 750  5200
 NoConn ~ 750  5300
 $Comp
-L BARREL_JACK CON1
+L esp32-iot-uno-hw-rescue:BARREL_JACK CON1
 U 1 1 5888B1B7
 P 1000 10000
 F 0 "CON1" H 981 10325 50  0000 C CNN
@@ -462,7 +417,7 @@ F 3 "" H 1000 10000 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MOSFET-P U6
+L MOSFET-P:MOSFET-P U6
 U 1 1 5888B1B8
 P 10850 10150
 F 0 "U6" H 10943 10120 30  0000 L CNN
@@ -477,7 +432,7 @@ Vin
 Text GLabel 2150 9700 1    60   Input ~ 0
 Vin
 $Comp
-L R_Small R12
+L esp32-iot-uno-hw-rescue:R_Small R12
 U 1 1 5888B1B9
 P 8900 9900
 F 0 "R12" H 8841 9854 50  0000 R CNN
@@ -488,7 +443,7 @@ F 3 "" H 8900 9900 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R13
+L esp32-iot-uno-hw-rescue:R_Small R13
 U 1 1 5888B1BA
 P 8900 10350
 F 0 "R13" H 8841 10304 50  0000 R CNN
@@ -501,7 +456,7 @@ $EndComp
 Text GLabel 8900 9750 1    60   Input ~ 0
 Vin
 $Comp
-L +3.3V #PWR015
+L power:+3.3V #PWR015
 U 1 1 5888B1BB
 P 9200 10300
 F 0 "#PWR015" H 9200 10150 50  0001 C CNN
@@ -512,7 +467,7 @@ F 3 "" H 9200 10300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L VCC #PWR016
+L power:VCC #PWR016
 U 1 1 5888B1BC
 P 10650 10500
 F 0 "#PWR016" H 10650 10350 50  0001 C CNN
@@ -523,7 +478,7 @@ F 3 "" H 10650 10500 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +5V #PWR017
+L power:+5V #PWR017
 U 1 1 5888B1BD
 P 10850 9850
 F 0 "#PWR017" H 10850 9700 50  0001 C CNN
@@ -534,7 +489,7 @@ F 3 "" H 10850 9850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +5V #PWR018
+L power:+5V #PWR018
 U 1 1 5888B1BE
 P 9700 9700
 F 0 "#PWR018" H 9700 9550 50  0001 C CNN
@@ -545,7 +500,7 @@ F 3 "" H 9700 9700 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR019
+L power:GND #PWR019
 U 1 1 5888B1BF
 P 9700 10550
 F 0 "#PWR019" H 9700 10300 50  0001 C CNN
@@ -556,7 +511,7 @@ F 3 "" H 9700 10550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C14
+L esp32-iot-uno-hw-rescue:C_Small C14
 U 1 1 5888B1C0
 P 9900 9800
 F 0 "C14" V 10129 9800 50  0000 C CNN
@@ -567,7 +522,7 @@ F 3 "" H 9900 9800 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L GND #PWR020
+L power:GND #PWR020
 U 1 1 5888B1C1
 P 10200 9850
 F 0 "#PWR020" H 10200 9600 50  0001 C CNN
@@ -578,7 +533,7 @@ F 3 "" H 10200 9850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MCP16311-MNY U2
+L dc-dc:MCP16311-MNY U2
 U 1 1 5888B1C3
 P 3250 10100
 F 0 "U2" H 3250 10667 50  0000 C CNN
@@ -589,7 +544,7 @@ F 3 "" H 2950 10650 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L D_Schottky_Small D1
+L esp32-iot-uno-hw-rescue:D_Schottky_Small D1
 U 1 1 5888B1C4
 P 1800 9800
 F 0 "D1" H 1800 9595 50  0000 C CNN
@@ -604,7 +559,7 @@ DTR
 Text GLabel 5250 7500 0    60   Input ~ 0
 RTS
 $Comp
-L C_Small C3
+L esp32-iot-uno-hw-rescue:C_Small C3
 U 1 1 5888B1D4
 P 2100 5950
 F 0 "C3" H 2192 5996 50  0000 L CNN
@@ -617,7 +572,7 @@ $EndComp
 Text Notes 5250 8800 0    157  ~ 31
 POWER
 $Comp
-L ESP32-WROVER-V3 U7
+L esp32-wrover-v3:ESP32-WROVER-V3 U7
 U 1 1 5888BC25
 P 4950 2400
 F 0 "U7" H 4950 3787 60  0000 C CNN
@@ -675,7 +630,7 @@ IO22/SCL
 Text GLabel 6200 2100 2    60   Input ~ 0
 IO23
 $Comp
-L +3.3V #PWR021
+L power:+3.3V #PWR021
 U 1 1 58890989
 P 3650 1500
 F 0 "#PWR021" H 3650 1350 50  0001 C CNN
@@ -686,7 +641,7 @@ F 3 "" H 3650 1500 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C17
+L esp32-iot-uno-hw-rescue:C_Small C17
 U 1 1 58890DBA
 P 2850 1700
 F 0 "C17" H 2942 1746 50  0000 L CNN
@@ -697,7 +652,7 @@ F 3 "" H 2850 1700 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C18
+L esp32-iot-uno-hw-rescue:C_Small C18
 U 1 1 588911EE
 P 3250 1700
 F 0 "C18" H 3342 1746 50  0000 L CNN
@@ -708,7 +663,7 @@ F 3 "" H 3250 1700 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR022
+L power:GND #PWR022
 U 1 1 588919AD
 P 2850 2100
 F 0 "#PWR022" H 2850 1850 50  0001 C CNN
@@ -719,7 +674,7 @@ F 3 "" H 2850 2100 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR023
+L power:GND #PWR023
 U 1 1 588921E0
 P 2800 3900
 F 0 "#PWR023" H 2800 3650 50  0001 C CNN
@@ -730,7 +685,7 @@ F 3 "" H 2800 3900 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR024
+L power:GND #PWR024
 U 1 1 58892990
 P 7000 2000
 F 0 "#PWR024" H 7000 1750 50  0001 C CNN
@@ -741,7 +696,7 @@ F 3 "" H 7000 2000 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R20
+L esp32-iot-uno-hw-rescue:R_Small R20
 U 1 1 588947C9
 P 1950 2100
 F 0 "R20" H 1891 2054 50  0000 R CNN
@@ -752,7 +707,7 @@ F 3 "" H 1950 2100 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L +3.3V #PWR025
+L power:+3.3V #PWR025
 U 1 1 58894C5F
 P 1950 1900
 F 0 "#PWR025" H 1950 1750 50  0001 C CNN
@@ -763,7 +718,7 @@ F 3 "" H 1950 1900 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C15
+L esp32-iot-uno-hw-rescue:C_Small C15
 U 1 1 58895036
 P 1950 2400
 F 0 "C15" H 2042 2446 50  0000 L CNN
@@ -774,7 +729,7 @@ F 3 "" H 1950 2400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR026
+L power:GND #PWR026
 U 1 1 58895957
 P 1950 2600
 F 0 "#PWR026" H 1950 2350 50  0001 C CNN
@@ -787,7 +742,7 @@ $EndComp
 Text GLabel 2250 1900 1    60   Input ~ 0
 EN
 $Comp
-L +3.3V #PWR027
+L power:+3.3V #PWR027
 U 1 1 5889653E
 P 1250 1150
 F 0 "#PWR027" H 1250 1000 50  0001 C CNN
@@ -798,7 +753,7 @@ F 3 "" H 1250 1150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R21
+L esp32-iot-uno-hw-rescue:R_Small R21
 U 1 1 58896606
 P 1250 1300
 F 0 "R21" H 1191 1254 50  0000 R CNN
@@ -809,7 +764,7 @@ F 3 "" H 1250 1300 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R22
+L esp32-iot-uno-hw-rescue:R_Small R22
 U 1 1 58896D55
 P 1950 1250
 F 0 "R22" H 1891 1204 50  0000 R CNN
@@ -822,7 +777,7 @@ $EndComp
 Text GLabel 1450 1550 2    60   Input ~ 0
 IO0
 $Comp
-L C_Small C16
+L esp32-iot-uno-hw-rescue:C_Small C16
 U 1 1 589050F0
 P 15000 9300
 F 0 "C16" H 15092 9346 50  0000 L CNN
@@ -833,7 +788,7 @@ F 3 "" H 15000 9300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L SD_CARD S1
+L microsd_socket:SD_CARD S1
 U 1 1 5890E3AB
 P 10850 2450
 F 0 "S1" H 10850 2900 60  0000 L CNN
@@ -844,7 +799,7 @@ F 3 "" H 10850 2500 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R28
+L esp32-iot-uno-hw-rescue:R_Small R28
 U 1 1 5891041B
 P 10400 1750
 F 0 "R28" H 10341 1704 50  0000 R CNN
@@ -855,7 +810,7 @@ F 3 "" H 10400 1750 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R27
+L esp32-iot-uno-hw-rescue:R_Small R27
 U 1 1 58910ACD
 P 10000 1750
 F 0 "R27" H 9941 1704 50  0000 R CNN
@@ -866,7 +821,7 @@ F 3 "" H 10000 1750 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R26
+L esp32-iot-uno-hw-rescue:R_Small R26
 U 1 1 58910BC5
 P 9600 1750
 F 0 "R26" H 9541 1704 50  0000 R CNN
@@ -877,7 +832,7 @@ F 3 "" H 9600 1750 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L +3.3V #PWR028
+L power:+3.3V #PWR028
 U 1 1 58911FBD
 P 10400 1450
 F 0 "#PWR028" H 10400 1300 50  0001 C CNN
@@ -888,7 +843,7 @@ F 3 "" H 10400 1450 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3.3V #PWR029
+L power:+3.3V #PWR029
 U 1 1 58914EA1
 P 8100 2050
 F 0 "#PWR029" H 8100 1900 50  0001 C CNN
@@ -899,7 +854,7 @@ F 3 "" H 8100 2050 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C19
+L esp32-iot-uno-hw-rescue:C_Small C19
 U 1 1 58915388
 P 8100 2550
 F 0 "C19" H 8200 2550 50  0000 L CNN
@@ -910,7 +865,7 @@ F 3 "" H 8100 2550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R16
+L esp32-iot-uno-hw-rescue:R_Small R16
 U 1 1 5888B1AF
 P 12925 8950
 F 0 "R16" H 12984 8996 50  0000 L CNN
@@ -923,7 +878,7 @@ $EndComp
 Text GLabel 13075 8750 2    60   Input ~ 0
 EN
 $Comp
-L CONN_01X06 P3
+L esp32-iot-uno-hw-rescue:CONN_01X06 P3
 U 1 1 5888B1B0
 P 13450 5400
 F 0 "P3" H 13528 5441 50  0000 L CNN
@@ -934,7 +889,7 @@ F 3 "" H 13450 5400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L D_Zener_Small_ALT D12
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D12
 U 1 1 5891BDBC
 P 12750 2725
 F 0 "D12" H 12750 2612 50  0000 C CNN
@@ -945,7 +900,7 @@ F 3 "" V 12750 2725 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L D_Zener_Small_ALT D11
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D11
 U 1 1 5891C0E0
 P 12750 3775
 F 0 "D11" H 12750 3662 50  0000 C CNN
@@ -956,7 +911,7 @@ F 3 "" V 12750 3775 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L D_Zener_Small_ALT D10
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D10
 U 1 1 5891C1E6
 P 14650 1625
 F 0 "D10" H 14650 1512 50  0000 C CNN
@@ -967,7 +922,7 @@ F 3 "" V 14650 1625 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L D_Zener_Small_ALT D9
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D9
 U 1 1 5891C516
 P 14650 2725
 F 0 "D9" H 14650 2612 50  0000 C CNN
@@ -978,7 +933,7 @@ F 3 "" V 14650 2725 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L D_Zener_Small_ALT D8
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D8
 U 1 1 5891C51C
 P 14650 3825
 F 0 "D8" H 14650 3712 50  0000 C CNN
@@ -1021,7 +976,7 @@ EN
 Text GLabel 6200 3800 2    60   Input ~ 0
 CLK/GPIO6
 $Comp
-L CP2102 U3
+L CP2102:CP2102 U3
 U 1 1 5893B91A
 P 2550 7100
 F 0 "U3" H 2550 7200 50  0000 C CNN
@@ -1050,7 +1005,7 @@ NoConn ~ 2900 8050
 NoConn ~ 3000 8050
 NoConn ~ 3100 8050
 $Comp
-L GND #PWR030
+L power:GND #PWR030
 U 1 1 5893DE8E
 P 2000 8150
 F 0 "#PWR030" H 2000 7900 50  0001 C CNN
@@ -1061,7 +1016,7 @@ F 3 "" H 2000 8150 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3.3V #PWR031
+L power:+3.3V #PWR031
 U 1 1 5893E394
 P 3000 5550
 F 0 "#PWR031" H 3000 5400 50  0001 C CNN
@@ -1072,7 +1027,7 @@ F 3 "" H 3000 5550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C13
+L esp32-iot-uno-hw-rescue:C_Small C13
 U 1 1 5893E7CD
 P 3250 6200
 F 0 "C13" H 3342 6246 50  0000 L CNN
@@ -1083,7 +1038,7 @@ F 3 "" H 3250 6200 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C20
+L esp32-iot-uno-hw-rescue:C_Small C20
 U 1 1 5893EAD9
 P 3550 6200
 F 0 "C20" H 3642 6246 50  0000 L CNN
@@ -1094,7 +1049,7 @@ F 3 "" H 3550 6200 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR032
+L power:GND #PWR032
 U 1 1 5893F336
 P 3900 6400
 F 0 "#PWR032" H 3900 6150 50  0001 C CNN
@@ -1105,7 +1060,7 @@ F 3 "" H 3900 6400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C11
+L esp32-iot-uno-hw-rescue:C_Small C11
 U 1 1 5893FF7C
 P 2500 5950
 F 0 "C11" H 2592 5996 50  0000 L CNN
@@ -1116,7 +1071,7 @@ F 3 "" H 2500 5950 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L VCC #PWR033
+L power:VCC #PWR033
 U 1 1 58941969
 P 2900 5300
 F 0 "#PWR033" H 2900 5150 50  0001 C CNN
@@ -1127,7 +1082,7 @@ F 3 "" H 2900 5300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR034
+L power:GND #PWR034
 U 1 1 589432A8
 P 2300 6150
 F 0 "#PWR034" H 2300 5900 50  0001 C CNN
@@ -1174,7 +1129,7 @@ IO14/CLK
 Text GLabel 6200 3500 2    60   Input ~ 0
 IO15/CMD
 $Comp
-L Crystal_Small Y1
+L esp32-iot-uno-hw-rescue:Crystal_Small Y1
 U 1 1 5897D588
 P 1650 3650
 F 0 "Y1" H 1650 3875 50  0000 C CNN
@@ -1185,7 +1140,7 @@ F 3 "" H 1650 3650 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C6
+L esp32-iot-uno-hw-rescue:C_Small C6
 U 1 1 5897DEA2
 P 1350 3850
 F 0 "C6" H 1442 3896 50  0000 L CNN
@@ -1196,7 +1151,7 @@ F 3 "" H 1350 3850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C10
+L esp32-iot-uno-hw-rescue:C_Small C10
 U 1 1 5897DFB3
 P 1950 3850
 F 0 "C10" H 2042 3896 50  0000 L CNN
@@ -1211,7 +1166,7 @@ IO32
 Text GLabel 1950 3300 1    60   Input ~ 0
 IO33
 $Comp
-L GND #PWR035
+L power:GND #PWR035
 U 1 1 5897E347
 P 1950 4050
 F 0 "#PWR035" H 1950 3800 50  0001 C CNN
@@ -1222,7 +1177,7 @@ F 3 "" H 1950 4050 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR036
+L power:GND #PWR036
 U 1 1 5897E43C
 P 1350 4050
 F 0 "#PWR036" H 1350 3800 50  0001 C CNN
@@ -1254,7 +1209,7 @@ IO2/DATA0
 Text GLabel 15175 3675 2    60   Input ~ 0
 ADC1_0/IO36
 $Comp
-L D_Zener_Small_ALT D7
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D7
 U 1 1 58941BAA
 P 12750 1600
 F 0 "D7" H 12750 1487 50  0000 C CNN
@@ -1295,7 +1250,7 @@ SD CARD INTERFACE
 Text Notes 4000 900  0    157  ~ 31
 ESP32
 $Comp
-L CONN_01X08 P2
+L esp32-iot-uno-hw-rescue:CONN_01X08 P2
 U 1 1 58931D3C
 P 15250 5300
 F 0 "P2" H 15328 5341 50  0000 L CNN
@@ -1306,7 +1261,7 @@ F 3 "" H 15250 5300 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L L_Small L1
+L esp32-iot-uno-hw-rescue:L_Small L1
 U 1 1 589407AF
 P 4400 9950
 F 0 "L1" V 4585 9950 50  0000 C CNN
@@ -1317,7 +1272,7 @@ F 3 "" H 4400 9950 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L MCP601OT U5
+L esp32-iot-uno-hw-rescue:MCP601OT U5
 U 1 1 58940FEB
 P 9800 10150
 F 0 "U5" H 10141 10196 50  0000 L CNN
@@ -1328,7 +1283,7 @@ F 3 "" H 9850 10350 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L SW_PUSH SW1
+L w_device:SW_PUSH SW1
 U 1 1 58941A94
 P 12925 9300
 F 0 "SW1" V 12879 9407 50  0000 L CNN
@@ -1339,7 +1294,7 @@ F 3 "" H 12925 9300 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L SW_PUSH SW2
+L w_device:SW_PUSH SW2
 U 1 1 58941D30
 P 14850 9300
 F 0 "SW2" V 14900 9600 50  0000 R CNN
@@ -1352,7 +1307,7 @@ $EndComp
 Text GLabel 6200 3200 2    60   Input ~ 0
 ADC2_0/IO4
 $Comp
-L +5V #PWR037
+L power:+5V #PWR037
 U 1 1 58A04410
 P 12350 5900
 F 0 "#PWR037" H 12350 5750 50  0001 C CNN
@@ -1367,7 +1322,7 @@ IO22/SCL
 Text GLabel 15000 5950 0    60   Input ~ 0
 IO21/SDA
 $Comp
-L Q_NPN_BEC Q1
+L esp32-iot-uno-hw-rescue:Q_NPN_BEC Q1
 U 1 1 58B0633E
 P 6050 6800
 F 0 "Q1" H 6241 6846 50  0000 L CNN
@@ -1378,7 +1333,7 @@ F 3 "" H -650 -550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Q_NPN_BEC Q2
+L esp32-iot-uno-hw-rescue:Q_NPN_BEC Q2
 U 1 1 58B064E4
 P 6050 7500
 F 0 "Q2" H 6241 7454 50  0000 L CNN
@@ -1389,7 +1344,7 @@ F 3 "" H -650 150 50  0001 C CNN
 	1    0    0    1   
 $EndComp
 $Comp
-L R_Small R3
+L esp32-iot-uno-hw-rescue:R_Small R3
 U 1 1 58B06F82
 P 5650 6800
 F 0 "R3" H 5591 6754 50  0000 R CNN
@@ -1400,7 +1355,7 @@ F 3 "" H 5650 6800 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L R_Small R6
+L esp32-iot-uno-hw-rescue:R_Small R6
 U 1 1 58B07182
 P 5650 7500
 F 0 "R6" H 5591 7454 50  0000 R CNN
@@ -1415,7 +1370,7 @@ IO2/DATA0
 Entry Wire Line
 	19800 -1000 19900 -900
 $Comp
-L GND #PWR038
+L power:GND #PWR038
 U 1 1 58B537FA
 P 8100 2750
 F 0 "#PWR038" H 8100 2500 50  0001 C CNN
@@ -1444,7 +1399,7 @@ IO23
 Text GLabel 14950 8750 2    60   Input ~ 0
 IO18
 $Comp
-L R_Small R7
+L esp32-iot-uno-hw-rescue:R_Small R7
 U 1 1 58DA9A02
 P 12750 1300
 F 0 "R7" H 12691 1254 50  0000 R CNN
@@ -1455,7 +1410,7 @@ F 3 "" H 12750 1300 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR039
+L power:GND #PWR039
 U 1 1 58DAA5D4
 P 12750 1900
 F 0 "#PWR039" H 12750 1650 50  0001 C CNN
@@ -1466,7 +1421,7 @@ F 3 "" H 12750 1900 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R25
+L esp32-iot-uno-hw-rescue:R_Small R25
 U 1 1 58DAAFCB
 P 13100 1625
 F 0 "R25" H 13041 1579 50  0000 R CNN
@@ -1477,7 +1432,7 @@ F 3 "" H 13100 1625 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R10
+L esp32-iot-uno-hw-rescue:R_Small R10
 U 1 1 58DAC611
 P 12750 2425
 F 0 "R10" H 12691 2379 50  0000 R CNN
@@ -1488,7 +1443,7 @@ F 3 "" H 12750 2425 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR040
+L power:GND #PWR040
 U 1 1 58DAC95D
 P 12750 3050
 F 0 "#PWR040" H 12750 2800 50  0001 C CNN
@@ -1499,7 +1454,7 @@ F 3 "" H 12750 3050 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R15
+L esp32-iot-uno-hw-rescue:R_Small R15
 U 1 1 58DACE70
 P 12750 3500
 F 0 "R15" H 12691 3454 50  0000 R CNN
@@ -1510,7 +1465,7 @@ F 3 "" H 12750 3500 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR041
+L power:GND #PWR041
 U 1 1 58DADAC6
 P 12750 4075
 F 0 "#PWR041" H 12750 3825 50  0001 C CNN
@@ -1521,7 +1476,7 @@ F 3 "" H 12750 4075 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R17
+L esp32-iot-uno-hw-rescue:R_Small R17
 U 1 1 58DADD7B
 P 13025 2775
 F 0 "R17" H 12966 2729 50  0000 R CNN
@@ -1532,7 +1487,7 @@ F 3 "" H 13025 2775 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R18
+L esp32-iot-uno-hw-rescue:R_Small R18
 U 1 1 58DADEB3
 P 13050 3850
 F 0 "R18" H 12991 3804 50  0000 R CNN
@@ -1543,7 +1498,7 @@ F 3 "" H 13050 3850 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR042
+L power:GND #PWR042
 U 1 1 58DB0402
 P 14650 1900
 F 0 "#PWR042" H 14650 1650 50  0001 C CNN
@@ -1554,7 +1509,7 @@ F 3 "" H 14650 1900 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR043
+L power:GND #PWR043
 U 1 1 58DB0B22
 P 14650 3000
 F 0 "#PWR043" H 14650 2750 50  0001 C CNN
@@ -1565,7 +1520,7 @@ F 3 "" H 14650 3000 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR044
+L power:GND #PWR044
 U 1 1 58DB114B
 P 14650 4100
 F 0 "#PWR044" H 14650 3850 50  0001 C CNN
@@ -1576,7 +1531,7 @@ F 3 "" H 14650 4100 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R34
+L esp32-iot-uno-hw-rescue:R_Small R34
 U 1 1 58DB13D8
 P 14900 3850
 F 0 "R34" H 14841 3804 50  0000 R CNN
@@ -1587,7 +1542,7 @@ F 3 "" H 14900 3850 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R33
+L esp32-iot-uno-hw-rescue:R_Small R33
 U 1 1 58DB1525
 P 14900 2750
 F 0 "R33" H 14841 2704 50  0000 R CNN
@@ -1598,7 +1553,7 @@ F 3 "" H 14900 2750 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R32
+L esp32-iot-uno-hw-rescue:R_Small R32
 U 1 1 58DB1795
 P 14850 1625
 F 0 "R32" H 14791 1579 50  0000 R CNN
@@ -1609,7 +1564,7 @@ F 3 "" H 14850 1625 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R29
+L esp32-iot-uno-hw-rescue:R_Small R29
 U 1 1 58DB4B4B
 P 14650 1275
 F 0 "R29" H 14591 1229 50  0000 R CNN
@@ -1620,7 +1575,7 @@ F 3 "" H 14650 1275 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R30
+L esp32-iot-uno-hw-rescue:R_Small R30
 U 1 1 58DB5224
 P 14650 2425
 F 0 "R30" H 14591 2379 50  0000 R CNN
@@ -1631,7 +1586,7 @@ F 3 "" H 14650 2425 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L R_Small R31
+L esp32-iot-uno-hw-rescue:R_Small R31
 U 1 1 58DB58F4
 P 14650 3525
 F 0 "R31" H 14591 3479 50  0000 R CNN
@@ -1644,7 +1599,7 @@ $EndComp
 Text GLabel 2000 1525 2    60   Input ~ 0
 IO0
 $Comp
-L MCP73831 U8
+L open-project:MCP73831 U8
 U 1 1 58DB6354
 P 9000 6100
 F 0 "U8" H 9000 5785 50  0000 C CNN
@@ -1655,7 +1610,7 @@ F 3 "" H 9000 6100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L LED_Small D5
+L esp32-iot-uno-hw-rescue:LED_Small D5
 U 1 1 58DB6DF0
 P 8250 6650
 F 0 "D5" V 8296 6582 50  0000 R CNN
@@ -1666,7 +1621,7 @@ F 3 "" V 8250 6650 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L C_Small C21
+L esp32-iot-uno-hw-rescue:C_Small C21
 U 1 1 58DB7430
 P 7850 6350
 F 0 "C21" H 7942 6396 50  0000 L CNN
@@ -1677,7 +1632,7 @@ F 3 "" H 7850 6350 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R23
+L esp32-iot-uno-hw-rescue:R_Small R23
 U 1 1 58DB7786
 P 8250 6350
 F 0 "R23" H 8191 6304 50  0000 R CNN
@@ -1688,7 +1643,7 @@ F 3 "" H 8250 6350 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR045
+L power:GND #PWR045
 U 1 1 58DB8882
 P 7850 6800
 F 0 "#PWR045" H 7850 6550 50  0001 C CNN
@@ -1699,7 +1654,7 @@ F 3 "" H 7850 6800 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR046
+L power:GND #PWR046
 U 1 1 58DB93B9
 P 9450 6750
 F 0 "#PWR046" H 9450 6500 50  0001 C CNN
@@ -1710,7 +1665,7 @@ F 3 "" H 9450 6750 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R_Small R24
+L esp32-iot-uno-hw-rescue:R_Small R24
 U 1 1 58DB965D
 P 9600 6400
 F 0 "R24" H 9541 6354 50  0000 R CNN
@@ -1721,7 +1676,7 @@ F 3 "" H 9600 6400 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR047
+L power:GND #PWR047
 U 1 1 58DB99EE
 P 9600 6750
 F 0 "#PWR047" H 9600 6500 50  0001 C CNN
@@ -1732,7 +1687,7 @@ F 3 "" H 9600 6750 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C_Small C22
+L esp32-iot-uno-hw-rescue:C_Small C22
 U 1 1 58DB9EC4
 P 9850 6400
 F 0 "C22" H 9942 6446 50  0000 L CNN
@@ -1743,7 +1698,7 @@ F 3 "" H 9850 6400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR048
+L power:GND #PWR048
 U 1 1 58DBA27E
 P 9850 6750
 F 0 "#PWR048" H 9850 6500 50  0001 C CNN
@@ -1754,7 +1709,7 @@ F 3 "" H 9850 6750 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L BAT BAT1
+L w_device:BAT BAT1
 U 1 1 58DBA8E6
 P 10200 6400
 F 0 "BAT1" H 10278 6446 50  0000 L CNN
@@ -1765,7 +1720,7 @@ F 3 "" H 10200 6400 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR049
+L power:GND #PWR049
 U 1 1 58DBAFFE
 P 10200 6750
 F 0 "#PWR049" H 10200 6500 50  0001 C CNN
@@ -1776,7 +1731,7 @@ F 3 "" H 10200 6750 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L MOSFET-P U9
+L MOSFET-P:MOSFET-P U9
 U 1 1 58DBB7C8
 P 10550 6000
 F 0 "U9" V 10400 6050 30  0000 L CNN
@@ -1787,7 +1742,7 @@ F 3 "" H 10550 5950 60  0000 C CNN
 	0    -1   1    0   
 $EndComp
 $Comp
-L D_Schottky_Small D6
+L esp32-iot-uno-hw-rescue:D_Schottky_Small D6
 U 1 1 58DBCE03
 P 10900 5850
 F 0 "D6" H 10900 5750 50  0000 C CNN
@@ -1798,7 +1753,7 @@ F 3 "" V 10900 5850 50  0000 C CNN
 	0    1    -1   0   
 $EndComp
 $Comp
-L R_Small R35
+L esp32-iot-uno-hw-rescue:R_Small R35
 U 1 1 58DBDF73
 P 11450 6250
 F 0 "R35" H 11391 6204 50  0000 R CNN
@@ -1809,7 +1764,7 @@ F 3 "" H 11450 6250 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L C_Small C23
+L esp32-iot-uno-hw-rescue:C_Small C23
 U 1 1 58DBE06F
 P 10900 6400
 F 0 "C23" H 10992 6446 50  0000 L CNN
@@ -1820,7 +1775,7 @@ F 3 "" H 10900 6400 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR050
+L power:GND #PWR050
 U 1 1 58DBE637
 P 10900 6750
 F 0 "#PWR050" H 10900 6500 50  0001 C CNN
@@ -1831,7 +1786,7 @@ F 3 "" H 10900 6750 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR051
+L power:GND #PWR051
 U 1 1 58DBE6FC
 P 11450 6750
 F 0 "#PWR051" H 11450 6500 50  0001 C CNN
@@ -1842,7 +1797,7 @@ F 3 "" H 11450 6750 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +5V #PWR052
+L power:+5V #PWR052
 U 1 1 58DC03B5
 P 7850 5600
 F 0 "#PWR052" H 7850 5450 50  0001 C CNN
@@ -1853,7 +1808,7 @@ F 3 "" H 7850 5600 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L +5VD #PWR053
+L power:+5VD #PWR053
 U 1 1 58DC2530
 P 11050 6000
 F 0 "#PWR053" H 11050 5850 50  0001 C CNN
@@ -1864,7 +1819,7 @@ F 3 "" H 11050 6000 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L +5VD #PWR054
+L power:+5VD #PWR054
 U 1 1 58DC2C75
 P 6150 9750
 F 0 "#PWR054" H 6150 9600 50  0001 C CNN
@@ -1879,7 +1834,7 @@ Wire Wire Line
 Wire Wire Line
 	13250 5550 13200 5550
 Wire Wire Line
-	12600 6550 13250 6550
+	12600 6550 13100 6550
 Wire Wire Line
 	13200 6150 13250 6150
 Wire Wire Line
@@ -1917,7 +1872,7 @@ Wire Wire Line
 Wire Wire Line
 	8000 10250 8000 10450
 Wire Wire Line
-	14850 9450 14850 9650
+	14850 9450 14850 9500
 Wire Wire Line
 	12925 9450 12925 9650
 Wire Wire Line
@@ -1926,15 +1881,15 @@ Connection ~ 1250 5550
 Wire Wire Line
 	700  5000 700  5550
 Wire Wire Line
-	700  5550 1750 5550
+	700  5550 1250 5550
 Wire Wire Line
 	1750 5550 1750 5350
 Wire Wire Line
 	6150 7700 6150 7750
 Wire Wire Line
-	5250 6800 5550 6800
+	5250 6800 5400 6800
 Wire Wire Line
-	5250 7500 5550 7500
+	5250 7500 5400 7500
 Wire Wire Line
 	1750 4950 1850 4950
 Wire Wire Line
@@ -1960,7 +1915,7 @@ Wire Wire Line
 Wire Wire Line
 	13300 7825 14100 7825
 Wire Wire Line
-	1900 9800 2850 9800
+	1900 9800 2000 9800
 Wire Wire Line
 	2000 9800 2000 10100
 Wire Wire Line
@@ -1976,11 +1931,11 @@ Wire Wire Line
 Wire Wire Line
 	2700 10100 2700 10200
 Wire Wire Line
-	3150 10500 3150 10650
+	3150 10500 3150 10600
 Wire Wire Line
 	3250 10600 3250 10500
 Wire Wire Line
-	1550 10600 5350 10600
+	1550 10600 2000 10600
 Connection ~ 3150 10600
 Wire Wire Line
 	2700 10600 2700 10400
@@ -2001,16 +1956,16 @@ Wire Wire Line
 Wire Wire Line
 	3700 9900 3700 9950
 Wire Wire Line
-	3700 9950 4300 9950
+	3700 9950 3950 9950
 Wire Wire Line
 	3950 9950 3950 9900
 Connection ~ 3950 9950
 Wire Wire Line
-	4500 9950 5350 9950
+	4500 9950 4600 9950
 Wire Wire Line
 	4600 9950 4600 10000
 Wire Wire Line
-	4600 10200 4600 10350
+	4600 10200 4600 10250
 Wire Wire Line
 	3650 10100 3700 10100
 Wire Wire Line
@@ -2022,7 +1977,7 @@ Wire Wire Line
 	4600 10600 4600 10550
 Connection ~ 3250 10600
 Wire Wire Line
-	5350 9900 5350 10150
+	5350 9900 5350 9950
 Connection ~ 4600 9950
 Wire Wire Line
 	5000 10150 5000 9950
@@ -2036,14 +1991,14 @@ Connection ~ 5000 10600
 Connection ~ 5350 9950
 Connection ~ 2000 9800
 Wire Wire Line
-	1300 10100 1550 10100
+	1300 10100 1450 10100
 Connection ~ 2000 10600
 Wire Wire Line
 	14850 8750 14850 8850
 Wire Wire Line
-	14850 9050 14850 9150
+	14850 9050 14850 9100
 Wire Wire Line
-	8000 9850 8000 10050
+	8000 9850 8000 9950
 Wire Wire Line
 	13200 5450 13250 5450
 Wire Wire Line
@@ -2072,7 +2027,7 @@ Wire Wire Line
 	2150 9700 2150 9800
 Connection ~ 2150 9800
 Wire Wire Line
-	8900 10000 8900 10250
+	8900 10000 8900 10050
 Wire Wire Line
 	9500 10050 8900 10050
 Connection ~ 8900 10050
@@ -2087,13 +2042,13 @@ Wire Wire Line
 Wire Wire Line
 	10850 9850 10850 9950
 Wire Wire Line
-	9700 9700 9700 9850
+	9700 9700 9700 9800
 Wire Wire Line
 	8900 10450 8900 10500
 Wire Wire Line
 	8900 10500 9700 10500
 Wire Wire Line
-	9700 10450 9700 10550
+	9700 10450 9700 10500
 Connection ~ 9700 10500
 Wire Wire Line
 	9500 10250 9500 10350
@@ -2112,9 +2067,9 @@ Wire Wire Line
 	3350 10500 3350 10600
 Connection ~ 3350 10600
 Wire Wire Line
-	3650 1500 3650 2100
+	3650 1500 3650 1550
 Wire Wire Line
-	2850 1550 3650 1550
+	2850 1550 3250 1550
 Wire Wire Line
 	3250 1550 3250 1600
 Connection ~ 3650 1550
@@ -2122,7 +2077,7 @@ Wire Wire Line
 	2850 1550 2850 1600
 Connection ~ 3250 1550
 Wire Wire Line
-	2850 1800 2850 2100
+	2850 1800 2850 2000
 Wire Wire Line
 	3250 1800 3250 2000
 Connection ~ 2850 2000
@@ -2134,7 +2089,7 @@ Wire Wire Line
 Wire Wire Line
 	1950 2000 1950 1900
 Wire Wire Line
-	1950 2200 1950 2300
+	1950 2200 1950 2250
 Wire Wire Line
 	1950 2500 1950 2600
 Connection ~ 1950 2250
@@ -2171,13 +2126,13 @@ Wire Wire Line
 	15000 9500 14850 9500
 Connection ~ 14850 9500
 Wire Wire Line
-	9000 2350 10500 2350
+	9000 2350 10400 2350
 Wire Wire Line
-	9000 2550 10500 2550
+	9000 2550 10000 2550
 Wire Wire Line
-	9000 2750 10500 2750
+	9000 2750 9600 2750
 Wire Wire Line
-	10400 1450 10400 1650
+	10400 1450 10400 1550
 Wire Wire Line
 	10000 1650 10000 1550
 Wire Wire Line
@@ -2193,11 +2148,11 @@ Connection ~ 9600 2750
 Wire Wire Line
 	8250 2450 10500 2450
 Wire Wire Line
-	8100 2050 8100 2450
+	8100 2050 8100 2400
 Wire Wire Line
 	3650 2100 3850 2100
 Wire Wire Line
-	2850 2000 3850 2000
+	2850 2000 3250 2000
 Wire Wire Line
 	2800 3400 3850 3400
 Wire Wire Line
@@ -2287,11 +2242,11 @@ Wire Wire Line
 Wire Wire Line
 	2000 8050 2000 8150
 Wire Wire Line
-	3000 5550 3000 6150
+	3000 5550 3000 6050
 Wire Wire Line
 	3250 6050 3250 6100
 Wire Wire Line
-	3000 6050 3550 6050
+	3000 6050 3100 6050
 Connection ~ 3000 6050
 Wire Wire Line
 	3550 6050 3550 6100
@@ -2299,17 +2254,17 @@ Connection ~ 3250 6050
 Wire Wire Line
 	3250 6300 3250 6350
 Wire Wire Line
-	3250 6350 3900 6350
+	3250 6350 3550 6350
 Connection ~ 3550 6350
 Wire Wire Line
-	2900 5300 2900 6150
+	2900 5300 2900 5800
 Wire Wire Line
 	3100 6150 3100 6050
 Connection ~ 3100 6050
 Wire Wire Line
 	2500 5850 2500 5800
 Wire Wire Line
-	2100 5800 2900 5800
+	2100 5800 2500 5800
 Connection ~ 2900 5800
 Wire Wire Line
 	2100 5850 2100 5800
@@ -2317,7 +2272,7 @@ Connection ~ 2500 5800
 Wire Wire Line
 	2500 6100 2500 6050
 Wire Wire Line
-	2100 6100 2500 6100
+	2100 6100 2300 6100
 Wire Wire Line
 	2300 6100 2300 6150
 Wire Wire Line
@@ -2371,7 +2326,7 @@ Wire Wire Line
 	8250 2400 8100 2400
 Connection ~ 8100 2400
 Wire Wire Line
-	8100 2650 8100 2750
+	8100 2650 8100 2700
 Wire Wire Line
 	8100 2700 8250 2700
 Wire Wire Line
@@ -2379,9 +2334,9 @@ Wire Wire Line
 Wire Wire Line
 	8250 2650 10500 2650
 Wire Wire Line
-	1950 3300 1950 3750
+	1950 3300 1950 3650
 Wire Wire Line
-	1350 3300 1350 3750
+	1350 3300 1350 3650
 Wire Wire Line
 	1550 3650 1350 3650
 Connection ~ 1350 3650
@@ -2393,25 +2348,25 @@ Wire Wire Line
 Wire Wire Line
 	1350 3950 1350 4050
 Wire Wire Line
-	12750 2525 12750 2625
+	12750 2525 12750 2575
 Wire Wire Line
-	12750 2825 12750 3050
+	12750 2825 12750 2950
 Wire Wire Line
-	12750 3600 12750 3675
+	12750 3600 12750 3650
 Wire Wire Line
-	12750 3875 12750 4075
+	12750 3875 12750 3975
 Wire Wire Line
-	14650 1725 14650 1900
+	14650 1725 14650 1825
 Wire Wire Line
-	14650 2525 14650 2625
+	14650 2525 14650 2575
 Wire Wire Line
-	14650 2825 14650 3000
+	14650 2825 14650 2900
 Wire Wire Line
-	14650 3925 14650 4100
+	14650 3925 14650 4025
 Wire Wire Line
-	14650 3625 14650 3725
+	14650 3625 14650 3675
 Wire Wire Line
-	9600 1550 10400 1550
+	9600 1550 10000 1550
 Connection ~ 10400 1550
 Wire Wire Line
 	12600 6550 12600 6650
@@ -2427,9 +2382,9 @@ Wire Wire Line
 Wire Wire Line
 	3550 6300 3550 6350
 Wire Wire Line
-	12750 1400 12750 1500
+	12750 1400 12750 1425
 Wire Wire Line
-	12750 1700 12750 1900
+	12750 1700 12750 1825
 Wire Bus Line
 	500  4500 16050 4500
 Wire Bus Line
@@ -2456,7 +2411,7 @@ Wire Wire Line
 Wire Wire Line
 	12750 1150 12450 1150
 Wire Wire Line
-	12750 1425 13250 1425
+	12750 1425 13100 1425
 Wire Wire Line
 	13100 1425 13100 1525
 Connection ~ 12750 1425
@@ -2485,23 +2440,23 @@ Wire Wire Line
 	13025 2950 12750 2950
 Connection ~ 12750 2950
 Wire Wire Line
-	12750 2575 13250 2575
+	12750 2575 13025 2575
 Wire Wire Line
 	13025 2575 13025 2675
 Connection ~ 12750 2575
 Wire Wire Line
-	12750 3650 13250 3650
+	12750 3650 13050 3650
 Wire Wire Line
 	13050 3650 13050 3750
 Connection ~ 12750 3650
 Connection ~ 13025 2575
 Connection ~ 13050 3650
 Wire Wire Line
-	14650 1375 14650 1525
+	14650 1375 14650 1400
 Wire Wire Line
 	14850 1525 14850 1400
 Wire Wire Line
-	14650 1400 15100 1400
+	14650 1400 14850 1400
 Connection ~ 14650 1400
 Connection ~ 14850 1400
 Wire Wire Line
@@ -2517,11 +2472,11 @@ Connection ~ 14650 2900
 Wire Wire Line
 	14900 2650 14900 2575
 Wire Wire Line
-	14650 2575 15100 2575
+	14650 2575 14900 2575
 Connection ~ 14650 2575
 Connection ~ 14900 2575
 Wire Wire Line
-	14650 3675 15175 3675
+	14650 3675 14900 3675
 Wire Wire Line
 	14900 3675 14900 3750
 Connection ~ 14650 3675
@@ -2554,11 +2509,11 @@ Wire Bus Line
 Wire Bus Line
 	11800 6950 16100 6950
 Wire Wire Line
-	7850 6000 8600 6000
+	7850 6000 8150 6000
 Wire Wire Line
 	8250 6000 8250 6250
 Wire Wire Line
-	7850 5600 7850 6250
+	7850 5600 7850 6000
 Connection ~ 8250 6000
 Wire Wire Line
 	8250 6450 8250 6550
@@ -2583,7 +2538,7 @@ Wire Wire Line
 Wire Wire Line
 	9600 6500 9600 6750
 Wire Wire Line
-	9400 6000 10350 6000
+	9400 6000 9850 6000
 Wire Wire Line
 	9850 6000 9850 6300
 Wire Wire Line
@@ -2594,14 +2549,14 @@ Connection ~ 9850 6000
 Wire Wire Line
 	10200 6500 10200 6750
 Wire Wire Line
-	10900 5950 10900 6300
+	10900 5950 10900 6000
 Wire Wire Line
-	10750 6000 11050 6000
+	10750 6000 10900 6000
 Connection ~ 10200 6000
 Wire Wire Line
 	8150 6000 8150 5700
 Wire Wire Line
-	8150 5700 11450 5700
+	8150 5700 10550 5700
 Wire Wire Line
 	10550 5700 10550 5800
 Connection ~ 8150 6000
@@ -2620,7 +2575,7 @@ Connection ~ 7850 6000
 Text Notes 8550 4850 0    157  ~ 31
 CHARGE CIRCUIT
 $Comp
-L TC1264 U4
+L tc1264:TC1264 U4
 U 1 1 58DDDE50
 P 7000 10050
 F 0 "U4" H 7000 10300 60  0000 C CNN
@@ -2631,11 +2586,11 @@ F 3 "" H 7000 10050 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6150 9750 6150 10050
+	6150 9750 6150 9950
 Wire Wire Line
 	6150 9950 6600 9950
 $Comp
-L C_Small C9
+L esp32-iot-uno-hw-rescue:C_Small C9
 U 1 1 58DDEF06
 P 6150 10150
 F 0 "C9" H 6300 10250 50  0000 C CNN
@@ -2647,7 +2602,7 @@ F 3 "" H 6150 10150 50  0000 C CNN
 $EndComp
 Connection ~ 6150 9950
 $Comp
-L GND #PWR055
+L power:GND #PWR055
 U 1 1 58DDF6F5
 P 6150 10450
 F 0 "#PWR055" H 6150 10200 50  0001 C CNN
@@ -2658,7 +2613,7 @@ F 3 "" H 6150 10450 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR056
+L power:GND #PWR056
 U 1 1 58DDF91C
 P 6500 10450
 F 0 "#PWR056" H 6500 10200 50  0001 C CNN
@@ -2675,7 +2630,7 @@ Wire Wire Line
 Wire Wire Line
 	6150 10450 6150 10250
 $Comp
-L C_Small C12
+L esp32-iot-uno-hw-rescue:C_Small C12
 U 1 1 58DE0B9A
 P 7550 10100
 F 0 "C12" H 7700 10200 50  0000 C CNN
@@ -2686,7 +2641,7 @@ F 3 "" H 7550 10100 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR057
+L power:GND #PWR057
 U 1 1 58DE0D50
 P 7550 10450
 F 0 "#PWR057" H 7550 10200 50  0001 C CNN
@@ -2699,12 +2654,12 @@ $EndComp
 Wire Wire Line
 	7550 10200 7550 10450
 Wire Wire Line
-	7400 9950 8000 9950
+	7400 9950 7550 9950
 Wire Wire Line
 	7550 9950 7550 10000
 Connection ~ 7550 9950
 $Comp
-L GND #PWR058
+L power:GND #PWR058
 U 1 1 58DE161F
 P 8000 10800
 F 0 "#PWR058" H 8000 10550 50  0001 C CNN
@@ -2716,4 +2671,162 @@ F 3 "" H 8000 10800 50  0000 C CNN
 $EndComp
 Text Notes 13200 7300 0    157  ~ 31
 HEADER OLED
+Wire Wire Line
+	1250 5550 1750 5550
+Wire Wire Line
+	2350 9800 2700 9800
+Wire Wire Line
+	2700 9800 2850 9800
+Wire Wire Line
+	3150 10600 3150 10650
+Wire Wire Line
+	3150 10600 3250 10600
+Wire Wire Line
+	2700 10600 3150 10600
+Wire Wire Line
+	2350 10600 2700 10600
+Wire Wire Line
+	3950 9950 4300 9950
+Wire Wire Line
+	4600 10250 4600 10350
+Wire Wire Line
+	3250 10600 3350 10600
+Wire Wire Line
+	4600 9950 5000 9950
+Wire Wire Line
+	5000 9950 5350 9950
+Wire Wire Line
+	4600 10600 5000 10600
+Wire Wire Line
+	5000 10600 5350 10600
+Wire Wire Line
+	5350 9950 5350 10150
+Wire Wire Line
+	2000 9800 2150 9800
+Wire Wire Line
+	2000 10600 2350 10600
+Wire Wire Line
+	8000 9950 8000 10050
+Wire Wire Line
+	1450 10100 1550 10100
+Wire Wire Line
+	2150 9800 2350 9800
+Wire Wire Line
+	8900 10050 8900 10250
+Wire Wire Line
+	9700 10500 9700 10550
+Wire Wire Line
+	9700 9800 9700 9850
+Wire Wire Line
+	3350 10600 4600 10600
+Wire Wire Line
+	3650 1550 3650 2100
+Wire Wire Line
+	3250 1550 3650 1550
+Wire Wire Line
+	2850 2000 2850 2100
+Wire Wire Line
+	3250 2000 3850 2000
+Wire Wire Line
+	1950 2250 1950 2300
+Wire Wire Line
+	14850 9100 14850 9150
+Wire Wire Line
+	14850 9500 14850 9650
+Wire Wire Line
+	10000 1550 10400 1550
+Wire Wire Line
+	10400 2350 10500 2350
+Wire Wire Line
+	10000 2550 10500 2550
+Wire Wire Line
+	9600 2750 10500 2750
+Wire Wire Line
+	3000 6050 3000 6150
+Wire Wire Line
+	3250 6050 3550 6050
+Wire Wire Line
+	3550 6350 3900 6350
+Wire Wire Line
+	3100 6050 3250 6050
+Wire Wire Line
+	2900 5800 2900 6150
+Wire Wire Line
+	2500 5800 2900 5800
+Wire Wire Line
+	2300 6100 2500 6100
+Wire Wire Line
+	5400 6800 5550 6800
+Wire Wire Line
+	5400 7500 5550 7500
+Wire Wire Line
+	8100 2400 8100 2450
+Wire Wire Line
+	1350 3650 1350 3750
+Wire Wire Line
+	1950 3650 1950 3750
+Wire Wire Line
+	10400 1550 10400 1650
+Wire Wire Line
+	13100 6550 13250 6550
+Wire Wire Line
+	8100 2700 8100 2750
+Wire Wire Line
+	12750 1425 12750 1500
+Wire Wire Line
+	12750 1825 12750 1900
+Wire Wire Line
+	13100 1425 13250 1425
+Wire Wire Line
+	12750 3975 12750 4075
+Wire Wire Line
+	12750 2950 12750 3050
+Wire Wire Line
+	12750 2575 12750 2625
+Wire Wire Line
+	12750 3650 12750 3675
+Wire Wire Line
+	13025 2575 13250 2575
+Wire Wire Line
+	13050 3650 13250 3650
+Wire Wire Line
+	14650 1400 14650 1525
+Wire Wire Line
+	14850 1400 15100 1400
+Wire Wire Line
+	14650 1825 14650 1900
+Wire Wire Line
+	14650 2900 14650 3000
+Wire Wire Line
+	14650 2575 14650 2625
+Wire Wire Line
+	14900 2575 15100 2575
+Wire Wire Line
+	14650 3675 14650 3725
+Wire Wire Line
+	14650 4025 14650 4100
+Wire Wire Line
+	14900 3675 15175 3675
+Wire Wire Line
+	8250 6000 8600 6000
+Wire Wire Line
+	9850 6000 10200 6000
+Wire Wire Line
+	10200 6000 10350 6000
+Wire Wire Line
+	8150 6000 8250 6000
+Wire Wire Line
+	10550 5700 10900 5700
+Wire Wire Line
+	10900 6000 10900 6300
+Wire Wire Line
+	10900 6000 11050 6000
+Wire Wire Line
+	10900 5700 11450 5700
+Wire Wire Line
+	7850 6000 7850 6250
+Wire Wire Line
+	6150 9950 6150 10050
+Wire Wire Line
+	7550 9950 8000 9950
 $EndSCHEMATC
