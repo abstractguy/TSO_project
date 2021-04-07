@@ -1,0 +1,118 @@
+Checklist Item Completed Count,Card Name
+SEMAINE 2,Produire schéma-bloc du matériel.
+SEMAINE 3,• Schématiser l’architecture système dans DRAWIO. (deadline lundi)
+SEMAINE 2,Corriger le dernier devoir de philo.
+SEMAINE 3,• Schémas préliminaires des algorithmes utilisés. (deadline jeudi)
+SEMAINE 4,Vérifier netlists. (deadline mercredi)
+SEMAINE 4,Corriger DRC. (deadline mercredi)
+SEMAINE 4,Vérifier empreintes. (deadline mercredi)
+SEMAINE 4,ECO to layout. (deadline mercredi)
+SEMAINE 4,Commencer la disposition du circuit imprimé. (deadline mercredi)
+SEMAINE 4,Implémenter boucle vidéo avec inférence sur images du plan A. (deadline jeudi)
+SEMAINE 4,"Corriger certaines parties du rapport (très brouillon, simple mais détaillé pour sauver du temps plus tard). (deadline jeudi)"
+SEMAINE 4,• Tester l’entrée de la caméra. (deadline vendredi)
+SEMAINE 4,Implémenter inférence vidéo en streaming sur caméras et tester sur Jetson Nano. (deadline samedi)
+Doing,'- Installer Altium en VM à la maison. (deadline vendredi)
+Doing,Évaluer réseaux neuronaux (job) pendant projet d'école pour gagner du temps.
+Doing,Envoyer le dernier devoir de philo.
+Doing,Réserver examen final de philo.
+Doing,Choisir pièces du PCB sur Altium. (deadline dimanche)
+Doing,Produire Bill Of Materials. (deadline dimanche)
+Doing,• Schématiser l’architecture matérielle dans DRAWIO. (deadline dimanche)
+Doing,Réécrire BOM avec nouvelle schématique. (deadline mercredi)
+Doing,Clean-up du repository Github. (deadline mercredi)
+Doing,Réécriture partielle du rapport. (deadline mercredi)
+Done,• Écrire requis client (buts vs bonus).
+Done,"• Activer VNC dans Docker sur ARM64v8 et sauver un écran, clavier et souris!"
+Done,• Réparer bug de udev
+Done,• Planifier les prochaines semaines.
+Done,• Tester le container pour uARM dans Docker avec ROS sur Nvidia Jetson. (deadline lundi)
+Done,• Choisir/définir matériel et commander/emprunter le matériel de dev. (deadline mardi)
+Done,• Planifier les prochaines semaines avec des chemins alternatifs où il reste des risques et officialiser dans Trello. (deadline mercredi)
+Done,Finir la rédaction du dernier devoir de philo. (deadline vendredi)
+Done,Envoyer T31 impôts (deadline vendredi)
+Done,Schématiser l'architecture système du DRAWIO (deadline vendredi)
+Done,Corriger le dernier devoir de philo. (deadline vendredi)
+Done,Envoyer le dernier devoir de philo. (deadline vendredi)
+Done,Imprévus (deadline samedi)
+Done,Payer pour extensions philo/français pour éviter surprises à réservation d'examens. (deadline samedi)
+Done,"'- Installer Altium en VM (Virtualbox sur Windows 10 Entreprise (developer edition), build 19041.vb_release.191206-1406) à la maison. Спасибо (deadline dimanche)"
+Done,Envoyer MIO cours de français (deadline mardi)
+Done,Added SnapEDA plugin to Altium to automate part selection. (deadline dimanche)
+Done,Short break.
+Done,Choisir pièces du PCB sur Altium. (deadline dimanche)
+Done,Produire Bill Of Materials. (deadline lundi)
+Done,• Schématiser l’architecture matérielle dans DRAWIO. (deadline lundi)
+Done,Valider sélection des pièces avant remise du BOM. (deadline lundi)
+Done,Sortir rapport de la session 5 sur projet final et partir de ça pour réécrire les descriptions et les schémas d'architecture.
+Done,Pause café.
+Done,Poser question email reçu (où?) (deadline lundi)
+Done,Manger.
+Done,Rendez-vous pharmacie (lundi PM)
+Done,Prendre passe de bus de la session. (deadline lundi)
+Done,Meeting work (monday 19h)
+Done,Recevoir Jetson Nano devkit. (deadline lundi)
+Done,Prendre une pause.
+Done,• Description préliminaire du système (attendre avant de mettre trop de détails). (deadline lundi)
+Done,• Description préliminaire du matériel (attendre avant de mettre trop de détails). (deadline lundi)
+Done,Call HR (deadline lundi)
+Done,Job project. (deadline lundi soir)
+Done,Contacter professeur de français (deadline lundi)
+Done,Réserver examen final de philo. (deadline mercredi)
+Done,• Description préliminaire des algorithmes utilisés (attendre avant de mettre trop de détails). (deadline mardi)
+Done,Break (mardi)
+Done,Work (mardi soiree)
+Done,• Ajouter la caméra sur ROS. (deadline mercredi)
+Done,Build des caméras sur ROS. (deadline jeudi)
+Done,• Début de la conception de la schématique du circuit imprimé. (deadline jeudi)
+Done,• La réception du matériel devrait débuter. (deadline jeudi)
+Done,Annuler Trello Business-class subscription pour éviter >100$/mois. (deadline samedi)
+Done,Check PCB design. (deadline samedi)
+Done,Work. (deadline dimanche)
+Done,Étudier cours à Kevin pour examen le lendemain. (deadline mardi matin)
+Done,"Réviser/modifier/élaborer plan A (architecture logicielle): détection d'objets avec OpenCV. (deadline mardi, semaine 4)"
+Done,Mettre un peu d'ordre sur Github. (deadline mardi)
+Done,"Réviser/modifier/élaborer plan B (architecture logicielle) : installer jetson-inference sur ROS. (deadline mercredi, semaine 5)"
+Done,Tester nouveau plan A. (deadline mardi)
+Done,• Continuation du plan A.
+Done,Entraîner réseaux neuronaux (job) pendant projet d'école pour gagner du temps.
+Removed for time gain,SEMAINE 1 :
+Removed for time gain,• Étudier conception haute-vitesse (voir Texas Instruments application notes). (deadline vendredi)
+Removed for time gain,SEMAINE 2 :
+Removed for time gain,"• Tests de build/run en utilisant le même code sur ARM64v8 que sur x86_64, avec émulation optionnelle en Docker avec QEMU. Ne pas dépenser plus de 3h sur ça, parce que ça fonctionne déjà sur ARM64v8. Ferait gagner du temps de build."
+Removed for time gain,• Simuler le circuit électrique sur multisim. (deadline mardi)
+Removed for time gain,Produire schéma-bloc du matériel. (DRAWIO déjà fait) (deadline lundi)
+Removed for time gain,Rendez-vous services adaptés dans l'autobus jeudi au retour
+Removed for time gain,Convertir poids du actor et poids du critic en ONNX puis générer le graphique des réseaux neuronaux pour incorporer dans le rapport avec les schémas de l'architecture logicielle. (deadline mercredi)
+Removed for time gain,• Schématiser l’architecture logicielle (moins la détection et le feedback) avec urdf_to_graphiz après l'ajout des caméras dans ROS. (deadline mercredi)
+Removed for time gain,Transcrire Trello sur billboard Github pour éviter paiements mois prochain et centraliser avec documentation. (deadline samedi)
+Removed for time gain,SEMAINE 5 :
+SEMAINE 5,• Début de l’installation d’OpenAI Gym sur ROS. (deadline lundi)
+SEMAINE 5,Intégrer plan B dans container Docker ROS Kinetic ou porter environnement dans ROS Melodic. (deadline mardi)
+SEMAINE 5,Tester plan B. (deadline mercredi)
+SEMAINE 5,Élaborer README.md. (deadline jeudi)
+SEMAINE 6,Convertir Nvidia Jetson AGX Xavier à Nvidia Jetson Nano. (deadline lundi)
+SEMAINE 6,.
+SEMAINE 6,• Continuation du plan B.
+SEMAINE 6,• Début de l’écriture de la définition de l’environnement OpenAI Gym. (deadline lundi)
+SEMAINE 6,• Complétion du plan A. (deadline mercredi)
+SEMAINE 6,• Les pièces devraient être toutes arrivées (deadline vendredi).
+SEMAINE 7,• Début du plan C (architecture logicielle) : étudier la conception d’environnement sur OpenAI Gym en écrivant un crypto_bot ou stocks_bot simple qui vend et achète automatiquement en apprenant sur le tas par renforcement. NE PAS prendre plus de 2 jours pour perfectionner le bot. Le but est d’apprendre les conventions de la librairie
+SEMAINE 7,• Complétion du plan B. (deadline mardi)
+SEMAINE 7,• Remise des fichiers de production du circuit imprimé. (deadline mercredi)
+SEMAINE 7,• Commander au moins 2 circuits imprimés (avoir pièces prêtes au moins en double). (deadline mercredi)
+SEMAINE 8,• Continuer plan C : écrire environnement OpenAI Gym pour le uARM dans le Docker ROS.
+SEMAINE 8,• Souder un seul circuit imprimé sur 2. (deadline vendredi)
+SEMAINE 9,• Début de la réécriture de FERM avec l’environnement OpenAI Gym pour le uARM dans container Docker sur ROS. (deadline lundi)
+SEMAINE 9,• Entraîner réseaux neuronaux et tester. (deadline vendredi)
+SEMAINE 10,• Valider les réseaux neuronaux. (deadline mercredi)
+SEMAINE 10,• S’assurer de la cohésion matériel/logiciel avec le plan A et B. (deadline jeudi)
+SEMAINE 10,• Complétion du plan C. (deadline vendredi)
+SEMAINE 10,• Procéder aux derniers tests matériels. (deadline samedi)
+SEMAINE 11,• Continuation et complétion de tout.
+SEMAINE 11,"• Débogage, réglages, perfectionnement. (no deadline)"
+SEMAINE 11,• Perfectionner rapport. (deadline vendredi)
+SEMAINE 12,• Semaine réservée aux imprévus.
+SEMAINE 12,• Sauvegardes partout!!!
+SEMAINE 12,• Temps en extra pour finaliser et nettoyer.
+SEMAINE 12,Examen final de philo III (deadline vendredi)
