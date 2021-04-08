@@ -1,0 +1,7 @@
+package uarm_msgs.msgs;
+import "new_joint_position.proto";
+
+message NewPosition
+{
+  repeated uarm_msgs.msgs.NewJointPosition   positions  = 1;
+}
