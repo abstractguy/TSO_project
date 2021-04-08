@@ -20,13 +20,32 @@ def parse_args():
 
 def add_inference_args(parser):
     parser.add_argument('--image', metavar='<image>', type=str, required=False, default='./doc/valid_test.png', help='Path of input image.')
+    parser.add_argument('--confidence-threshold', metavar='<confidence-threshold>', type=float, required=False, default=0.5, help='Confidence threshold.')
+    parser.add_argument('--nms-threshold', metavar='<nms-threshold>', type=float, required=False, default=0.3, help='NMS threshold.')
+    parser.add_argument('--model', metavar='<model>', type=str, required=False, default='yolov4-tiny', help='Path of input image.')
+    parser.add_argument('--disable-gpu', action='store_true', help='Disable GPU usage for inference.')
     return parser
 
-def detect(image_filename):
-    image_bgr = cv2.imread(image_filename)
+def detect(image_filename, 
+           confidence_threshold=0.5, 
+           nms_threshold=0.3, 
+           model='yolov4-tiny', 
+           enable_gpu=True):
+
+    input_image = cv2.imread(image_filename)
+
+    bbox, label, conf = cvlib.detect_common_objects(input_image, 
+                                                    confidence=confidence_threshold, 
+                                                    nms_thresh=nms_threshold, 
+                                                    model=model, 
+                                                    enable_gpu=enable_gpu)
+
+    inferred_image = draw_bbox(input_image, bbox, label, conf)
+
+    image_bgr = inferred_image
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-    bbox, label, conf = cvlib.detect_common_objects(image_rgb)
-    output_image = draw_bbox(image_rgb, bbox, label, conf)
+
+    output_image = image_rgb
     plt.imshow(output_image)
     plt.show()
 
@@ -34,7 +53,11 @@ def main():
     args = parse_args()
 
     try:
-        detect(image_filename=args.image)
+        detect(image_filename=args.image, 
+               confidence_threshold=args.confidence_threshold, 
+               nms_threshold=args.nms_threshold, 
+               model=args.model, 
+               enable_gpu=not args.disable_gpu)
 
     except Exception as e:
         print(e)
