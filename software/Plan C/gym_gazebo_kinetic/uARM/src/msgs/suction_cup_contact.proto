@@ -1,6 +1,0 @@
-package uarm_msgs.msgs;
-
-message SuctionCupContact
-{
-  required string                 collision_name   = 1;
-}

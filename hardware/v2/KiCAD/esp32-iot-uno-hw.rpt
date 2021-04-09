@@ -1,0 +1,14 @@
+** Drc report for /home/samuel/school/Projets/Final/TSO_project/hardware/esp32-iot-uno-hw.kicad_pcb **
+** Created on 2021-04-08 15:29:16 **
+
+** Found 0 DRC errors **
+
+** Found 2 unconnected pads **
+ErrType(2): Unconnected items
+    @(123.457 mm, 79.870 mm): Track 0.300 mm [GND] on F.Cu, length: 3.337 mm
+    @(125.642 mm, 79.067 mm): Zone Outline [GND] on B.Cu
+ErrType(2): Unconnected items
+    @(157.386 mm, 104.930 mm): Zone Outline [GND] on B.Cu
+    @(153.116 mm, 107.167 mm): Track 0.300 mm [GND] on F.Cu, length: 3.286 mm
+
+** End of Report **

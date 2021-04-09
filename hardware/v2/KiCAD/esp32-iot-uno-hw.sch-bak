@@ -1,0 +1,2296 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A3 16535 11693
+encoding utf-8
+Sheet 1 1
+Title "esp32-iot-uno"
+Date "2017-03-31"
+Rev ""
+Comp "http://iotmaker.vn"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R2
+U 1 1 5888B17D
+P 1250 2150
+F 0 "R2" H 1309 2196 50  0000 L CNN
+F 1 "470R" H 1309 2105 50  0000 L CNN
+F 2 "footprint:R_0603" H 1250 2150 50  0001 C CNN
+F 3 "" H 1250 2150 50  0000 C CNN
+	1    1250 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:LED_Small D1
+U 1 1 5888B17E
+P 1250 2500
+F 0 "D1" V 1296 2432 50  0000 R CNN
+F 1 "LED_IO23_W" V 1205 2432 50  0000 R CNN
+F 2 "LEDs:LED_0603" V 1250 2500 50  0001 C CNN
+F 3 "" V 1250 2500 50  0000 C CNN
+	1    1250 2500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+3.3V #PWR024
+U 1 1 5888B183
+P 8000 9850
+F 0 "#PWR024" H 8000 9700 50  0001 C CNN
+F 1 "+3.3V" H 8015 10023 50  0000 C CNN
+F 2 "" H 8000 9850 50  0000 C CNN
+F 3 "" H 8000 9850 50  0000 C CNN
+	1    8000 9850
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:D_Schottky_Small D4
+U 1 1 5888B185
+P 9850 8850
+F 0 "D4" H 9850 8645 50  0000 C CNN
+F 1 "SS34" H 9850 8736 50  0000 C CNN
+F 2 "footprint:do214aa-g" V 9850 8850 50  0001 C CNN
+F 3 "" V 9850 8850 50  0000 C CNN
+	1    9850 8850
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR030
+U 1 1 5888B186
+P 10100 8850
+F 0 "#PWR030" H 10100 8700 50  0001 C CNN
+F 1 "+5V" H 10115 9023 50  0000 C CNN
+F 2 "" H 10100 8850 50  0000 C CNN
+F 3 "" H 10100 8850 50  0000 C CNN
+	1    10100 8850
+	0    1    -1   0   
+$EndComp
+$Comp
+L power:VCC #PWR027
+U 1 1 5888B187
+P 9600 8850
+F 0 "#PWR027" H 9600 8700 50  0001 C CNN
+F 1 "VCC" H 9617 9023 50  0000 C CNN
+F 2 "" H 9600 8850 50  0000 C CNN
+F 3 "" H 9600 8850 50  0000 C CNN
+	1    9600 8850
+	0    -1   1    0   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R7
+U 1 1 5888B18C
+P 5550 5600
+F 0 "R7" H 5491 5554 50  0000 R CNN
+F 1 "470R" H 5491 5645 50  0000 R CNN
+F 2 "footprint:R_0603" H 5550 5600 50  0001 C CNN
+F 3 "" H 5550 5600 50  0000 C CNN
+	1    5550 5600
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R10
+U 1 1 5888B18D
+P 5950 5600
+F 0 "R10" H 5891 5554 50  0000 R CNN
+F 1 "470R" H 5891 5645 50  0000 R CNN
+F 2 "footprint:R_0603" H 5950 5600 50  0001 C CNN
+F 3 "" H 5950 5600 50  0000 C CNN
+	1    5950 5600
+	-1   0    0    1   
+$EndComp
+Text GLabel 1800 5050 2    60   Input ~ 0
+D-
+Text GLabel 1800 5150 2    60   Input ~ 0
+D+
+$Comp
+L power:VCC #PWR05
+U 1 1 5888B18F
+P 1850 4850
+F 0 "#PWR05" H 1850 4700 50  0001 C CNN
+F 1 "VCC" H 1867 5023 50  0000 C CNN
+F 2 "" H 1850 4850 50  0000 C CNN
+F 3 "" H 1850 4850 50  0000 C CNN
+	1    1850 4850
+	1    0    0    -1  
+$EndComp
+Text GLabel 6200 7750 2    60   Input ~ 0
+IO0
+Text GLabel 6250 6550 2    60   Input ~ 0
+EN
+$Comp
+L power:GND #PWR03
+U 1 1 5888B192
+P 1250 5550
+F 0 "#PWR03" H 1250 5300 50  0001 C CNN
+F 1 "GND" H 1255 5377 50  0000 C CNN
+F 2 "" H 1250 5550 50  0000 C CNN
+F 3 "" H 1250 5550 50  0000 C CNN
+	1    1250 5550
+	1    0    0    -1  
+$EndComp
+NoConn ~ 1750 5250
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R11
+U 1 1 5888B196
+P 8000 10150
+F 0 "R11" H 8059 10196 50  0000 L CNN
+F 1 "470R" H 8059 10105 50  0000 L CNN
+F 2 "footprint:R_0603" H 8000 10150 50  0001 C CNN
+F 3 "" H 8000 10150 50  0000 C CNN
+	1    8000 10150
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:LED_Small D3
+U 1 1 5888B197
+P 8000 10550
+F 0 "D3" V 8046 10482 50  0000 R CNN
+F 1 "Led_PWR_G" V 7955 10482 50  0000 R CNN
+F 2 "LEDs:LED_0603" V 8000 10550 50  0001 C CNN
+F 3 "" V 8000 10550 50  0000 C CNN
+	1    8000 10550
+	0    -1   -1   0   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:CONN_01X10 P4
+U 1 1 5888B198
+P 10900 6200
+F 0 "P4" H 10978 6241 50  0000 L CNN
+F 1 "GPIO" H 10978 6150 50  0001 L CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x10_Pitch2.54mm" H 10900 6200 50  0001 C CNN
+F 3 "" H 10900 6200 50  0000 C CNN
+	1    10900 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:CONN_01X08 P2
+U 1 1 5888B19A
+P 9100 6200
+F 0 "P2" H 9178 6241 50  0000 L CNN
+F 1 "GPIO" H 9178 6150 50  0001 L CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x08_Pitch2.54mm" H 9100 6200 50  0001 C CNN
+F 3 "" H 9100 6200 50  0000 C CNN
+	1    9100 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR035
+U 1 1 5888B19F
+P 8250 5800
+F 0 "#PWR035" H 8250 5650 50  0001 C CNN
+F 1 "+3.3V" H 8265 5973 50  0000 C CNN
+F 2 "" H 8250 5800 50  0000 C CNN
+F 3 "" H 8250 5800 50  0000 C CNN
+	1    8250 5800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR036
+U 1 1 5888B1A1
+P 8250 6550
+F 0 "#PWR036" H 8250 6300 50  0001 C CNN
+F 1 "GND" H 8255 6377 50  0000 C CNN
+F 2 "" H 8250 6550 50  0000 C CNN
+F 3 "" H 8250 6550 50  0000 C CNN
+	1    8250 6550
+	1    0    0    -1  
+$EndComp
+Text Notes 3150 4800 0    157  ~ 31
+USB INTERFACE\n
+Text Notes 8900 4750 0    157  ~ 31
+HEADER GPIO
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C6
+U 1 1 5888B1A3
+P 2350 10200
+F 0 "C6" H 2400 10300 50  0000 L CNN
+F 1 "10uF/50V" V 2500 9850 50  0000 L CNN
+F 2 "footprint:C_1210" H 2350 10200 50  0001 C CNN
+F 3 "" H 2350 10200 50  0000 C CNN
+	1    2350 10200
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C4
+U 1 1 5888B1A4
+P 2000 10200
+F 0 "C4" H 2050 10300 50  0000 L CNN
+F 1 "10uF/50V" V 2150 9850 50  0000 L CNN
+F 2 "footprint:C_1210" H 2092 10109 50  0001 L CNN
+F 3 "" H 2000 10200 50  0000 C CNN
+	1    2000 10200
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C8
+U 1 1 5888B1A5
+P 2700 10300
+F 0 "C8" H 2792 10346 50  0000 L CNN
+F 1 "1uF" H 2792 10255 50  0000 L CNN
+F 2 "footprint:C_0603" H 2700 10300 50  0001 C CNN
+F 3 "" H 2700 10300 50  0000 C CNN
+	1    2700 10300
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C13
+U 1 1 5888B1A6
+P 3950 9800
+F 0 "C13" H 4042 9846 50  0000 L CNN
+F 1 "100nF" H 4042 9755 50  0000 L CNN
+F 2 "footprint:C_0603" H 3950 9800 50  0001 C CNN
+F 3 "" H 3950 9800 50  0000 C CNN
+	1    3950 9800
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R5
+U 1 1 5888B1A8
+P 4600 10100
+F 0 "R5" H 4659 10146 50  0000 L CNN
+F 1 "52.5K" H 4659 10055 50  0000 L CNN
+F 2 "footprint:R_0603" H 4600 10100 50  0001 C CNN
+F 3 "" H 4600 10100 50  0000 C CNN
+	1    4600 10100
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R6
+U 1 1 5888B1A9
+P 4600 10450
+F 0 "R6" H 4659 10496 50  0000 L CNN
+F 1 "10k" H 4659 10405 50  0000 L CNN
+F 2 "footprint:R_0603" H 4600 10450 50  0001 C CNN
+F 3 "" H 4600 10450 50  0000 C CNN
+	1    4600 10450
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C14
+U 1 1 5888B1AA
+P 5000 10250
+F 0 "C14" V 4900 10150 50  0000 L CNN
+F 1 "10uF/25V" V 5100 10050 50  0000 L CNN
+F 2 "footprint:C_1210" H 5000 10250 50  0001 C CNN
+F 3 "" H 5000 10250 50  0000 C CNN
+	1    5000 10250
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C15
+U 1 1 5888B1AB
+P 5350 10250
+F 0 "C15" V 5250 10150 50  0000 L CNN
+F 1 "10uF/25V" V 5450 10050 50  0000 L CNN
+F 2 "footprint:C_1210" H 5350 10250 50  0001 C CNN
+F 3 "" H 5350 10250 50  0000 C CNN
+	1    5350 10250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR015
+U 1 1 5888B1AC
+P 3150 10650
+F 0 "#PWR015" H 3150 10400 50  0001 C CNN
+F 1 "GND" H 3155 10477 50  0000 C CNN
+F 2 "" H 3150 10650 50  0000 C CNN
+F 3 "" H 3150 10650 50  0000 C CNN
+	1    3150 10650
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR018
+U 1 1 5888B1AD
+P 5350 9900
+F 0 "#PWR018" H 5350 9750 50  0001 C CNN
+F 1 "+5V" H 5365 10073 50  0000 C CNN
+F 2 "" H 5350 9900 50  0000 C CNN
+F 3 "" H 5350 9900 50  0000 C CNN
+	1    5350 9900
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:BARREL_JACK CON1
+U 1 1 5888B1B7
+P 1000 10000
+F 0 "CON1" H 981 10325 50  0000 C CNN
+F 1 "BARREL_JACK" H 981 10234 50  0000 C CNN
+F 2 "Connectors:BARREL_JACK" H 1000 10000 50  0001 C CNN
+F 3 "" H 1000 10000 50  0000 C CNN
+	1    1000 10000
+	1    0    0    -1  
+$EndComp
+$Comp
+L MOSFET-P:MOSFET-P U7
+U 1 1 5888B1B8
+P 10850 10150
+F 0 "U7" H 10943 10120 30  0000 L CNN
+F 1 "IRLM6402" H 10943 10180 30  0000 L CNN
+F 2 "footprint:SOT-23_standar" H 10850 10100 60  0001 C CNN
+F 3 "" H 10850 10100 60  0000 C CNN
+	1    10850 10150
+	1    0    0    1   
+$EndComp
+Text GLabel 8850 6550 0    60   Input ~ 0
+Vin
+Text GLabel 2150 9700 1    60   Input ~ 0
+Vin
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R12
+U 1 1 5888B1B9
+P 8900 9900
+F 0 "R12" H 8841 9854 50  0000 R CNN
+F 1 "10k" H 8841 9945 50  0000 R CNN
+F 2 "footprint:R_0603" H 8900 9900 50  0001 C CNN
+F 3 "" H 8900 9900 50  0000 C CNN
+	1    8900 9900
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R13
+U 1 1 5888B1BA
+P 8900 10350
+F 0 "R13" H 8841 10304 50  0000 R CNN
+F 1 "10k" H 8841 10395 50  0000 R CNN
+F 2 "footprint:R_0603" H 8900 10350 50  0001 C CNN
+F 3 "" H 8900 10350 50  0000 C CNN
+	1    8900 10350
+	-1   0    0    1   
+$EndComp
+Text GLabel 8900 9750 1    60   Input ~ 0
+Vin
+$Comp
+L power:+3.3V #PWR026
+U 1 1 5888B1BB
+P 9200 10300
+F 0 "#PWR026" H 9200 10150 50  0001 C CNN
+F 1 "+3.3V" H 9215 10473 50  0000 C CNN
+F 2 "" H 9200 10300 50  0000 C CNN
+F 3 "" H 9200 10300 50  0000 C CNN
+	1    9200 10300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR032
+U 1 1 5888B1BC
+P 10650 10500
+F 0 "#PWR032" H 10650 10350 50  0001 C CNN
+F 1 "VCC" H 10667 10673 50  0000 C CNN
+F 2 "" H 10650 10500 50  0000 C CNN
+F 3 "" H 10650 10500 50  0000 C CNN
+	1    10650 10500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR033
+U 1 1 5888B1BD
+P 10850 9900
+F 0 "#PWR033" H 10850 9750 50  0001 C CNN
+F 1 "+5V" H 10865 10073 50  0000 C CNN
+F 2 "" H 10850 9900 50  0000 C CNN
+F 3 "" H 10850 9900 50  0000 C CNN
+	1    10850 9900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR028
+U 1 1 5888B1BE
+P 9700 9700
+F 0 "#PWR028" H 9700 9550 50  0001 C CNN
+F 1 "+5V" H 9715 9873 50  0000 C CNN
+F 2 "" H 9700 9700 50  0000 C CNN
+F 3 "" H 9700 9700 50  0000 C CNN
+	1    9700 9700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR029
+U 1 1 5888B1BF
+P 9700 10550
+F 0 "#PWR029" H 9700 10300 50  0001 C CNN
+F 1 "GND" H 9705 10377 50  0000 C CNN
+F 2 "" H 9700 10550 50  0000 C CNN
+F 3 "" H 9700 10550 50  0000 C CNN
+	1    9700 10550
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C18
+U 1 1 5888B1C0
+P 9900 9800
+F 0 "C18" V 10129 9800 50  0000 C CNN
+F 1 "100nF" V 10038 9800 50  0000 C CNN
+F 2 "footprint:C_0603" H 9900 9800 50  0001 C CNN
+F 3 "" H 9900 9800 50  0000 C CNN
+	1    9900 9800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR031
+U 1 1 5888B1C1
+P 10200 9850
+F 0 "#PWR031" H 10200 9600 50  0001 C CNN
+F 1 "GND" H 10205 9677 50  0000 C CNN
+F 2 "" H 10200 9850 50  0000 C CNN
+F 3 "" H 10200 9850 50  0000 C CNN
+	1    10200 9850
+	1    0    0    -1  
+$EndComp
+$Comp
+L dc-dc:MCP16311-MNY U3
+U 1 1 5888B1C3
+P 3250 10100
+F 0 "U3" H 3250 10667 50  0000 C CNN
+F 1 "MCP16311-MNY" H 3250 10576 50  0000 C CNN
+F 2 "Housings_SSOP:MSOP-8_3x3mm_Pitch0.65mm" H 3250 9600 50  0001 C CNN
+F 3 "" H 2950 10650 50  0000 C CNN
+	1    3250 10100
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:D_Schottky_Small D2
+U 1 1 5888B1C4
+P 1800 9800
+F 0 "D2" H 1800 9595 50  0000 C CNN
+F 1 "SS34" H 1800 9686 50  0000 C CNN
+F 2 "footprint:do214aa-g" V 1800 9800 50  0001 C CNN
+F 3 "" V 1800 9800 50  0000 C CNN
+	1    1800 9800
+	-1   0    0    1   
+$EndComp
+Text GLabel 5250 6800 0    60   Input ~ 0
+DTR
+Text GLabel 5250 7500 0    60   Input ~ 0
+RTS
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C5
+U 1 1 5888B1D4
+P 2100 5950
+F 0 "C5" H 2192 5996 50  0000 L CNN
+F 1 "10uF" H 2192 5905 50  0000 L CNN
+F 2 "footprint:C_0603" H 2100 5950 50  0001 C CNN
+F 3 "" H 2100 5950 50  0000 C CNN
+	1    2100 5950
+	1    0    0    -1  
+$EndComp
+Text Notes 5250 8800 0    157  ~ 31
+POWER
+Text GLabel 3650 2200 0    60   Input ~ 0
+EN
+Text GLabel 3650 2300 0    60   Input ~ 0
+ADC1_0/IO36
+Text GLabel 3650 2400 0    60   Input ~ 0
+ADC1_3/IO39
+Text GLabel 3650 2700 0    60   Input ~ 0
+IO32
+Text GLabel 3650 2800 0    60   Input ~ 0
+IO33
+Text GLabel 3650 2900 0    60   Input ~ 0
+IO25
+Text GLabel 3650 3000 0    60   Input ~ 0
+IO26
+Text GLabel 3650 3100 0    60   Input ~ 0
+IO27
+Text GLabel 3650 3300 0    60   Input ~ 0
+IO12
+Text GLabel 3650 3500 0    60   Input ~ 0
+IO13
+Text GLabel 6200 3300 2    60   Input ~ 0
+IO0
+NoConn ~ 6050 2600
+Text GLabel 6200 2900 2    60   Input ~ 0
+IO5
+Text GLabel 6200 2800 2    60   Input ~ 0
+IO18
+Text GLabel 6200 2700 2    60   Input ~ 0
+IO19
+Text GLabel 6200 2500 2    60   Input ~ 0
+IO21/SDA
+Text GLabel 6200 2400 2    60   Input ~ 0
+RXD
+Text GLabel 6200 2300 2    60   Input ~ 0
+TXD
+Text GLabel 6200 2200 2    60   Input ~ 0
+IO22/SCL
+Text GLabel 6200 2100 2    60   Input ~ 0
+IO23
+$Comp
+L power:+3.3V #PWR016
+U 1 1 58890989
+P 3650 1500
+F 0 "#PWR016" H 3650 1350 50  0001 C CNN
+F 1 "+3.3V" H 3665 1673 50  0000 C CNN
+F 2 "" H 3650 1500 50  0000 C CNN
+F 3 "" H 3650 1500 50  0000 C CNN
+	1    3650 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C9
+U 1 1 58890DBA
+P 2850 1700
+F 0 "C9" H 2942 1746 50  0000 L CNN
+F 1 "0.1uF" H 2942 1655 50  0000 L CNN
+F 2 "footprint:C_0603" H 2850 1700 50  0001 C CNN
+F 3 "" H 2850 1700 50  0000 C CNN
+	1    2850 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C10
+U 1 1 588911EE
+P 3250 1700
+F 0 "C10" H 3342 1746 50  0000 L CNN
+F 1 "10uF" H 3342 1655 50  0000 L CNN
+F 2 "footprint:C_0603" H 3250 1700 50  0001 C CNN
+F 3 "" H 3250 1700 50  0000 C CNN
+	1    3250 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR012
+U 1 1 588919AD
+P 2850 2100
+F 0 "#PWR012" H 2850 1850 50  0001 C CNN
+F 1 "GND" H 2855 1927 50  0000 C CNN
+F 2 "" H 2850 2100 50  0000 C CNN
+F 3 "" H 2850 2100 50  0000 C CNN
+	1    2850 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR011
+U 1 1 588921E0
+P 2800 3900
+F 0 "#PWR011" H 2800 3650 50  0001 C CNN
+F 1 "GND" H 2805 3727 50  0000 C CNN
+F 2 "" H 2800 3900 50  0000 C CNN
+F 3 "" H 2800 3900 50  0000 C CNN
+	1    2800 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR022
+U 1 1 58892990
+P 6800 2000
+F 0 "#PWR022" H 6800 1750 50  0001 C CNN
+F 1 "GND" H 6805 1827 50  0000 C CNN
+F 2 "" H 6800 2000 50  0000 C CNN
+F 3 "" H 6800 2000 50  0000 C CNN
+	1    6800 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R4
+U 1 1 588947C9
+P 1950 2100
+F 0 "R4" H 1891 2054 50  0000 R CNN
+F 1 "10k" H 1891 2145 50  0000 R CNN
+F 2 "footprint:R_0603" H 1950 2100 50  0001 C CNN
+F 3 "" H 1950 2100 50  0000 C CNN
+	1    1950 2100
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:+3.3V #PWR06
+U 1 1 58894C5F
+P 1950 1950
+F 0 "#PWR06" H 1950 1800 50  0001 C CNN
+F 1 "+3.3V" H 1965 2123 50  0000 C CNN
+F 2 "" H 1950 1950 50  0000 C CNN
+F 3 "" H 1950 1950 50  0000 C CNN
+	1    1950 1950
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C2
+U 1 1 58895036
+P 1950 2400
+F 0 "C2" H 2042 2446 50  0000 L CNN
+F 1 "0.1uF/50V" H 2042 2355 50  0000 L CNN
+F 2 "footprint:C_0603" H 1950 2400 50  0001 C CNN
+F 3 "" H 1950 2400 50  0000 C CNN
+	1    1950 2400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR07
+U 1 1 58895957
+P 1950 2600
+F 0 "#PWR07" H 1950 2350 50  0001 C CNN
+F 1 "GND" H 1955 2427 50  0000 C CNN
+F 2 "" H 1950 2600 50  0000 C CNN
+F 3 "" H 1950 2600 50  0000 C CNN
+	1    1950 2600
+	1    0    0    -1  
+$EndComp
+Text GLabel 2250 1900 1    60   Input ~ 0
+EN
+$Comp
+L power:+3.3V #PWR01
+U 1 1 5889653E
+P 1250 1150
+F 0 "#PWR01" H 1250 1000 50  0001 C CNN
+F 1 "+3.3V" H 1265 1323 50  0000 C CNN
+F 2 "" H 1250 1150 50  0000 C CNN
+F 3 "" H 1250 1150 50  0000 C CNN
+	1    1250 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R1
+U 1 1 58896606
+P 1250 1300
+F 0 "R1" H 1191 1254 50  0000 R CNN
+F 1 "10k/1%" H 1191 1345 50  0000 R CNN
+F 2 "footprint:R_0603" H 1250 1300 50  0001 C CNN
+F 3 "" H 1250 1300 50  0000 C CNN
+	1    1250 1300
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R3
+U 1 1 58896D55
+P 1950 1250
+F 0 "R3" H 1891 1204 50  0000 R CNN
+F 1 "10k/1%" H 1891 1295 50  0000 R CNN
+F 2 "footprint:R_0603" H 1950 1250 50  0001 C CNN
+F 3 "" H 1950 1250 50  0000 C CNN
+	1    1950 1250
+	-1   0    0    1   
+$EndComp
+Text GLabel 1450 1550 2    60   Input ~ 0
+IO0
+$Comp
+L esp32-iot-uno-hw-rescue:CONN_01X06 P1
+U 1 1 5888B1B0
+P 9100 5300
+F 0 "P1" H 9178 5341 50  0000 L CNN
+F 1 "ADC" H 9178 5250 50  0001 L CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x06_Pitch2.54mm" H 9100 5300 50  0001 C CNN
+F 3 "" H 9100 5300 50  0000 C CNN
+	1    9100 5300
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D6
+U 1 1 5891BDBC
+P 8500 2725
+F 0 "D6" H 8500 2612 50  0000 C CNN
+F 1 "D_Zener_3.3V" H 8500 2839 50  0001 C CNN
+F 2 "Diodes_SMD:D_SOD-323_HandSoldering" V 8500 2725 50  0001 C CNN
+F 3 "" V 8500 2725 50  0000 C CNN
+	1    8500 2725
+	0    1    1    0   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D7
+U 1 1 5891C0E0
+P 8500 3775
+F 0 "D7" H 8500 3662 50  0000 C CNN
+F 1 "D_Zener_3.3V" H 8500 3889 50  0001 C CNN
+F 2 "Diodes_SMD:D_SOD-323_HandSoldering" V 8500 3775 50  0001 C CNN
+F 3 "" V 8500 3775 50  0000 C CNN
+	1    8500 3775
+	0    1    1    0   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D8
+U 1 1 5891C1E6
+P 10400 1625
+F 0 "D8" H 10400 1512 50  0000 C CNN
+F 1 "D_Zener_3.3V" V 10445 1693 50  0001 L CNN
+F 2 "Diodes_SMD:D_SOD-323_HandSoldering" V 10400 1625 50  0001 C CNN
+F 3 "" V 10400 1625 50  0000 C CNN
+	1    10400 1625
+	0    1    1    0   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D9
+U 1 1 5891C516
+P 10400 2725
+F 0 "D9" H 10400 2612 50  0000 C CNN
+F 1 "D_Zener_3.3V" V 10445 2793 50  0001 L CNN
+F 2 "Diodes_SMD:D_SOD-323_HandSoldering" V 10400 2725 50  0001 C CNN
+F 3 "" V 10400 2725 50  0000 C CNN
+	1    10400 2725
+	0    1    1    0   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D10
+U 1 1 5891C51C
+P 10400 3825
+F 0 "D10" H 10400 3712 50  0000 C CNN
+F 1 "D_Zener_3.3V" V 10445 3893 50  0001 L CNN
+F 2 "Diodes_SMD:D_SOD-323_HandSoldering" V 10400 3825 50  0001 C CNN
+F 3 "" V 10400 3825 50  0000 C CNN
+	1    10400 3825
+	0    1    1    0   
+$EndComp
+Text GLabel 10250 3350 0    60   Input ~ 0
+A0/IO36
+Text GLabel 10225 2300 0    60   Input ~ 0
+A1/IO39
+Text GLabel 10225 1150 0    60   Input ~ 0
+A2/IO14
+Text GLabel 8225 2300 0    60   Input ~ 0
+A4/IO13
+Text GLabel 8225 3350 0    60   Input ~ 0
+A3/IO12
+Text GLabel 10650 5950 0    60   Input ~ 0
+IO5
+Text GLabel 10650 6050 0    60   Input ~ 0
+IO23
+Text GLabel 10650 6150 0    60   Input ~ 0
+IO19
+Text GLabel 10650 6250 0    60   Input ~ 0
+IO18
+Text GLabel 10650 5250 0    60   Input ~ 0
+IO0
+Text GLabel 6050 5850 2    60   Input ~ 0
+TXD
+Text GLabel 5450 5850 0    60   Input ~ 0
+RXD
+Text GLabel 8850 6050 0    60   Input ~ 0
+EN
+Text GLabel 1100 6750 0    60   Input ~ 0
+D-
+Text GLabel 1100 6650 0    60   Input ~ 0
+D+
+NoConn ~ 1200 6850
+NoConn ~ 3900 7350
+NoConn ~ 3900 7250
+NoConn ~ 2100 8050
+NoConn ~ 2200 8050
+NoConn ~ 2300 8050
+NoConn ~ 2400 8050
+NoConn ~ 2500 8050
+NoConn ~ 2600 8050
+NoConn ~ 2700 8050
+NoConn ~ 2800 8050
+NoConn ~ 2900 8050
+NoConn ~ 3000 8050
+NoConn ~ 3100 8050
+$Comp
+L power:GND #PWR09
+U 1 1 5893DE8E
+P 2000 8150
+F 0 "#PWR09" H 2000 7900 50  0001 C CNN
+F 1 "GND" H 2005 7977 50  0000 C CNN
+F 2 "" H 2000 8150 50  0000 C CNN
+F 3 "" H 2000 8150 50  0000 C CNN
+	1    2000 8150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR014
+U 1 1 5893E394
+P 3100 6050
+F 0 "#PWR014" H 3100 5900 50  0001 C CNN
+F 1 "+3.3V" H 3115 6223 50  0000 C CNN
+F 2 "" H 3100 6050 50  0000 C CNN
+F 3 "" H 3100 6050 50  0000 C CNN
+	1    3100 6050
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C11
+U 1 1 5893E7CD
+P 3250 6200
+F 0 "C11" H 3342 6246 50  0000 L CNN
+F 1 "1uF" H 3342 6155 50  0000 L CNN
+F 2 "footprint:C_0603" H 3250 6200 50  0001 C CNN
+F 3 "" H 3250 6200 50  0000 C CNN
+	1    3250 6200
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C7
+U 1 1 5893FF7C
+P 2500 5950
+F 0 "C7" H 2592 5996 50  0000 L CNN
+F 1 "1uF" H 2592 5905 50  0000 L CNN
+F 2 "footprint:C_0603" H 2500 5950 50  0001 C CNN
+F 3 "" H 2500 5950 50  0000 C CNN
+	1    2500 5950
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR010
+U 1 1 589432A8
+P 2300 6150
+F 0 "#PWR010" H 2300 5900 50  0001 C CNN
+F 1 "GND" H 2305 5977 50  0000 C CNN
+F 2 "" H 2300 6150 50  0000 C CNN
+F 3 "" H 2300 6150 50  0000 C CNN
+	1    2300 6150
+	1    0    0    -1  
+$EndComp
+Text GLabel 4000 7050 2    60   Input ~ 0
+RTS
+Text GLabel 4000 6950 2    60   Input ~ 0
+RXD_CP2102
+Text GLabel 5450 5350 0    60   Input ~ 0
+TXD_CP2102
+Text GLabel 6050 5350 2    60   Input ~ 0
+RXD_CP2102
+Text GLabel 10650 5150 0    60   Input ~ 0
+ADC2_0/IO4
+Text GLabel 6200 3400 2    60   Input ~ 0
+IO2/DATA0
+Text GLabel 3650 3200 0    60   Input ~ 0
+IO14/CLK
+Text GLabel 6200 3500 2    60   Input ~ 0
+IO15/CMD
+$Comp
+L esp32-iot-uno-hw-rescue:Crystal_Small Y1
+U 1 1 5897D588
+P 1650 3650
+F 0 "Y1" H 1650 3875 50  0000 C CNN
+F 1 "32.768KHz" H 1650 3784 50  0000 C CNN
+F 2 "Crystals:Crystal_SMD_MicroCrystal_MS3V-T1R" H 1650 3650 50  0001 C CNN
+F 3 "" H 1650 3650 50  0000 C CNN
+	1    1650 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C1
+U 1 1 5897DEA2
+P 1350 3850
+F 0 "C1" H 1442 3896 50  0000 L CNN
+F 1 "27pF/50V" H 1442 3805 50  0000 L CNN
+F 2 "footprint:C_0603" H 1350 3850 50  0001 C CNN
+F 3 "" H 1350 3850 50  0000 C CNN
+	1    1350 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C3
+U 1 1 5897DFB3
+P 1950 3850
+F 0 "C3" H 2042 3896 50  0000 L CNN
+F 1 "27pF/50V" H 2042 3805 50  0000 L CNN
+F 2 "footprint:C_0603" H 1950 3850 50  0001 C CNN
+F 3 "" H 1950 3850 50  0000 C CNN
+	1    1950 3850
+	1    0    0    -1  
+$EndComp
+Text GLabel 1350 3300 1    60   Input ~ 0
+IO32
+Text GLabel 1950 3300 1    60   Input ~ 0
+IO33
+$Comp
+L power:GND #PWR08
+U 1 1 5897E347
+P 1950 4050
+F 0 "#PWR08" H 1950 3800 50  0001 C CNN
+F 1 "GND" H 1955 3877 50  0000 C CNN
+F 2 "" H 1950 4050 50  0000 C CNN
+F 3 "" H 1950 4050 50  0000 C CNN
+	1    1950 4050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR04
+U 1 1 5897E43C
+P 1350 4050
+F 0 "#PWR04" H 1350 3800 50  0001 C CNN
+F 1 "GND" H 1355 3877 50  0000 C CNN
+F 2 "" H 1350 4050 50  0000 C CNN
+F 3 "" H 1350 4050 50  0000 C CNN
+	1    1350 4050
+	1    0    0    -1  
+$EndComp
+Text GLabel 3650 2500 0    60   Input ~ 0
+IO34
+Text GLabel 3650 2600 0    60   Input ~ 0
+IO35
+Text GLabel 10650 6550 0    60   Input ~ 0
+IO34
+Text GLabel 10650 6650 0    60   Input ~ 0
+IO35
+Text GLabel 10650 5050 0    60   Input ~ 0
+IO25
+Text GLabel 10650 4950 0    60   Input ~ 0
+IO26
+Text GLabel 10650 4850 0    60   Input ~ 0
+IO27
+Text GLabel 10650 5350 0    60   Input ~ 0
+IO2/DATA0
+Text GLabel 10925 3675 2    60   Input ~ 0
+ADC1_0/IO36
+$Comp
+L esp32-iot-uno-hw-rescue:D_Zener_Small_ALT D5
+U 1 1 58941BAA
+P 8500 1600
+F 0 "D5" H 8500 1487 50  0000 C CNN
+F 1 "D_Zener_3.3V" V 8545 1668 50  0001 L CNN
+F 2 "Diodes_SMD:D_SOD-323_HandSoldering" V 8500 1600 50  0001 C CNN
+F 3 "" V 8500 1600 50  0000 C CNN
+	1    8500 1600
+	0    1    1    0   
+$EndComp
+Text GLabel 8200 1150 0    60   Input ~ 0
+A5/IO15
+Text GLabel 10850 2575 2    60   Input ~ 0
+ADC1_3/IO39
+Text GLabel 10850 1400 2    60   Input ~ 0
+IO14/CLK
+Text GLabel 9000 3650 2    60   Input ~ 0
+IO12
+Text GLabel 9000 2575 2    60   Input ~ 0
+IO13
+Text GLabel 9000 1425 2    60   Input ~ 0
+IO15/CMD
+Text GLabel 8850 5050 0    60   Input ~ 0
+A0/IO36
+Text GLabel 8850 5150 0    60   Input ~ 0
+A1/IO39
+Text GLabel 8850 5250 0    60   Input ~ 0
+A2/IO14
+Text GLabel 8850 5350 0    60   Input ~ 0
+A3/IO12
+Text GLabel 8850 5450 0    60   Input ~ 0
+A4/IO13
+Text GLabel 8850 5550 0    60   Input ~ 0
+A5/IO15
+Text Notes 9000 875  0    157  ~ 31
+ADC IN
+Text Notes 4000 900  0    157  ~ 31
+ESP32
+$Comp
+L esp32-iot-uno-hw-rescue:CONN_01X08 P3
+U 1 1 58931D3C
+P 10900 5200
+F 0 "P3" H 10978 5241 50  0000 L CNN
+F 1 "GPIO" H 10978 5150 50  0001 L CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x08_Pitch2.54mm" H 10900 5200 50  0001 C CNN
+F 3 "" H 10900 5200 50  0000 C CNN
+	1    10900 5200
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:L_Small L1
+U 1 1 589407AF
+P 4400 9950
+F 0 "L1" V 4585 9950 50  0000 C CNN
+F 1 "22uH" V 4494 9950 50  0000 C CNN
+F 2 "Choke_SMD:Choke_SMD_Wuerth-WE-PD2-Typ-MS" V 4494 9950 50  0001 C CNN
+F 3 "" H 4400 9950 50  0000 C CNN
+	1    4400 9950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:MCP601OT U6
+U 1 1 58940FEB
+P 9800 10150
+F 0 "U6" H 10141 10196 50  0000 L CNN
+F 1 "MCP601OT" H 10141 10105 50  0000 L CNN
+F 2 "TO_SOT_Packages_SMD:SOT-23-5" H 10500 9900 50  0001 C CNN
+F 3 "" H 9850 10350 50  0000 C CNN
+	1    9800 10150
+	1    0    0    -1  
+$EndComp
+Text GLabel 6200 3200 2    60   Input ~ 0
+ADC2_0/IO4
+$Comp
+L power:+5V #PWR034
+U 1 1 58A04410
+P 8000 5800
+F 0 "#PWR034" H 8000 5650 50  0001 C CNN
+F 1 "+5V" H 8015 5973 50  0000 C CNN
+F 2 "" H 8000 5800 50  0000 C CNN
+F 3 "" H 8000 5800 50  0000 C CNN
+	1    8000 5800
+	1    0    0    -1  
+$EndComp
+Text GLabel 10650 5750 0    60   Input ~ 0
+IO22/SCL
+Text GLabel 10650 5850 0    60   Input ~ 0
+IO21/SDA
+$Comp
+L esp32-iot-uno-hw-rescue:Q_NPN_BEC Q1
+U 1 1 58B0633E
+P 6050 6800
+F 0 "Q1" H 6241 6846 50  0000 L CNN
+F 1 "S8050_NPN_BEC" H 6241 6755 50  0000 L CNN
+F 2 "footprint:SOT-23_standar" H -450 -450 50  0001 C CNN
+F 3 "" H -650 -550 50  0001 C CNN
+	1    6050 6800
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:Q_NPN_BEC Q2
+U 1 1 58B064E4
+P 6050 7500
+F 0 "Q2" H 6241 7454 50  0000 L CNN
+F 1 "S8050_NPN_BEC" H 6241 7545 50  0000 L CNN
+F 2 "footprint:SOT-23_standar" H -450 250 50  0001 C CNN
+F 3 "" H -650 150 50  0001 C CNN
+	1    6050 7500
+	1    0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R8
+U 1 1 58B06F82
+P 5650 6800
+F 0 "R8" H 5591 6754 50  0000 R CNN
+F 1 "10K" H 5591 6845 50  0000 R CNN
+F 2 "footprint:R_0603" H 5650 6800 50  0001 C CNN
+F 3 "" H 5650 6800 50  0000 C CNN
+	1    5650 6800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R9
+U 1 1 58B07182
+P 5650 7500
+F 0 "R9" H 5591 7454 50  0000 R CNN
+F 1 "10K" H 5591 7545 50  0000 R CNN
+F 2 "footprint:R_0603" H 5650 7500 50  0001 C CNN
+F 3 "" H 5650 7500 50  0000 C CNN
+	1    5650 7500
+	0    -1   -1   0   
+$EndComp
+Text GLabel 1950 1050 1    60   Input ~ 0
+IO2/DATA0
+Entry Wire Line
+	19800 -1000 19900 -900
+Text GLabel 6200 3000 2    60   Input ~ 0
+IO17/U2TXD
+Text GLabel 6200 3100 2    60   Input ~ 0
+IO16/U2RXD
+NoConn ~ 8900 5950
+NoConn ~ 8900 5850
+Text GLabel 10650 5550 0    60   Input ~ 0
+IO16/U2RXD
+Text GLabel 10650 5450 0    60   Input ~ 0
+IO17/U2TXD
+Text GLabel 10650 6350 0    60   Input ~ 0
+IO17/U2TXD
+Text GLabel 10650 6450 0    60   Input ~ 0
+IO16/U2RXD
+Text GLabel 1100 2700 0    60   Input ~ 0
+IO23
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R14
+U 1 1 58DA9A02
+P 8500 1300
+F 0 "R14" H 8441 1254 50  0000 R CNN
+F 1 "33R/1%" H 8441 1345 50  0000 R CNN
+F 2 "footprint:R_0603" H 8500 1300 50  0001 C CNN
+F 3 "" H 8500 1300 50  0000 C CNN
+	1    8500 1300
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR037
+U 1 1 58DAA5D4
+P 8500 1900
+F 0 "#PWR037" H 8500 1650 50  0001 C CNN
+F 1 "GND" H 8505 1727 50  0000 C CNN
+F 2 "" H 8500 1900 50  0000 C CNN
+F 3 "" H 8500 1900 50  0000 C CNN
+	1    8500 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R20
+U 1 1 58DAAFCB
+P 8850 1625
+F 0 "R20" H 8791 1579 50  0000 R CNN
+F 1 "NC/1%" H 8791 1670 50  0000 R CNN
+F 2 "footprint:R_0603" H 8850 1625 50  0001 C CNN
+F 3 "" H 8850 1625 50  0000 C CNN
+	1    8850 1625
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R15
+U 1 1 58DAC611
+P 8500 2425
+F 0 "R15" H 8441 2379 50  0000 R CNN
+F 1 "33R/1%" H 8441 2470 50  0000 R CNN
+F 2 "footprint:R_0603" H 8500 2425 50  0001 C CNN
+F 3 "" H 8500 2425 50  0000 C CNN
+	1    8500 2425
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR038
+U 1 1 58DAC95D
+P 8500 3050
+F 0 "#PWR038" H 8500 2800 50  0001 C CNN
+F 1 "GND" H 8505 2877 50  0000 C CNN
+F 2 "" H 8500 3050 50  0000 C CNN
+F 3 "" H 8500 3050 50  0000 C CNN
+	1    8500 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R16
+U 1 1 58DACE70
+P 8500 3500
+F 0 "R16" H 8441 3454 50  0000 R CNN
+F 1 "33R/1%" H 8441 3545 50  0000 R CNN
+F 2 "footprint:R_0603" H 8500 3500 50  0001 C CNN
+F 3 "" H 8500 3500 50  0000 C CNN
+	1    8500 3500
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR039
+U 1 1 58DADAC6
+P 8500 4075
+F 0 "#PWR039" H 8500 3825 50  0001 C CNN
+F 1 "GND" H 8505 3902 50  0000 C CNN
+F 2 "" H 8500 4075 50  0000 C CNN
+F 3 "" H 8500 4075 50  0000 C CNN
+	1    8500 4075
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R18
+U 1 1 58DADD7B
+P 8775 2775
+F 0 "R18" H 8716 2729 50  0000 R CNN
+F 1 "NC/1%" H 8716 2820 50  0000 R CNN
+F 2 "footprint:R_0603" H 8775 2775 50  0001 C CNN
+F 3 "" H 8775 2775 50  0000 C CNN
+	1    8775 2775
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R19
+U 1 1 58DADEB3
+P 8800 3850
+F 0 "R19" H 8741 3804 50  0000 R CNN
+F 1 "NC/1%" H 8741 3895 50  0000 R CNN
+F 2 "footprint:R_0603" H 8800 3850 50  0001 C CNN
+F 3 "" H 8800 3850 50  0000 C CNN
+	1    8800 3850
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR041
+U 1 1 58DB0402
+P 10400 1900
+F 0 "#PWR041" H 10400 1650 50  0001 C CNN
+F 1 "GND" H 10405 1727 50  0000 C CNN
+F 2 "" H 10400 1900 50  0000 C CNN
+F 3 "" H 10400 1900 50  0000 C CNN
+	1    10400 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR042
+U 1 1 58DB0B22
+P 10400 3000
+F 0 "#PWR042" H 10400 2750 50  0001 C CNN
+F 1 "GND" H 10405 2827 50  0000 C CNN
+F 2 "" H 10400 3000 50  0000 C CNN
+F 3 "" H 10400 3000 50  0000 C CNN
+	1    10400 3000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR043
+U 1 1 58DB114B
+P 10400 4100
+F 0 "#PWR043" H 10400 3850 50  0001 C CNN
+F 1 "GND" H 10405 3927 50  0000 C CNN
+F 2 "" H 10400 4100 50  0000 C CNN
+F 3 "" H 10400 4100 50  0000 C CNN
+	1    10400 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R27
+U 1 1 58DB13D8
+P 10650 3850
+F 0 "R27" H 10591 3804 50  0000 R CNN
+F 1 "NC/1%" H 10591 3895 50  0000 R CNN
+F 2 "footprint:R_0603" H 10650 3850 50  0001 C CNN
+F 3 "" H 10650 3850 50  0000 C CNN
+	1    10650 3850
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R26
+U 1 1 58DB1525
+P 10650 2750
+F 0 "R26" H 10591 2704 50  0000 R CNN
+F 1 "NC/1%" H 10591 2795 50  0000 R CNN
+F 2 "footprint:R_0603" H 10650 2750 50  0001 C CNN
+F 3 "" H 10650 2750 50  0000 C CNN
+	1    10650 2750
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R24
+U 1 1 58DB1795
+P 10600 1625
+F 0 "R24" H 10541 1579 50  0000 R CNN
+F 1 "NC/1%" H 10541 1670 50  0000 R CNN
+F 2 "footprint:R_0603" H 10600 1625 50  0001 C CNN
+F 3 "" H 10600 1625 50  0000 C CNN
+	1    10600 1625
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R21
+U 1 1 58DB4B4B
+P 10400 1275
+F 0 "R21" H 10341 1229 50  0000 R CNN
+F 1 "33R/1%" H 10341 1320 50  0000 R CNN
+F 2 "footprint:R_0603" H 10400 1275 50  0001 C CNN
+F 3 "" H 10400 1275 50  0000 C CNN
+	1    10400 1275
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R22
+U 1 1 58DB5224
+P 10400 2425
+F 0 "R22" H 10341 2379 50  0000 R CNN
+F 1 "33R/1%" H 10341 2470 50  0000 R CNN
+F 2 "footprint:R_0603" H 10400 2425 50  0001 C CNN
+F 3 "" H 10400 2425 50  0000 C CNN
+	1    10400 2425
+	-1   0    0    1   
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R23
+U 1 1 58DB58F4
+P 10400 3525
+F 0 "R23" H 10341 3479 50  0000 R CNN
+F 1 "33R/1%" H 10341 3570 50  0000 R CNN
+F 2 "footprint:R_0603" H 10400 3525 50  0001 C CNN
+F 3 "" H 10400 3525 50  0000 C CNN
+	1    10400 3525
+	-1   0    0    1   
+$EndComp
+Text GLabel 2000 1525 2    60   Input ~ 0
+IO0
+$Comp
+L power:+5VD #PWR019
+U 1 1 58DC2C75
+P 6150 9900
+F 0 "#PWR019" H 6150 9750 50  0001 C CNN
+F 1 "+5VD" H 6165 10073 50  0000 C CNN
+F 2 "" H 6150 9900 50  0001 C CNN
+F 3 "" H 6150 9900 50  0001 C CNN
+	1    6150 9900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8900 5050 8850 5050
+Wire Wire Line
+	8900 5450 8850 5450
+Wire Wire Line
+	8250 6450 8750 6450
+Wire Wire Line
+	8850 6050 8900 6050
+Wire Wire Line
+	10700 5550 10650 5550
+Wire Wire Line
+	10700 5450 10650 5450
+Wire Wire Line
+	10700 5350 10650 5350
+Wire Wire Line
+	10700 5250 10650 5250
+Wire Wire Line
+	10700 5150 10650 5150
+Wire Wire Line
+	10700 5050 10650 5050
+Wire Wire Line
+	10700 4950 10650 4950
+Wire Wire Line
+	10700 4850 10650 4850
+Wire Wire Line
+	10700 6650 10650 6650
+Wire Wire Line
+	10700 6550 10650 6550
+Wire Wire Line
+	10700 6450 10650 6450
+Wire Wire Line
+	10700 6350 10650 6350
+Wire Wire Line
+	10700 6250 10650 6250
+Wire Wire Line
+	10700 6150 10650 6150
+Wire Wire Line
+	10650 5850 10700 5850
+Wire Wire Line
+	10650 5750 10700 5750
+Wire Wire Line
+	8000 10250 8000 10450
+Connection ~ 1250 5550
+Wire Wire Line
+	700  5000 700  5550
+Wire Wire Line
+	700  5550 1250 5550
+Wire Wire Line
+	1750 5550 1750 5350
+Wire Wire Line
+	6150 7700 6150 7750
+Wire Wire Line
+	5250 6800 5400 6800
+Wire Wire Line
+	5250 7500 5400 7500
+Wire Wire Line
+	1750 4950 1850 4950
+Wire Wire Line
+	1850 4950 1850 4850
+Wire Wire Line
+	1800 5150 1750 5150
+Wire Wire Line
+	1800 5050 1750 5050
+Wire Wire Line
+	5550 5700 5550 5850
+Wire Wire Line
+	5950 5700 5950 5850
+Wire Wire Line
+	9600 8850 9750 8850
+Wire Wire Line
+	1250 2250 1250 2400
+Wire Wire Line
+	1250 1900 1250 2050
+Wire Wire Line
+	1900 9800 2000 9800
+Wire Wire Line
+	2000 9800 2000 10100
+Wire Wire Line
+	2350 10100 2350 9800
+Connection ~ 2350 9800
+Wire Wire Line
+	2850 9900 2700 9900
+Wire Wire Line
+	2700 9900 2700 9800
+Connection ~ 2700 9800
+Wire Wire Line
+	2850 10100 2700 10100
+Wire Wire Line
+	2700 10100 2700 10200
+Wire Wire Line
+	3150 10500 3150 10600
+Wire Wire Line
+	3250 10600 3250 10500
+Wire Wire Line
+	1550 10600 2000 10600
+Connection ~ 3150 10600
+Wire Wire Line
+	2700 10600 2700 10400
+Wire Wire Line
+	2350 10300 2350 10600
+Connection ~ 2700 10600
+Wire Wire Line
+	2000 10300 2000 10600
+Connection ~ 2350 10600
+Wire Wire Line
+	3700 9800 3650 9800
+Wire Wire Line
+	3700 9700 3700 9800
+Wire Wire Line
+	3700 9700 3950 9700
+Wire Wire Line
+	3650 9900 3700 9900
+Wire Wire Line
+	3700 9900 3700 9950
+Wire Wire Line
+	3700 9950 3950 9950
+Wire Wire Line
+	3950 9950 3950 9900
+Connection ~ 3950 9950
+Wire Wire Line
+	4500 9950 4600 9950
+Wire Wire Line
+	4600 9950 4600 10000
+Wire Wire Line
+	4600 10200 4600 10250
+Wire Wire Line
+	3650 10100 3700 10100
+Wire Wire Line
+	3700 10100 3700 10250
+Wire Wire Line
+	3700 10250 4600 10250
+Connection ~ 4600 10250
+Wire Wire Line
+	4600 10600 4600 10550
+Connection ~ 3250 10600
+Wire Wire Line
+	5350 9900 5350 9950
+Connection ~ 4600 9950
+Wire Wire Line
+	5000 10150 5000 9950
+Connection ~ 5000 9950
+Wire Wire Line
+	5000 10600 5000 10350
+Connection ~ 4600 10600
+Wire Wire Line
+	5350 10600 5350 10350
+Connection ~ 5000 10600
+Connection ~ 5350 9950
+Connection ~ 2000 9800
+Wire Wire Line
+	1300 10100 1450 10100
+Connection ~ 2000 10600
+Wire Wire Line
+	8000 9850 8000 9950
+Wire Wire Line
+	8850 5350 8900 5350
+Connection ~ 8000 9950
+Wire Wire Line
+	8000 10800 8000 10650
+Wire Wire Line
+	1300 9800 1700 9800
+Wire Wire Line
+	1300 9800 1300 9900
+Wire Wire Line
+	1550 10100 1550 10600
+Wire Wire Line
+	1300 10000 1450 10000
+Wire Wire Line
+	1450 10000 1450 10100
+Connection ~ 1450 10100
+Wire Wire Line
+	8850 6550 8900 6550
+Wire Wire Line
+	2150 9700 2150 9800
+Connection ~ 2150 9800
+Wire Wire Line
+	8900 10000 8900 10050
+Wire Wire Line
+	9500 10050 8900 10050
+Connection ~ 8900 10050
+Wire Wire Line
+	8900 9750 8900 9800
+Wire Wire Line
+	10100 10150 10650 10150
+Wire Wire Line
+	10850 10350 10850 10500
+Wire Wire Line
+	10850 10500 10650 10500
+Wire Wire Line
+	9700 9700 9700 9800
+Wire Wire Line
+	8900 10450 8900 10500
+Wire Wire Line
+	8900 10500 9700 10500
+Wire Wire Line
+	9700 10450 9700 10500
+Connection ~ 9700 10500
+Wire Wire Line
+	9500 10250 9500 10350
+Wire Wire Line
+	9500 10350 9200 10350
+Wire Wire Line
+	9200 10350 9200 10300
+Connection ~ 9700 9800
+Wire Wire Line
+	10200 9800 10200 9850
+Wire Wire Line
+	9700 9800 9800 9800
+Wire Wire Line
+	10000 9800 10200 9800
+Wire Wire Line
+	3350 10500 3350 10600
+Connection ~ 3350 10600
+Wire Wire Line
+	3650 1500 3650 1550
+Wire Wire Line
+	2850 1550 3250 1550
+Wire Wire Line
+	3250 1550 3250 1600
+Connection ~ 3650 1550
+Wire Wire Line
+	2850 1550 2850 1600
+Connection ~ 3250 1550
+Wire Wire Line
+	2850 1800 2850 2000
+Wire Wire Line
+	3250 1800 3250 2000
+Connection ~ 2850 2000
+Connection ~ 3250 2000
+Wire Wire Line
+	2800 3400 2800 3900
+Wire Wire Line
+	1950 2200 1950 2250
+Wire Wire Line
+	1950 2500 1950 2600
+Connection ~ 1950 2250
+Wire Wire Line
+	2250 1900 2250 2250
+Wire Wire Line
+	2250 2250 1950 2250
+Wire Wire Line
+	1250 1150 1250 1200
+Wire Wire Line
+	1950 1350 1950 1525
+Wire Wire Line
+	1250 1400 1250 1550
+Wire Wire Line
+	1250 1550 1450 1550
+Wire Wire Line
+	1950 1050 1950 1150
+Wire Wire Line
+	6250 6550 6150 6550
+Wire Wire Line
+	6150 6550 6150 6600
+Wire Wire Line
+	6150 7250 6150 7300
+Wire Wire Line
+	6150 7000 6150 7050
+Wire Wire Line
+	3650 2100 3850 2100
+Wire Wire Line
+	2850 2000 3250 2000
+Wire Wire Line
+	2800 3400 3850 3400
+Wire Wire Line
+	3850 2200 3650 2200
+Wire Wire Line
+	3850 2300 3650 2300
+Wire Wire Line
+	3850 2400 3650 2400
+Wire Wire Line
+	3850 2600 3650 2600
+Wire Wire Line
+	3850 2500 3650 2500
+Wire Wire Line
+	3650 2700 3850 2700
+Wire Wire Line
+	3850 2800 3650 2800
+Wire Wire Line
+	3650 2900 3850 2900
+Wire Wire Line
+	3850 3000 3650 3000
+Wire Wire Line
+	3650 3100 3850 3100
+Wire Wire Line
+	3650 3200 3850 3200
+Wire Wire Line
+	3850 3300 3650 3300
+Wire Wire Line
+	3650 3500 3850 3500
+Wire Wire Line
+	6050 2100 6200 2100
+Wire Wire Line
+	6050 2200 6200 2200
+Wire Wire Line
+	6050 2300 6200 2300
+Wire Wire Line
+	6050 2400 6200 2400
+Wire Wire Line
+	6050 2500 6200 2500
+Wire Wire Line
+	6050 2700 6200 2700
+Wire Wire Line
+	6050 2800 6200 2800
+Wire Wire Line
+	6050 2900 6200 2900
+Wire Wire Line
+	6050 3200 6200 3200
+Wire Wire Line
+	6050 3300 6200 3300
+Wire Wire Line
+	6050 3400 6200 3400
+Wire Wire Line
+	6050 3500 6200 3500
+Wire Wire Line
+	8900 5150 8850 5150
+Wire Wire Line
+	8900 5250 8850 5250
+Wire Wire Line
+	8250 5800 8250 6150
+Wire Wire Line
+	8250 6150 8900 6150
+Wire Wire Line
+	10700 5950 10650 5950
+Wire Wire Line
+	10700 6050 10650 6050
+Wire Wire Line
+	1250 2600 1250 2700
+Wire Wire Line
+	1250 2700 1100 2700
+Wire Wire Line
+	1100 6650 1200 6650
+Wire Wire Line
+	1100 6750 1200 6750
+Wire Wire Line
+	2000 8050 2000 8150
+Wire Wire Line
+	3250 6050 3250 6100
+Wire Wire Line
+	3000 6050 3100 6050
+Wire Wire Line
+	3250 6300 3250 6350
+Wire Wire Line
+	3100 6150 3100 6050
+Connection ~ 3100 6050
+Wire Wire Line
+	2500 5850 2500 5800
+Wire Wire Line
+	2100 5800 2500 5800
+Wire Wire Line
+	2100 5850 2100 5800
+Connection ~ 2500 5800
+Wire Wire Line
+	2500 6100 2500 6050
+Wire Wire Line
+	2100 6100 2300 6100
+Wire Wire Line
+	2300 6100 2300 6150
+Wire Wire Line
+	2100 6050 2100 6100
+Connection ~ 2300 6100
+Wire Wire Line
+	4000 6650 3900 6650
+Wire Wire Line
+	4000 6850 3900 6850
+Wire Wire Line
+	4000 6950 3900 6950
+Wire Wire Line
+	4000 7050 3900 7050
+Wire Wire Line
+	5550 5850 5450 5850
+Wire Wire Line
+	6150 7750 6200 7750
+Wire Wire Line
+	6150 7250 5400 6950
+Wire Wire Line
+	5400 6950 5400 6800
+Connection ~ 5400 6800
+Wire Wire Line
+	6150 7050 5400 7350
+Wire Wire Line
+	5400 7350 5400 7500
+Connection ~ 5400 7500
+Wire Wire Line
+	6050 5350 5950 5350
+Wire Wire Line
+	5450 5350 5550 5350
+Wire Wire Line
+	5950 5850 6050 5850
+Wire Wire Line
+	1950 3300 1950 3650
+Wire Wire Line
+	1350 3300 1350 3650
+Wire Wire Line
+	1550 3650 1350 3650
+Connection ~ 1350 3650
+Wire Wire Line
+	1950 3650 1750 3650
+Connection ~ 1950 3650
+Wire Wire Line
+	1950 3950 1950 4050
+Wire Wire Line
+	1350 3950 1350 4050
+Wire Wire Line
+	8500 2525 8500 2575
+Wire Wire Line
+	8500 2825 8500 2950
+Wire Wire Line
+	8500 3600 8500 3650
+Wire Wire Line
+	8500 3875 8500 3975
+Wire Wire Line
+	10400 1725 10400 1825
+Wire Wire Line
+	10400 2525 10400 2575
+Wire Wire Line
+	10400 2825 10400 2900
+Wire Wire Line
+	10400 3925 10400 4025
+Wire Wire Line
+	10400 3625 10400 3675
+Wire Wire Line
+	8250 6450 8250 6550
+Wire Wire Line
+	8900 6350 8750 6350
+Wire Wire Line
+	8750 6350 8750 6450
+Connection ~ 8750 6450
+Wire Wire Line
+	8900 5550 8850 5550
+Wire Wire Line
+	8500 1400 8500 1425
+Wire Wire Line
+	8500 1700 8500 1825
+Wire Bus Line
+	500  4500 16050 4500
+Wire Bus Line
+	11800 450  11800 9950
+Wire Wire Line
+	8000 5800 8000 6250
+Wire Wire Line
+	8000 6250 8900 6250
+Wire Wire Line
+	5750 6800 5850 6800
+Wire Wire Line
+	5750 7500 5850 7500
+Wire Wire Line
+	6200 3000 6050 3000
+Wire Wire Line
+	6050 3100 6200 3100
+Wire Wire Line
+	8500 1200 8500 1150
+Wire Wire Line
+	8500 1150 8200 1150
+Wire Wire Line
+	8500 1425 8850 1425
+Wire Wire Line
+	8850 1425 8850 1525
+Connection ~ 8500 1425
+Wire Wire Line
+	8850 1725 8850 1825
+Wire Wire Line
+	8850 1825 8500 1825
+Connection ~ 8500 1825
+Connection ~ 8850 1425
+Wire Wire Line
+	8500 3400 8500 3350
+Wire Wire Line
+	8500 3350 8225 3350
+Wire Wire Line
+	8500 2325 8500 2300
+Wire Wire Line
+	8500 2300 8225 2300
+Wire Wire Line
+	8800 3950 8800 3975
+Wire Wire Line
+	8800 3975 8500 3975
+Connection ~ 8500 3975
+Wire Wire Line
+	8775 2875 8775 2950
+Wire Wire Line
+	8775 2950 8500 2950
+Connection ~ 8500 2950
+Wire Wire Line
+	8500 2575 8775 2575
+Wire Wire Line
+	8775 2575 8775 2675
+Connection ~ 8500 2575
+Wire Wire Line
+	8500 3650 8800 3650
+Wire Wire Line
+	8800 3650 8800 3750
+Connection ~ 8500 3650
+Connection ~ 8775 2575
+Connection ~ 8800 3650
+Wire Wire Line
+	10400 1375 10400 1400
+Wire Wire Line
+	10600 1525 10600 1400
+Wire Wire Line
+	10400 1400 10600 1400
+Connection ~ 10400 1400
+Connection ~ 10600 1400
+Wire Wire Line
+	10600 1725 10600 1825
+Wire Wire Line
+	10600 1825 10400 1825
+Connection ~ 10400 1825
+Wire Wire Line
+	10650 2850 10650 2900
+Wire Wire Line
+	10650 2900 10400 2900
+Connection ~ 10400 2900
+Wire Wire Line
+	10650 2650 10650 2575
+Wire Wire Line
+	10400 2575 10650 2575
+Connection ~ 10400 2575
+Connection ~ 10650 2575
+Wire Wire Line
+	10400 3675 10650 3675
+Wire Wire Line
+	10650 3675 10650 3750
+Connection ~ 10400 3675
+Wire Wire Line
+	10400 4025 10650 4025
+Wire Wire Line
+	10650 4025 10650 3950
+Connection ~ 10400 4025
+Connection ~ 10650 3675
+Wire Wire Line
+	10225 1150 10400 1150
+Wire Wire Line
+	10400 1150 10400 1175
+Wire Wire Line
+	10225 2300 10400 2300
+Wire Wire Line
+	10400 2300 10400 2325
+Wire Wire Line
+	10250 3350 10400 3350
+Wire Wire Line
+	10400 3350 10400 3425
+Wire Wire Line
+	1950 1525 2000 1525
+Wire Wire Line
+	5950 5350 5950 5500
+Wire Wire Line
+	5550 5350 5550 5500
+$Comp
+L tc1264:TC1264 U5
+U 1 1 58DDDE50
+P 7000 10050
+F 0 "U5" H 7000 10300 60  0000 C CNN
+F 1 "TC1264-3.3VDBTR" H 7000 9800 60  0000 C CNN
+F 2 "TO_SOT_Packages_SMD:SOT-223-3Lead_TabPin2" H 7000 10050 60  0001 C CNN
+F 3 "" H 7000 10050 60  0001 C CNN
+	1    7000 10050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6150 9950 6600 9950
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C16
+U 1 1 58DDEF06
+P 6150 10150
+F 0 "C16" H 6300 10250 50  0000 C CNN
+F 1 "1uF" H 6300 10150 50  0000 C CNN
+F 2 "footprint:C_0603" H 6150 10150 50  0001 C CNN
+F 3 "" H 6150 10150 50  0000 C CNN
+	1    6150 10150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR020
+U 1 1 58DDF6F5
+P 6150 10450
+F 0 "#PWR020" H 6150 10200 50  0001 C CNN
+F 1 "GND" H 6155 10277 50  0000 C CNN
+F 2 "" H 6150 10450 50  0000 C CNN
+F 3 "" H 6150 10450 50  0000 C CNN
+	1    6150 10450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR021
+U 1 1 58DDF91C
+P 6500 10450
+F 0 "#PWR021" H 6500 10200 50  0001 C CNN
+F 1 "GND" H 6505 10277 50  0000 C CNN
+F 2 "" H 6500 10450 50  0000 C CNN
+F 3 "" H 6500 10450 50  0000 C CNN
+	1    6500 10450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6600 10150 6500 10150
+Wire Wire Line
+	6500 10150 6500 10450
+Wire Wire Line
+	6150 10450 6150 10250
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C17
+U 1 1 58DE0B9A
+P 7550 10100
+F 0 "C17" H 7700 10200 50  0000 C CNN
+F 1 "1uF" H 7700 10100 50  0000 C CNN
+F 2 "footprint:C_0603" H 7550 10100 50  0001 C CNN
+F 3 "" H 7550 10100 50  0000 C CNN
+	1    7550 10100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR023
+U 1 1 58DE0D50
+P 7550 10450
+F 0 "#PWR023" H 7550 10200 50  0001 C CNN
+F 1 "GND" H 7555 10277 50  0000 C CNN
+F 2 "" H 7550 10450 50  0000 C CNN
+F 3 "" H 7550 10450 50  0000 C CNN
+	1    7550 10450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7550 10200 7550 10450
+Wire Wire Line
+	7400 9950 7550 9950
+Wire Wire Line
+	7550 9950 7550 10000
+Connection ~ 7550 9950
+$Comp
+L power:GND #PWR025
+U 1 1 58DE161F
+P 8000 10800
+F 0 "#PWR025" H 8000 10550 50  0001 C CNN
+F 1 "GND" H 8005 10627 50  0000 C CNN
+F 2 "" H 8000 10800 50  0000 C CNN
+F 3 "" H 8000 10800 50  0000 C CNN
+	1    8000 10800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1250 5550 1750 5550
+Wire Wire Line
+	2350 9800 2700 9800
+Wire Wire Line
+	2700 9800 2850 9800
+Wire Wire Line
+	3150 10600 3150 10650
+Wire Wire Line
+	3150 10600 3250 10600
+Wire Wire Line
+	2700 10600 3150 10600
+Wire Wire Line
+	2350 10600 2700 10600
+Wire Wire Line
+	3950 9950 4300 9950
+Wire Wire Line
+	4600 10250 4600 10350
+Wire Wire Line
+	3250 10600 3350 10600
+Wire Wire Line
+	4600 9950 5000 9950
+Wire Wire Line
+	5000 9950 5350 9950
+Wire Wire Line
+	4600 10600 5000 10600
+Wire Wire Line
+	5000 10600 5350 10600
+Wire Wire Line
+	5350 9950 5350 10150
+Wire Wire Line
+	2000 9800 2150 9800
+Wire Wire Line
+	2000 10600 2350 10600
+Wire Wire Line
+	8000 9950 8000 10050
+Wire Wire Line
+	1450 10100 1550 10100
+Wire Wire Line
+	2150 9800 2350 9800
+Wire Wire Line
+	8900 10050 8900 10250
+Wire Wire Line
+	9700 10500 9700 10550
+Wire Wire Line
+	9700 9800 9700 9850
+Wire Wire Line
+	3350 10600 4600 10600
+Wire Wire Line
+	3650 1550 3650 2100
+Wire Wire Line
+	3250 1550 3650 1550
+Wire Wire Line
+	2850 2000 2850 2100
+Wire Wire Line
+	3250 2000 3850 2000
+Wire Wire Line
+	1950 2250 1950 2300
+Wire Wire Line
+	3000 6050 3000 6150
+Wire Wire Line
+	3100 6050 3250 6050
+Wire Wire Line
+	2500 5800 2900 5800
+Wire Wire Line
+	2300 6100 2500 6100
+Wire Wire Line
+	5400 6800 5550 6800
+Wire Wire Line
+	5400 7500 5550 7500
+Wire Wire Line
+	1350 3650 1350 3750
+Wire Wire Line
+	1950 3650 1950 3750
+Wire Wire Line
+	8750 6450 8900 6450
+Wire Wire Line
+	8500 1425 8500 1500
+Wire Wire Line
+	8500 1825 8500 1900
+Wire Wire Line
+	8850 1425 9000 1425
+Wire Wire Line
+	8500 3975 8500 4075
+Wire Wire Line
+	8500 2950 8500 3050
+Wire Wire Line
+	8500 2575 8500 2625
+Wire Wire Line
+	8500 3650 8500 3675
+Wire Wire Line
+	8775 2575 9000 2575
+Wire Wire Line
+	8800 3650 9000 3650
+Wire Wire Line
+	10400 1400 10400 1525
+Wire Wire Line
+	10600 1400 10850 1400
+Wire Wire Line
+	10400 1825 10400 1900
+Wire Wire Line
+	10400 2900 10400 3000
+Wire Wire Line
+	10400 2575 10400 2625
+Wire Wire Line
+	10650 2575 10850 2575
+Wire Wire Line
+	10400 3675 10400 3725
+Wire Wire Line
+	10400 4025 10400 4100
+Wire Wire Line
+	10650 3675 10925 3675
+Wire Wire Line
+	6150 9950 6150 10050
+Wire Wire Line
+	7550 9950 8000 9950
+Wire Wire Line
+	750  5000 700  5000
+NoConn ~ 750  5300
+NoConn ~ 750  5200
+NoConn ~ 750  5100
+$Comp
+L usb_mini_b:usb_mini_b U1
+U 1 1 5888B18B
+P 1300 5400
+F 0 "U1" H 1250 6097 60  0000 C CNN
+F 1 "usb_mini_b" H 1250 5991 60  0000 C CNN
+F 2 "Connectors:USB_Micro-B" H 300 5850 60  0001 C CNN
+F 3 "" H 300 5850 60  0000 C CNN
+	1    1300 5400
+	1    0    0    -1  
+$EndComp
+Connection ~ 3250 6050
+Wire Wire Line
+	3250 6050 3550 6050
+$Comp
+L power:GND #PWR040
+U 1 1 6087A264
+P 8575 8100
+F 0 "#PWR040" H 8575 7850 50  0001 C CNN
+F 1 "GND" H 8580 7927 50  0000 C CNN
+F 2 "" H 8575 8100 50  0000 C CNN
+F 3 "" H 8575 8100 50  0000 C CNN
+	1    8575 8100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR044
+U 1 1 6087A26A
+P 10500 8100
+F 0 "#PWR044" H 10500 7850 50  0001 C CNN
+F 1 "GND" H 10505 7927 50  0000 C CNN
+F 2 "" H 10500 8100 50  0000 C CNN
+F 3 "" H 10500 8100 50  0000 C CNN
+	1    10500 8100
+	1    0    0    -1  
+$EndComp
+Text Notes 9250 7100 0    157  ~ 31
+BUTTON
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R25
+U 1 1 6087A271
+P 10500 7400
+F 0 "R25" H 10559 7446 50  0000 L CNN
+F 1 "470R" H 10559 7355 50  0000 L CNN
+F 2 "footprint:R_0603" H 10500 7400 50  0001 C CNN
+F 3 "" H 10500 7400 50  0000 C CNN
+	1    10500 7400
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C19
+U 1 1 6087A277
+P 10650 7750
+F 0 "C19" H 10742 7796 50  0000 L CNN
+F 1 "0.1uF/50V" H 10742 7705 50  0000 L CNN
+F 2 "footprint:C_0603" H 10650 7750 50  0001 C CNN
+F 3 "" H 10650 7750 50  0000 C CNN
+	1    10650 7750
+	1    0    0    -1  
+$EndComp
+$Comp
+L esp32-iot-uno-hw-rescue:R_Small R17
+U 1 1 6087A27D
+P 8575 7400
+F 0 "R17" H 8634 7446 50  0000 L CNN
+F 1 "470R" H 8634 7355 50  0000 L CNN
+F 2 "footprint:R_0603" H 8575 7400 50  0001 C CNN
+F 3 "" H 8575 7400 50  0000 C CNN
+	1    8575 7400
+	1    0    0    -1  
+$EndComp
+Text GLabel 8725 7200 2    60   Input ~ 0
+EN
+$Comp
+L w_device:SW_PUSH SW1
+U 1 1 6087A284
+P 8575 7750
+F 0 "SW1" V 8529 7857 50  0000 L CNN
+F 1 "SW_EN" V 8620 7857 50  0000 L CNN
+F 2 "footprint:Tact_Switch_TS6X3.6" H 8575 7750 60  0001 C CNN
+F 3 "" H 8575 7750 60  0000 C CNN
+	1    8575 7750
+	0    1    1    0   
+$EndComp
+$Comp
+L w_device:SW_PUSH SW2
+U 1 1 6087A28A
+P 10500 7750
+F 0 "SW2" V 10550 8050 50  0000 R CNN
+F 1 "SW_IO18" V 10450 8200 50  0000 R CNN
+F 2 "footprint:Tact_Switch_TS6X3.6" H 10500 7750 60  0001 C CNN
+F 3 "" H 10500 7750 60  0000 C CNN
+	1    10500 7750
+	0    -1   -1   0   
+$EndComp
+Text GLabel 10600 7200 2    60   Input ~ 0
+IO18
+Wire Wire Line
+	10500 7900 10500 7950
+Wire Wire Line
+	8575 7900 8575 8100
+Wire Wire Line
+	10600 7200 10500 7200
+Wire Wire Line
+	10500 7200 10500 7300
+Wire Wire Line
+	10500 7500 10500 7550
+Wire Wire Line
+	8575 7500 8575 7600
+Wire Wire Line
+	10650 7650 10650 7550
+Wire Wire Line
+	10650 7550 10500 7550
+Connection ~ 10500 7550
+Wire Wire Line
+	10650 7850 10650 7950
+Wire Wire Line
+	10650 7950 10500 7950
+Connection ~ 10500 7950
+Wire Wire Line
+	8575 7200 8725 7200
+Wire Wire Line
+	8575 7200 8575 7300
+Wire Wire Line
+	10500 7550 10500 7600
+Wire Wire Line
+	10500 7950 10500 8100
+Text GLabel 4000 6850 2    60   Input ~ 0
+TXD_CP2102
+Text GLabel 4000 6650 2    60   Input ~ 0
+DTR
+NoConn ~ 3900 6750
+NoConn ~ 3900 7450
+NoConn ~ 3900 7550
+NoConn ~ 3850 3600
+NoConn ~ 3850 3700
+$Comp
+L esp32-wrover-v3:ESP32-WROVER-V3 U4
+U 1 1 5888BC25
+P 4950 2400
+F 0 "U4" H 4950 3787 60  0000 C CNN
+F 1 "ESP32" H 4950 3681 60  0000 C CNN
+F 2 "footprint:ESP-WROOM-32" H 5300 3750 60  0001 C CNN
+F 3 "" H 4500 2850 60  0001 C CNN
+	1    4950 2400
+	1    0    0    -1  
+$EndComp
+NoConn ~ 3850 3800
+NoConn ~ 6050 3600
+NoConn ~ 6050 3700
+NoConn ~ 6050 3800
+$Comp
+L power:+3.3V #PWR02
+U 1 1 5888B181
+P 1250 1900
+F 0 "#PWR02" H 1250 1750 50  0001 C CNN
+F 1 "+3.3V" H 1265 2073 50  0000 C CNN
+F 2 "" H 1250 1900 50  0000 C CNN
+F 3 "" H 1250 1900 50  0000 C CNN
+	1    1250 1900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1950 2000 1950 1950
+$Comp
+L power:VCC #PWR013
+U 1 1 58941969
+P 3000 5900
+F 0 "#PWR013" H 3000 5750 50  0001 C CNN
+F 1 "VCC" H 3017 6073 50  0000 C CNN
+F 2 "" H 3000 5900 50  0000 C CNN
+F 3 "" H 3000 5900 50  0000 C CNN
+	1    3000 5900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3000 5900 3000 6050
+Connection ~ 3000 6050
+Wire Wire Line
+	2900 5800 2900 6150
+Wire Wire Line
+	3550 6350 3900 6350
+Wire Wire Line
+	3900 6350 3900 6400
+$Comp
+L CP2102:CP2102 U2
+U 1 1 5893B91A
+P 2550 7100
+F 0 "U2" H 2550 7200 50  0000 C CNN
+F 1 "CP2109" H 2550 7100 50  0000 C CNN
+F 2 "Housings_DFN_QFN:QFN-28-1EP_5x5mm_Pitch0.5mm" H 2550 7100 60  0001 C CNN
+F 3 "" H 2550 7100 60  0001 C CNN
+	1    2550 7100
+	1    0    0    -1  
+$EndComp
+Connection ~ 3550 6350
+$Comp
+L esp32-iot-uno-hw-rescue:C_Small C12
+U 1 1 5893EAD9
+P 3550 6200
+F 0 "C12" H 3642 6246 50  0000 L CNN
+F 1 "10uF" H 3642 6155 50  0000 L CNN
+F 2 "footprint:C_0603" H 3550 6200 50  0001 C CNN
+F 3 "" H 3550 6200 50  0000 C CNN
+	1    3550 6200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 6050 3550 6100
+Wire Wire Line
+	3550 6300 3550 6350
+Wire Wire Line
+	3250 6350 3550 6350
+$Comp
+L power:GND #PWR017
+U 1 1 5893F336
+P 4450 6200
+F 0 "#PWR017" H 4450 5950 50  0001 C CNN
+F 1 "GND" H 4455 6027 50  0000 C CNN
+F 2 "" H 4450 6200 50  0000 C CNN
+F 3 "" H 4450 6200 50  0000 C CNN
+	1    4450 6200
+	1    0    0    -1  
+$EndComp
+NoConn ~ 3900 7150
+Wire Wire Line
+	4300 6200 4450 6200
+Wire Wire Line
+	4300 6400 4300 6200
+Wire Wire Line
+	3900 6400 4300 6400
+Wire Wire Line
+	9950 8850 10100 8850
+Wire Wire Line
+	10850 9950 10850 9900
+Wire Wire Line
+	6150 9900 6150 9950
+Connection ~ 6150 9950
+Wire Wire Line
+	6800 2000 6050 2000
+Wire Bus Line
+	425  8400 16100 8400
+Wire Bus Line
+	7450 6850 11750 6850
+Wire Bus Line
+	7400 450  7400 8400
+$EndSCHEMATC
