@@ -1,9 +1,0 @@
-Manufacturer=Infineon
-PartNumber=IRLM6402
-PartCategory=MOSFET (P-Channel)
-PackageCategory=SOT23 (3-Pin)
-PinCount=3
-Version=1.1
-Released=2020-02-24 13:16:00
-Downloaded=2021-04-12 21:12:39
-3D=Y
