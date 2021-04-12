@@ -1,0 +1,72 @@
+(Japanese_coding: sjis)
+(function "ECS_11447642"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2020-02-24-13:16:00)
+    (utime 2020-11-30-23:40:41)
+    (interface
+        (port "1" (symbPinId 1) (portType INOUT))
+        (port "2" (symbPinId 3) (portType INOUT))
+        (port "3" (symbPinId 2) (portType INOUT))
+    )
+    (property "symbolName" "IRLM6402")
+)
+
+
+(pinAssign "ECS_11447642"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2020-02-24-13:16:00)
+    (utime 2020-11-30-23:40:41)
+    (interface
+        (port "1" (symbPinId 1) (portName "G") (portType INOUT))
+        (port "2" (symbPinId 3) (portName "S") (portType INOUT))
+        (port "3" (symbPinId 2) (portName "D") (portType INOUT))
+    )
+    (internal
+        (funcInst (functionRef "ECS_11447642")
+                (port "1" (match "1"))
+                (port "2" (match "2"))
+                (port "3" (match "3"))
+        )
+    )
+    (property "usePowerBox" "No")
+    (property "symbolName" "IRLM6402")
+)
+
+
+(part "IRLM6402"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2020-02-24-13:16:00)
+    (utime 2020-11-30-23:40:41)
+    (packageRef "IRLM6402")
+    (pinAssignRef "ECS_11447642")
+    (interface
+        (port "1" (symbPinId 1) (portName "G") (portType INOUT))
+        (port "2" (symbPinId 3) (portName "S") (portType INOUT))
+        (port "3" (symbPinId 2) (portName "D") (portType INOUT))
+    )
+    (partClass UNDEF)
+    (useInSchema Y)
+    (useInLayout Y)
+    (inPartsList Y)
+    (partType NORMAL)
+    (placeRestriction FREE)
+    (property "enetNonSeries" "YES")
+    (property "refDesPrefix" "Q")
+    (property "description" "HEXFET Power MOSFET")
+    (property "Manufacturer_Name" "Infineon")
+    (property "Manufacturer_Part_Number" "IRLM6402")
+    (property "Mouser_Part_Number" "")
+    (property "Mouser_Price/Stock" "")
+    (property "Arrow_Part_Number" "")
+    (property "Arrow_Price/Stock" "")
+    (property "Datasheet_Link" "https://www.kynix.com/Detail/613549/IRLM6402.html")
+    (property "compAreaTopHeight" 1.12)
+)
+
+

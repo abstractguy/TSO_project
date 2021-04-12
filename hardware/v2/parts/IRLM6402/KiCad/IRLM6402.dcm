@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP IRLM6402
+D HEXFET Power MOSFET
+K
+F https://www.kynix.com/Detail/613549/IRLM6402.html
+$ENDCMP
+#
+#End Doc Library
