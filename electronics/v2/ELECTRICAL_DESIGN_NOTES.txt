@@ -1,6 +1,5 @@
-- 3.3V zener for ADC inputs (or 2 diodes per I/O, don't forget capacitor)
-- Check voltages everywhere (header connector pins are wrong)
-- Plug (choose) ESP-WROOM32 PWM/ADC I/O pins (3.3V <-> 5V transistors, check rise/fall times)
-- Check regulator output current (ensure there is enough and if not, reuse older schematics)
-- Do this quick!!
+- 3.3V zener for ADC inputs
+- Check voltages everywhere
+- Plug (choose) ESP-WROOM32 PWM/ADC I/O pins
+- Check servo electrical specs again
 
