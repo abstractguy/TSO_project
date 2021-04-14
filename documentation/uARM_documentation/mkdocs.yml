@@ -1,0 +1,8 @@
+site_name: uArm Docs
+pages:
+    - Home: index.md
+    - Getting Started: getting_started.md
+    - uArm CommandLine Tools: cli.md
+theme: readthedocs
+markdown_extensions:
+    - markdown_include.include
