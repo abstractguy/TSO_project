@@ -1,0 +1,6 @@
+- PWM 3.3V -> 5V transistors
+- 3.3V zener for ADC inputs (or 2 I/O diodes, don't forget capacitor)
+- SD card connector and chip, compatible ESP-WROOM32
+- Check voltages everywhere (header connector pins are wrong)
+- Plug I/O pins
+
