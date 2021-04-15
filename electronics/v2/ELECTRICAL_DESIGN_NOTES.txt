@@ -1,5 +1,4 @@
 - 3.3V zener for ADC inputs
 - Check voltages everywhere
-- Plug (choose) ESP-WROOM32 PWM/ADC I/O pins
 - Check servo electrical specs again
 
