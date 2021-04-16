@@ -1,4 +1,0 @@
-- 3.3V zener for ADC inputs
-- Check voltages everywhere
-- Check servo electrical specs again
-
