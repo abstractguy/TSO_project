@@ -88,14 +88,6 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[GeneratedDocument1]
-DocumentPath=Project Outputs for uARM\uARM.NET
-DItemRevisionGUID=
-
-[GeneratedDocument2]
-DocumentPath=Project Outputs for uARM\uARM_BOM.csv
-DItemRevisionGUID=
-
 [Configuration1]
 Name=Sources
 ParameterCount=0
