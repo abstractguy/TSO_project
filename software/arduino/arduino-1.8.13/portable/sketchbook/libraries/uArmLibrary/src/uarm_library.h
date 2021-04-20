@@ -191,6 +191,13 @@ public:
         boolean set_servo_status(boolean attach_state, byte servo_num);
         void init();
 
+        boolean g_gripper_reset;
+        Servo g_servo_rot;
+        Servo g_servo_left;
+        Servo g_servo_right;
+        Servo g_servo_hand_rot;
+        Servo g_servo_hand;
+
 protected:
         double cur_rot;
         double cur_left;
@@ -201,13 +208,6 @@ protected:
         double g_current_x;
         double g_current_y;
         double g_current_z;
-
-        boolean g_gripper_reset;
-        Servo g_servo_rot;
-        Servo g_servo_left;
-        Servo g_servo_right;
-        Servo g_servo_hand_rot;
-        Servo g_servo_hand;
 private:
 
 };
