@@ -1,0 +1,55 @@
+{
+  "files" : [ {
+    "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.gz",
+    "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino/arduino-1.8.13/portable/cache/downloads.arduino.cc/libraries/library_index.json.gz",
+    "eTag" : "72c1efd201909e50d01c3278c7a64b4b",
+    "md5" : "MD5:72c1efd201909e50d01c3278c7a64b4b",
+    "createdAt" : "2021-04-20T13:23:22.108",
+    "cacheControl" : {
+      "maxAge" : 14400,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2021-04-20T17:23:22.108"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json.sig",
+    "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino/arduino-1.8.13/portable/cache/downloads.arduino.cc/packages/package_index.json.sig",
+    "eTag" : "753e04e61fa9f3db34345aac161e1035",
+    "md5" : "MD5:753e04e61fa9f3db34345aac161e1035",
+    "createdAt" : "2021-04-20T13:23:20.963",
+    "cacheControl" : {
+      "maxAge" : 3600,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2021-04-20T14:23:20.963"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.sig",
+    "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino/arduino-1.8.13/portable/cache/downloads.arduino.cc/libraries/library_index.json.sig",
+    "eTag" : "397c125a448f25fb2c2938533b19656a",
+    "md5" : "MD5:397c125a448f25fb2c2938533b19656a",
+    "createdAt" : "2021-04-20T13:23:22.352",
+    "cacheControl" : {
+      "maxAge" : 14400,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2021-04-20T17:23:22.352"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json",
+    "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino/arduino-1.8.13/portable/cache/downloads.arduino.cc/packages/package_index.json",
+    "eTag" : "e960bbd3da844c94b50b1363fe954821",
+    "md5" : "MD5:e960bbd3da844c94b50b1363fe954821",
+    "createdAt" : "2021-04-20T13:23:20.631",
+    "cacheControl" : {
+      "maxAge" : 3600,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2021-04-20T14:23:20.631"
+  } ]
+}
