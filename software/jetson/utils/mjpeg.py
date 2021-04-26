@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-# File:      yolo_inference/utils/mjpeg.py
+# File:      software/jetson/utils/mjpeg.py
 # By:        Samuel Duclos
 # For:       Myself
 # Reference: https://github.com/jkjung-avt/tensorrt_demos.git

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-# File:        python/utils/uarm.py
+# File:        software/jetson/utils/uarm.py
 # By:          Samuel Duclos
 # For:         My team.
 # Description: uARM control in Python for TSO_team.
@@ -52,9 +53,9 @@ class UARM:
         time.sleep(self.pump_delay)
         self.set_servo_detach()
 
-    def grab(self, grab_position=None, sensor=None, sensor_threshold=0.5):
+    def grab(self, grab_position=None):
         self.set_position(position=grab_position)
-        if self.sensor.detect_object(sensor_threshold=sensor_threshold):
+        if True:
             self.set_pump(on=True)
             return True
         else:
@@ -64,8 +65,8 @@ class UARM:
         self.set_position(position=drop_position)
         self.set_pump(on=False)
 
-    def scan(self, position=None, sensor=None, sensor_threshold=0.5):
-        return uarm.grab(grab_position=position, sensor=sensor, sensor_threshold=sensor_threshold)
+    def scan(self, position=None):
+        return self.grab(grab_position=position)
 
     def reset(self):
         self.set_pump(on=False)
@@ -81,8 +82,8 @@ class UARM:
         signal.signal(signal.SIGHUP, self.reset) # Handles disconnected TTY for clean up.
         signal.signal(signal.SIGTERM, self.reset) # Handles clean exits for clean up.
 
-    def set_weight_to_somewhere(self, grab_position=None, drop_position=None, sensor=None, sensor_threshold=0.5):
-        self.scan(position=grab_position, sensor=sensor, sensor_threshold=sensor_threshold)
+    def set_weight_to_somewhere(self, grab_position=None, drop_position=None):
+        self.scan(position=grab_position)
         self.drop(drop_position=drop_position)
         self.reset()
 

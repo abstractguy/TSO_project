@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-# File:      yolo_inference/utils/camera.py
+# File:      software/jetson/utils/camera.py
 # By:        Samuel Duclos
 # For:       Myself
 # Reference: https://github.com/jkjung-avt/tensorrt_demos.git

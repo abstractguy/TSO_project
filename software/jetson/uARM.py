@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-# File:        python/uARM.py
+# File:        software/jetson/uARM.py
 # By:          Samuel Duclos
 # For:         Myself
 # Description: uARM control in Python for TSO_team.
-# For help:    python3 python/uARM_payload.py --help # <-- Use --help for help using this file like this. <--
+# For help:    cd software/jetson && python3 uARM.py --help # <-- Use --help for help using this file like this. <--
 
-from utils.payload import add_payload_args
+from utils.uarm_payload import add_payload_args
 
 import argparse, subprocess, sys, time
 
@@ -19,11 +20,41 @@ def parse_args():
     print(vars(args))
     return args
 
+def run(*popenargs, **kwargs):
+    """Emulate Python 3 subprocess.run()."""
+    input = kwargs.pop("input", None)
+    check = kwargs.pop("handle", False)
+
+    if input is not None:
+        if 'stdin' in kwargs:
+            raise ValueError('stdin and input arguments may not both be used.')
+
+        kwargs['stdin'] = subprocess.PIPE
+
+    process = subprocess.Popen(*popenargs, **kwargs)
+
+    try:
+        stdout, stderr = process.communicate(input)
+
+    except:
+        process.kill()
+        process.wait()
+        raise
+
+    retcode = process.poll()
+
+    if check and retcode:
+        raise subprocess.CalledProcessError(
+            retcode, process.args, output=stdout, stderr=stderr)
+
+    return retcode, stdout, stderr
+
 def run_process(args):
-    python_payload = b'uARM_payload.py'
-    result = subprocess.run([sys.executable], capture_output=True, text=True, timeout=None, input=python_payload)
+    """Run process payload in the background."""
+    python_payload = 'uarm_payload.py'
+    result, stdout, stderr = run(['/opt/conda/envs/school/bin/python3', python_payload])
     time.sleep(3)
-    return result
+    return result, stdout, stderr
 
 def main():
     """Main function."""
@@ -33,8 +64,6 @@ def main():
         result = run_process(args)
 
         while True:
-            print('stdout:', result.stdout)
-            print('stderr:', result.stderr)
             time.sleep(5)
 
     except Exception as e:

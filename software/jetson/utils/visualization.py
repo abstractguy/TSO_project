@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-# File:  yolo_inference/utils/visualization.py
+# File:  software/jetson/utils/visualization.py
 # By:    Samuel Duclos
 # For:   Myself
-
-from __future__ import print_function
 
 import colorsys, cv2, math, numpy as np, random
 

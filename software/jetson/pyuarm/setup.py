@@ -4,21 +4,21 @@ from setuptools import setup, find_packages
 
 # Get Version from version.py file
 main_ns = {}
-ver_path = convert_path('pyuarm/version.py')
+ver_path = convert_path('pyuarm/pyuarm/version.py')
 with open(ver_path) as ver_file:
         exec(ver_file.read(), main_ns)
 version = main_ns['__version__']
 
 # Get README.rst for description
-long_description = open('README.rst').read()
+long_description = open('pyuarm/README.rst').read()
 
 # Read requirements.txt as install_requires
-with open('requirements.txt') as f:
+with open('pyuarm/requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(name='pyuarm',
     version=version,
-    author='Alex Tan',
+    author='Alex Tan & Samuel Duclos',
     packages=find_packages(),
     entry_points={
             'scripts': [

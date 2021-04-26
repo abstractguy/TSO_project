@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 # File:        software/simple_opencv_detection.py
 # By:          Samuel Duclos

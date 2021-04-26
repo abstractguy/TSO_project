@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-# File:      yolo_inference/utils/overclock_settings.py
+# File:      software/jetson/utils/overclock_settings.py
 # By:        Samuel Duclos
 # For:       Myself
 # Reference: https://github.com/NVIDIA-AI-IOT/jetson_benchmarks.git

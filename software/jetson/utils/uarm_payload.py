@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-# File:          python/utils/payload.py
+# File:          software/jetson/utils/uarm_payload.py
 # By:            Samuel Duclos
-# For:           My team.
+# For:           Myself
 # Description:   Do what the setup is made for...
 
 from utils import uarm
+import signal
 
 def add_payload_args(parser):
     parser.add_argument('--first-x-position', metavar='<first-x-position>', type=float, required=False, default=21.6, help='First position on X axis.')
@@ -18,7 +20,7 @@ def add_payload_args(parser):
     parser.add_argument('--third-y-position', metavar='<third-y-position>', type=float, required=False, default=18.76, help='Third absolute position to Y axis.')
     parser.add_argument('--third-z-position', metavar='<third-z-position>', type=float, required=False, default=178.67, help='Third absolute position to Z axis.')
     parser.add_argument('--speed', metavar='<speed>', type=int, required=False, default=150, help='Speed of uARM displacements.')
-    parser.add_argument('--uarm-tty-port', metavar='<uarm-tty-port>', type=str, required=False, default='/dev/ttyUSB1', help='uARM UART TTY port.')
+    parser.add_argument('--uarm-tty-port', metavar='<uarm-tty-port>', type=str, required=False, default='/dev/ttyUSB0', help='uARM UART TTY port.')
     parser.add_argument('--uart-delay', metavar='<uart-delay>', type=float, required=False, default=2.0, help='Delay after configuring uARM\'s UART port.')
     parser.add_argument('--grab-delay', metavar='<grab-delay>', type=float, required=False, default=5.0, help='Delay after uARM grabs object.')
     parser.add_argument('--drop-delay', metavar='<drop-delay>', type=float, required=False, default=5.0, help='Delay after uARM drops object.')
@@ -81,25 +83,10 @@ class Payload:
                               servo_detach_delay=self.servo_detach_delay, 
                               pump_delay=self.pump_delay)
 
-        self.handle_exit_signals()
-        self.uarm.reset()
-
     def uarm_payload(self, grab_position=None, drop_position=None):
-        self.uarm.set_weight_to_somewhere(grab_position=grab_position, drop_position=drop_position, sensor=self.sensor, sensor_threshold=self.sensor_threshold)
+        self.uarm.set_weight_to_somewhere(grab_position=grab_position, drop_position=drop_position)
 
     def payload(self):
         self.uarm_payload(grab_position=self.vehicle_position, drop_position=self.balance_position)
         self.uarm_payload(grab_position=self.balance_position, drop_position=self.vehicle_position)
-
-    def __del__(self):
-        self.reset()
-
-    def reset(self):
-        self.uarm.reset()
-        print('Factory reset!')
-
-    def handle_exit_signals(self):
-        signal.signal(signal.SIGINT, self.reset) # Handles CTRL-C for clean up.
-        signal.signal(signal.SIGHUP, self.reset) # Handles stalled process for clean up.
-        signal.signal(signal.SIGTERM, self.reset) # Handles clean exits for clean up.
 
