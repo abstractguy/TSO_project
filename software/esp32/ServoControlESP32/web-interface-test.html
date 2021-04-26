@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <style>
+    body {
+      text-align: center;
+      font-family: "Trebuchet MS", Arial;
+      margin-left:auto;
+      margin-right:auto;
+      
+    }
+    .slider {
+	  -webkit-appearance: none;
+	  width: 300px;
+	  height: 25px;
+	  border-radius: 10px;  
+	  background: #ffffff;
+	  outline: none;
+	  opacity: 0.7;
+	  -webkit-transition: .2s;
+	  transition: opacity .2s;
+	}
+	
+	.slider::-webkit-slider-thumb {
+	  -webkit-appearance: none;
+	  appearance: none;
+	  width: 35px;
+	  height: 35px;
+	  border-radius: 50%; 
+	  background: #ff3410;
+	  cursor: pointer;
+	}
+    
+	
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body style="background-color:#70cfff;">
+  <h1 style="color:#ff3410;">Servo Control</h1>
+  <h2 style="color:#ffffff;">Position: <span id="servoPos"></span>&#176;</h2>
+  <input type="range" min="0" max="180" class="slider" id="servoSlider" onchange="servo(this.value)"/>
+  <script>
+    var slider = document.getElementById("servoSlider");
+    var servoP = document.getElementById("servoPos");
+    servoP.innerHTML = slider.value;
+    slider.oninput = function() {
+      slider.value = this.value;
+      servoP.innerHTML = this.value;
+    }
+    $.ajaxSetup({timeout:1000});
+    function servo(pos) {
+      $.get("/?value=" + pos + "&");
+      {Connection: close};
+    }
+  </script>
+</body>
+</html>
