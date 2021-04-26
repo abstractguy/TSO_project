@@ -1,0 +1,6 @@
+include CHANGELOG.md
+
+include requirements.txt
+include README.rst
+
+global-exclude .DS_Store

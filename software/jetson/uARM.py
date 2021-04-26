@@ -30,13 +30,18 @@ def main():
     args = parse_args()
 
     try:
+        result = run_process(args)
+
         while True:
-            result = run_process(args)
             print('stdout:', result.stdout)
             print('stderr:', result.stderr)
+            time.sleep(5)
 
     except Exception as e:
         print(e)
+
+    except KeyboardInterrupt:
+        print('Program was interrupted by user: exiting.')
 
     finally:
         # Release resources.
