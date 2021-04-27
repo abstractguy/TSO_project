@@ -88,6 +88,10 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=QGOTSHKQ
 
+[GeneratedDocument1]
+DocumentPath=Project Outputs for uARM\Design Rule Check - uARM.html
+DItemRevisionGUID=
+
 [Configuration1]
 Name=Sources
 ParameterCount=0
