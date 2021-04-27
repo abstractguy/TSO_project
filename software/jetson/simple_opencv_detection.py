@@ -78,7 +78,7 @@ def detect(args):
     fps = 0.0
     tic = time.time()
 
-    # Read input. Camera mode not yet implemented.
+    # Read input.
     if args.input_type == 'image':
         cap = 'image'
         image = cv2.imread(args.image)
