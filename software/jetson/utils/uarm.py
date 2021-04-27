@@ -10,9 +10,8 @@ import pyuarm, signal, time
 
 initial_position = {'x': 21.6, 'y': 80.79, 'z': 186.11, 'speed': 150, 'relative': False, 'wait': True}
 
-class UARM:
+class UARM(object):
     def __init__(self, 
-                 uarm_tty_port='/dev/ttyUSB0', 
                  uart_delay=2, 
                  initial_position=initial_position, 
                  servo_attach_delay=5, 
@@ -20,7 +19,6 @@ class UARM:
                  servo_detach_delay=5, 
                  pump_delay=5):
 
-        self.uarm_tty_port = uarm_tty_port
         self.uart_delay = uart_delay
         self.initial_position = initial_position
         self.servo_attach_delay = servo_attach_delay
@@ -28,10 +26,17 @@ class UARM:
         self.servo_detach_delay = servo_detach_delay
         self.pump_delay = pump_delay
 
-        self.uarm = pyuarm.UArm(port_name=self.uarm_tty_port)
+        self.uarm = self.get_uarm()
         self.handle_exit_signals()
 
         time.sleep(self.uart_delay)
+
+    def get_uarm(self):
+        ports = pyuarm.tools.list_uarms.uarm_ports()
+        if len(ports) > 0:
+            return pyuarm.UArm(port_name=ports[0])
+        else:
+            return None
 
     def set_servo_attach(self):
         self.uarm.set_servo_attach()
@@ -86,4 +91,3 @@ class UARM:
         self.scan(position=grab_position)
         self.drop(drop_position=drop_position)
         self.reset()
-
