@@ -58,20 +58,20 @@ class UARM(object):
         time.sleep(self.pump_delay)
         self.set_servo_detach()
 
-    def grab(self, grab_position=None):
-        self.set_position(position=grab_position)
-        if True:
-            self.set_pump(on=True)
-            return True
-        else:
-            return False
-
     def drop(self, drop_position=None):
         self.set_position(position=drop_position)
         self.set_pump(on=False)
 
-    def scan(self, position=None):
-        return self.grab(grab_position=position)
+    def grab(self, grab_position=None, condition=True):
+        self.set_position(position=grab_position)
+        if condition:
+            self.set_pump(on=True)
+        return condition
+
+    def set_weight_to_somewhere(self, grab_position=None, drop_position=None, sensor=True):
+        self.grab(grab_position=grab_position, condition=sensor)
+        self.drop(drop_position=drop_position)
+        self.reset()
 
     def reset(self):
         self.set_pump(on=False)
@@ -86,8 +86,3 @@ class UARM(object):
         signal.signal(signal.SIGINT, self.reset) # Handles CTRL-C for clean up.
         signal.signal(signal.SIGHUP, self.reset) # Handles disconnected TTY for clean up.
         signal.signal(signal.SIGTERM, self.reset) # Handles clean exits for clean up.
-
-    def set_weight_to_somewhere(self, grab_position=None, drop_position=None):
-        self.scan(position=grab_position)
-        self.drop(drop_position=drop_position)
-        self.reset()

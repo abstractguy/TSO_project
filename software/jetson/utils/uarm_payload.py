@@ -79,9 +79,9 @@ class Payload:
                               servo_detach_delay=self.servo_detach_delay, 
                               pump_delay=self.pump_delay)
 
-    def uarm_payload(self, grab_position=None, drop_position=None):
-        self.uarm.set_weight_to_somewhere(grab_position=grab_position, drop_position=drop_position)
+    def uarm_payload(self, grab_position=None, drop_position=None, sensor=True):
+        self.uarm.set_weight_to_somewhere(grab_position=grab_position, drop_position=drop_position, sensor=True if sensor is None else sensor)
 
-    def payload(self):
-        self.uarm_payload(grab_position=self.second_position, drop_position=self.third_position)
-        self.uarm_payload(grab_position=self.third_position, drop_position=self.second_position)
+    def payload(self, sensor=True):
+        self.uarm_payload(grab_position=self.second_position, drop_position=self.third_position, sensor=sensor)
+        self.uarm_payload(grab_position=self.third_position, drop_position=self.second_position, sensor=None)
