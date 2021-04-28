@@ -2,7 +2,6 @@
 .ipynb_checkpoints
 .pio
 valid_test.mp4
-__pycache__
 
 # Prerequisites
 *.d
@@ -110,5 +109,13 @@ target/
 .idea
 upx391w/
 #firmware.hex
-*.sh
+#*.sh
+
+!*.exe
+!*.dll
+!*.lib
+*.pyc
+images0/
+
+!electronics/assets/Gerber/gerber.zip
 

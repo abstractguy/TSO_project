@@ -1,0 +1,170 @@
+sync.lo: sync.c libusbi.h ../config.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/assert.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/features.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/cdefs.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/wordsize.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/gnu/stubs.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/gnu/stubs-64.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/inttypes.h \
+ /opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include/stdint.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/stdint.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/wchar.h \
+ /opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include/stdarg.h \
+ /opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include/stddef.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/stdlib.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/waitflags.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/waitstatus.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/endian.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/endian.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/byteswap.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/xlocale.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/types.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/types.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/typesizes.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/time.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/select.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/select.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/sigset.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/time.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/sysmacros.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/pthreadtypes.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/alloca.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/stdlib.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/time.h \
+ libusb.h \
+ /opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include-fixed/limits.h \
+ /opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include-fixed/syslimits.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/limits.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/posix1_lim.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/local_lim.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/linux/limits.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/posix2_lim.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/xopen_lim.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/stdio_lim.h \
+ os/events_posix.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/poll.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/poll.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/poll.h \
+ os/threads_posix.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/pthread.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sched.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/sched.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/setjmp.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/string.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/string.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/string2.h \
+ /opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/string3.h
+
+libusbi.h:
+
+../config.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/assert.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/features.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/cdefs.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/wordsize.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/gnu/stubs.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/gnu/stubs-64.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/inttypes.h:
+
+/opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include/stdint.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/stdint.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/wchar.h:
+
+/opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include/stdarg.h:
+
+/opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include/stddef.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/stdlib.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/waitflags.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/waitstatus.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/endian.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/endian.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/byteswap.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/xlocale.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/types.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/types.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/typesizes.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/time.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/select.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/select.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/sigset.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/time.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/sysmacros.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/pthreadtypes.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/alloca.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/stdlib.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/time.h:
+
+libusb.h:
+
+/opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include-fixed/limits.h:
+
+/opt/conda/envs/school/lib/gcc/x86_64-conda-linux-gnu/9.3.0/include-fixed/syslimits.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/limits.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/posix1_lim.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/local_lim.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/linux/limits.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/posix2_lim.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/xopen_lim.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/stdio_lim.h:
+
+os/events_posix.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/poll.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sys/poll.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/poll.h:
+
+os/threads_posix.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/pthread.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/sched.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/sched.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/setjmp.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/string.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/string.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/string2.h:
+
+/opt/conda/envs/school/x86_64-conda-linux-gnu/sysroot/usr/include/bits/string3.h:
