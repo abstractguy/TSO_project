@@ -105,7 +105,7 @@ def pantilt_process_manager():
         tilt_i = manager.Value('f', 0.2)
         tilt_d = manager.Value('f', 0)
 
-        detect_process = Process(target=detect, args=(args, object_x, object_y, center_x, center_y))
+        detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
         pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, CENTER[0], 'pan'))
         tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, CENTER[1], 'tilt'))
         servo_process = Process(target=set_servos, args=(pan, tilt))

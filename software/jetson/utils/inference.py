@@ -6,7 +6,7 @@
 # For:         Myself
 # Description: This file returns detection results from an image.
 
-import cv2, cvlib, time
+import cvlib
 
 def add_inference_args(parser):
     """Add parser arguments for inference options."""
