@@ -11,10 +11,7 @@
 
 #from utils.overclock_settings import Overclock
 from utils.camera import add_input_args, Camera
-from utils.display import open_window, set_display, show_fps
-from utils.visualization import BBoxVisualization
-from utils.inference import add_inference_args, infer
-from cvlib.object_detection import draw_bbox
+from utils.inference import add_inference_args, ObjectCenter
 from copy import deepcopy
 import argparse, cv2, cvlib, time
 
@@ -33,7 +30,7 @@ def parse_args():
     return args
 
 def add_output_args(parser):
-    """Add parser augument for output options."""
+    """Add parser arguments for output options."""
     parser.add_argument('--video-name', type=str, default='yolo_inference', help='Name of the video.')
     parser.add_argument('--image-shape', metavar='<image-shape>', nargs='+', type=int, required=False, default=[480, 640], help='Shape of image.')
     parser.add_argument('--output-image', metavar='<output-image>', type=str, required=False, default='./doc/object_detection_result.jpg', help='Path of saved output image.')
@@ -42,7 +39,7 @@ def add_output_args(parser):
     parser.add_argument('--no-show', action='store_true', help='Don\'t display live results on screen. Can improve FPS.')
     return parser
 
-def detect(args):
+def detect(args, objX=None, objY=None, centerX=None, centerY=None):
     """Detection loop."""
     # Prepare arguments early.
     enable_gpu = not args.disable_gpu
@@ -50,6 +47,9 @@ def detect(args):
     (height, width) = args.image_shape
     full_scrn = False
     fps = 0.0
+
+    obj = ObjectCenter(args, enable_gpu=enable_gpu, show=show)
+
     tic = time.time()
 
     # Read input.
@@ -57,7 +57,11 @@ def detect(args):
         cap = 'image'
         image = cv2.imread(args.image)
 
-    if not show:
+    if show:
+        from cvlib.object_detection import draw_bbox
+        from utils.display import open_window, set_display, show_fps
+
+    else:
         out = cv2.VideoWriter(args.video_name, cv2.VideoWriter_fourcc(*'mp4v'), 30, (width, height))
 
     if args.input_type == 'video':
@@ -73,7 +77,8 @@ def detect(args):
         #overclock = Overclock(jetson_devkit='xavier')
         #overclock.overclock()
 
-        open_window(args.video_name, 'Camera inference', width, height)
+        if show:
+            open_window(args.video_name, 'Camera inference', width, height)
 
         if args.mjpeg_port is None:
             mjpeg_server = None
@@ -100,25 +105,43 @@ def detect(args):
             if not status:
                 break
 
+            if args.flip_vertically:
+               frame = cv2.flip(frame, 0)
+
+            if args.flip_horizontally:
+               frame = cv2.flip(frame, 1)
+
             # Apply object detection.
-            predictions = infer(frame, 
-                                confidence=args.confidence_threshold, 
-                                nms_thresh=args.nms_threshold, 
-                                model=args.model, 
-                                enable_gpu=enable_gpu, 
-                                show=show, 
-                                object_category=args.object_category, 
-                                filter_objects=not args.no_filter_object_category)
+            predictions = obj.infer(frame, 
+                                    confidence=args.confidence_threshold, 
+                                    nms_thresh=args.nms_threshold, 
+                                    model=args.model, 
+                                    object_category=args.object_category, 
+                                    filter_objects=not args.no_filter_object_category)
 
             if predictions is not None:
                 bbox, label, conf = predictions
 
-                # Draw bounding box over detected objects.
-                inferred_image = draw_bbox(frame, bbox, label, conf, write_conf=True)
+                # Calculate the center of the frame since we will be trying to keep the object there.
+                (H, W) = frame.shape[:2]
+                #centerX.value = W // 2
+                #centerY.value = H // 2
 
-            frame = show_fps(frame, fps)
+                #object_location = obj.update(predictions, frame, (centerX.value, centerY.value))
+                #((objX.value, objY.value), predictions) = object_location
+
+                centerX = W // 2
+                centerY = H // 2
+
+                object_location = obj.update(predictions, frame, (centerX, centerY))
+                ((objX, objY), predictions) = object_location
+
+                if show:
+                    # Draw bounding box over detected objects.
+                    inferred_image = draw_bbox(frame, bbox, label, conf, write_conf=True)
 
             if show:
+                frame = show_fps(frame, fps)
                 # Show raw inference results.
                 cv2.imshow(args.video_name, frame)
             else:
@@ -157,6 +180,7 @@ def detect(args):
             cap.release()
 
         #overclock.underclock()
+
 
 def main():
     """Main function."""

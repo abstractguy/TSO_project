@@ -12,7 +12,7 @@ USB_GSTREAMER = True
 
 
 def add_input_args(parser):
-    """Add parser augument for input options."""
+    """Add parser arguments for input options."""
     parser.add_argument('--image', metavar='<image>', type=str, required=False, default='./doc/valid_test.png', help='Path of input image.')
     parser.add_argument('--video', metavar='<video>', type=str, required=False, default='./doc/valid_test.mp4', help='Path of input video.')
     parser.add_argument('--input-type', metavar='<input-type>', type=str, required=False, choices=['image', 'video', 'camera'], default='video', help='Input type for inference.')
@@ -25,6 +25,8 @@ def add_input_args(parser):
     parser.add_argument('--onboard', type=int, default=None, help='Jetson onboard camera [None].')
     parser.add_argument('--width', type=int, default=640, help='Image width [640].')
     parser.add_argument('--height', type=int, default=480, help='Image height [480].')
+    parser.add_argument('--flip-vertically', action='store_true', help='Flip image vertically.')
+    parser.add_argument('--flip-horizontally', action='store_true', help='Flip image horizontally.')
     parser.add_argument('--copy_frame', action='store_true', help='Copy video frame internally [False].')
     parser.add_argument('--do_resize', action='store_true', help='Resize image/video [False].')
     parser.add_argument('--use-udp', action='store_true', help='Whether to use raw UDP.')

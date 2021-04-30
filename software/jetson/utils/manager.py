@@ -8,7 +8,7 @@
 
 
 from multiprocessing import Value, Process, Manager
-from utils.camera2 import run_pantilt_detect
+from simple_opencv_detection import detect
 from utils.pid import PIDController
 from pyuarm.protocol import *
 
@@ -72,16 +72,19 @@ def pid_process(output, p, i, d, box_coord, origin_coord, action):
         output.value = p.update(error)
         # logging.info(f'{action} error {error} angle: {output.value}')
 
+
 # ('person',)
 #('orange', 'apple', 'sports ball')
-
-
-def pantilt_process_manager(model_cls, labels=('person',), rotation=0):
+def pantilt_process_manager():
     pyuarm.set_servo_attach()
+
     with Manager() as manager:
         # Set initial bounding box (x, y)-coordinates to center of frame.
         center_x = manager.Value('i', 0)
         center_y = manager.Value('i', 0)
+
+        object_x = manager.Value('i', 0)
+        object_y = manager.Value('i', 0)
 
         center_x.value = RESOLUTION[0] // 2
         center_y.value = RESOLUTION[1] // 2
@@ -102,7 +105,7 @@ def pantilt_process_manager(model_cls, labels=('person',), rotation=0):
         tilt_i = manager.Value('f', 0.2)
         tilt_d = manager.Value('f', 0)
 
-        detect_process = Process(target=run_pantilt_detect, args=(center_x, center_y, labels, model_cls, rotation))
+        detect_process = Process(target=detect, args=(args, object_x, object_y, center_x, center_y))
         pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, CENTER[0], 'pan'))
         tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, CENTER[1], 'tilt'))
         servo_process = Process(target=set_servos, args=(pan, tilt))
@@ -119,5 +122,5 @@ def pantilt_process_manager(model_cls, labels=('person',), rotation=0):
 
 
 if __name__ == '__main__':
-    pantilt_process_manager(model_cls, labels=('person',), rotation=0)
+    pantilt_process_manager()
 
