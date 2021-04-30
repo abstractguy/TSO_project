@@ -44,8 +44,10 @@ def run(*popenargs, **kwargs):
     retcode = process.poll()
 
     if check and retcode:
-        raise subprocess.CalledProcessError(
-            retcode, process.args, output=stdout, stderr=stderr)
+        raise subprocess.CalledProcessError(retcode, 
+                                            process.args, 
+                                            output=stdout, 
+                                            stderr=stderr)
 
     return retcode, stdout, stderr
 

@@ -10,7 +10,7 @@ import pyuarm, signal, time
 
 initial_position = {'x': 21.6, 'y': 80.79, 'z': 186.11, 'speed': 150, 'relative': False, 'wait': True}
 
-class UARM(object):
+class UArm(object):
     def __init__(self, 
                  uart_delay=2, 
                  initial_position=initial_position, 
@@ -86,3 +86,4 @@ class UARM(object):
         signal.signal(signal.SIGINT, self.reset) # Handles CTRL-C for clean up.
         signal.signal(signal.SIGHUP, self.reset) # Handles disconnected TTY for clean up.
         signal.signal(signal.SIGTERM, self.reset) # Handles clean exits for clean up.
+

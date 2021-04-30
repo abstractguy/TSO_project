@@ -6,10 +6,10 @@
 # For:         Myself
 # Description: This file implements a multiprocessing manager for motor control after object detection.
 
-
 from multiprocessing import Value, Process, Manager
 from simple_opencv_detection import detect
 from utils.pid import PIDController
+from utils.uarm import UArm
 from pyuarm.protocol import *
 
 import logging, pyuarm, signal, sys
@@ -24,6 +24,8 @@ SERVO_MAX = 90
 
 CENTER = (RESOLUTION[0] // 2, RESOLUTION[1] // 2)
 
+FLIP_VERTICALLY = True
+FLIP_HORIZONTALLY = False
 
 def signal_handler(sig, frame):
     """Handles keyboard interrupt."""
@@ -35,13 +37,13 @@ def in_range(val, start, end):
     """Checks if the input value is in the supplied range."""
     return (val >= start and val <= end)
 
-def set_servos(pan, tilt):
+def set_servos(pan, tilt, flip_vertically=FLIP_VERTICALLY, flip_horizontally=FLIP_HORIZONTALLY):
     # Signal trap to handle keyboard interrupt.
     signal.signal(signal.SIGINT, signal_handler)
 
     while True:
-        pan_angle = -1 * pan.value
-        tilt_angle = tilt.value
+        pan_angle = (-1 if flip_vertically else 1) * pan.value
+        tilt_angle = (-1 if flip_horizontally else 1) * tilt.value
 
         # If the pan angle is within the range: pan.
         if in_range(pan_angle, SERVO_MIN, SERVO_MAX):
@@ -70,8 +72,16 @@ def pid_process(output, p, i, d, box_coord, origin_coord, action):
 
 # ('person',)
 #('orange', 'apple', 'sports ball')
-def pantilt_process_manager():
-    pyuarm.set_servo_attach()
+def pantilt_process_manager(flip_vertically=FLIP_VERTICALLY, flip_horizontally=FLIP_HORIZONTALLY)
+):
+    uarm = UArm(uart_delay=2, 
+                initial_position=initial_position, 
+                servo_attach_delay=5, 
+                set_position_delay=5, 
+                servo_detach_delay=5, 
+                pump_delay=5)
+
+    uarm.set_servo_attach()
 
     with Manager() as manager:
         # Set initial bounding box (x, y)-coordinates to center of frame.
@@ -103,7 +113,7 @@ def pantilt_process_manager():
         detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
         pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, CENTER[0], 'pan'))
         tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, CENTER[1], 'tilt'))
-        servo_process = Process(target=set_servos, args=(pan, tilt))
+        servo_process = Process(target=set_servos, args=(pan, tilt, flip_vertically, flip_horizontally))
 
         detect_process.start()
         pan_process.start()

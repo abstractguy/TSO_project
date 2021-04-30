@@ -9,7 +9,7 @@
 from utils import uarm
 import signal
 
-def add_payload_args(parser):
+def add_uarm_args(parser):
     parser.add_argument('--first-x-position', metavar='<first-x-position>', type=float, required=False, default=21.6, help='First position on X axis.')
     parser.add_argument('--first-y-position', metavar='<first-y-position>', type=float, required=False, default=80.79, help='First position on Y axis.')
     parser.add_argument('--first-z-position', metavar='<first-z-position>', type=float, required=False, default=186.11, help='First position on Z axis.')
@@ -30,7 +30,7 @@ def add_payload_args(parser):
     parser.add_argument('--transition-delay', metavar='<transition-delay>', type=float, required=False, default=5.0, help='Delay after using uARM buzzer signals the end of a phase and allows world to react.')
     return parser
 
-class Payload:
+class UArm(object):
     def __init__(self, 
                  initial_x_position=21.6, 
                  initial_y_position=80.79, 
@@ -72,7 +72,7 @@ class Payload:
         self.second_position = {'x': self.second_x_position, 'y': self.second_y_position, 'z': self.second_z_position, 'speed': self.uarm_speed, 'relative': False, 'wait': True}
         self.third_position = {'x': self.third_x_position, 'y': self.third_y_position, 'z': self.third_z_position, 'speed': self.uarm_speed, 'relative': False, 'wait': True}
 
-        self.uarm = uarm.UARM(uart_delay=self.uart_delay, 
+        self.uarm = uarm.UArm(uart_delay=self.uart_delay, 
                               initial_position=self.initial_position, 
                               servo_attach_delay=self.servo_attach_delay, 
                               set_position_delay=self.set_position_delay, 
