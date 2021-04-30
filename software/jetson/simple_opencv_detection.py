@@ -6,20 +6,21 @@
 # For:         Myself
 # Usage:       python3 simple_opencv_detection.py --image doc/valid_test.png --input-type image
 # Usage:       python3 simple_opencv_detection.py --video doc/valid_test.mp4 --input-type video
-# Description: This file implements software plan A for TSO_project.
+# Usage:       python3 simple_opencv_detection.py --input-type camera
+# Description: This file tests object detection with OpenCV.
 
 #from utils.overclock_settings import Overclock
-from utils.camera import Camera
+from utils.camera import add_input_args, Camera
 from utils.display import open_window, set_display, show_fps
 from utils.visualization import BBoxVisualization
-from utils.mjpeg import MjpegServer
+from utils.inference import add_inference_args, infer
 from cvlib.object_detection import draw_bbox
 from copy import deepcopy
 import argparse, cv2, cvlib, time
 
 def parse_args():
     """Parse input arguments."""
-    parser = argparse.ArgumentParser(description='Simple OpenCV object detection test using one image.', 
+    parser = argparse.ArgumentParser(description='Simple OpenCV object detection test using one image, video or stream.', 
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser = add_input_args(parser)
     parser = add_inference_args(parser)
@@ -30,33 +31,6 @@ def parse_args():
         args.no_show = True
     print(vars(args))
     return args
-
-def add_input_args(parser):
-    """Add parser augument for input options."""
-    parser.add_argument('--image', metavar='<image>', type=str, required=False, default='./doc/valid_test.png', help='Path of input image.')
-    parser.add_argument('--video', metavar='<video>', type=str, required=False, default='./doc/valid_test.mp4', help='Path of input video.')
-    parser.add_argument('--input-type', metavar='<input-type>', type=str, required=False, choices=['image', 'video', 'camera'], default='video', help='Input type for inference.')
-    parser.add_argument('--video_looping', action='store_true', help='Loop around the video file [False].')
-    parser.add_argument('--rtsp', type=str, default=None, help='RTSP H.264 stream, e.g. rtsp://admin:123456@192.168.1.64:554.')
-    parser.add_argument('--rtsp_latency', type=int, default=200, help='RTSP latency in ms [200].')
-    parser.add_argument('--rtp', action='store_true', help='Use RTP through UDP.')
-    parser.add_argument('--udp-port', metavar='<udp-port>', type=int, required=False, default=1337, help='UDP port to use for RTP.')
-    parser.add_argument('--usb', type=int, default=None, help='USB webcam device id (/dev/video?) [None].')
-    parser.add_argument('--onboard', type=int, default=None, help='Jetson onboard camera [None].')
-    parser.add_argument('--width', type=int, default=640, help='Image width [640].')
-    parser.add_argument('--height', type=int, default=480, help='Image height [480].')
-    parser.add_argument('--copy_frame', action='store_true', help='Copy video frame internally [False].')
-    parser.add_argument('--do_resize', action='store_true', help='Resize image/video [False].')
-    parser.add_argument('--use-udp', action='store_true', help='Whether to use raw UDP.')
-    return parser
-
-def add_inference_args(parser):
-    """Add parser augument for inference options."""
-    parser.add_argument('--confidence-threshold', metavar='<confidence-threshold>', type=float, required=False, default=0.25, help='Confidence threshold.') # 0.5
-    parser.add_argument('--nms-threshold', metavar='<nms-threshold>', type=float, required=False, default=0.3, help='NMS threshold.')
-    parser.add_argument('--model', metavar='<model>', type=str, required=False, default='yolov4', help='Path of input image.')
-    parser.add_argument('--disable-gpu', action='store_true', help='Disable GPU usage for inference.')
-    return parser
 
 def add_output_args(parser):
     """Add parser augument for output options."""
@@ -105,6 +79,7 @@ def detect(args):
             mjpeg_server = None
 
         else:
+            from utils.mjpeg import MjpegServer
             mjpeg_server = MjpegServer(port=args.mjpeg_port)
             print('MJPEG server started...')
 
@@ -126,15 +101,16 @@ def detect(args):
                 break
 
             # Apply object detection.
-            bbox, label, conf = cvlib.detect_common_objects(frame, 
-                                                            confidence=args.confidence_threshold, 
-                                                            nms_thresh=args.nms_threshold, 
-                                                            model=args.model, 
-                                                            enable_gpu=enable_gpu)
+            predictions = infer(frame, 
+                                confidence=args.confidence_threshold, 
+                                nms_thresh=args.nms_threshold, 
+                                model=args.model, 
+                                enable_gpu=enable_gpu, 
+                                show=show)
 
-            predictions = bbox, label, conf
             if predictions is not None:
-                boxes, confs, clss = predictions
+                bbox, label, conf = predictions
+
                 # Draw bounding box over detected objects.
                 inferred_image = draw_bbox(frame, bbox, label, conf, write_conf=True)
 
@@ -142,7 +118,6 @@ def detect(args):
 
             if show:
                 # Show raw inference results.
-                print(bbox, label, conf)
                 cv2.imshow(args.video_name, frame)
             else:
                 print('FPS:', fps)

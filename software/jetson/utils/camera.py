@@ -11,11 +11,11 @@ import cv2, logging, numpy as np, subprocess, threading
 USB_GSTREAMER = True
 
 
-def add_camera_args(parser):
-    """Add parser augument for camera options."""
-    parser.add_argument('--video-name', type=str, default='yolo_inference', help='Name of the video.')
-    parser.add_argument('--image', type=str, default=None, help='Image file name, e.g. dog.jpg.')
-    parser.add_argument('--video', type=str, default=None, help='Video file name, e.g. traffic.mp4.')
+def add_input_args(parser):
+    """Add parser augument for input options."""
+    parser.add_argument('--image', metavar='<image>', type=str, required=False, default='./doc/valid_test.png', help='Path of input image.')
+    parser.add_argument('--video', metavar='<video>', type=str, required=False, default='./doc/valid_test.mp4', help='Path of input video.')
+    parser.add_argument('--input-type', metavar='<input-type>', type=str, required=False, choices=['image', 'video', 'camera'], default='video', help='Input type for inference.')
     parser.add_argument('--video_looping', action='store_true', help='Loop around the video file [False].')
     parser.add_argument('--rtsp', type=str, default=None, help='RTSP H.264 stream, e.g. rtsp://admin:123456@192.168.1.64:554.')
     parser.add_argument('--rtsp_latency', type=int, default=200, help='RTSP latency in ms [200].')
@@ -29,6 +29,7 @@ def add_camera_args(parser):
     parser.add_argument('--do_resize', action='store_true', help='Resize image/video [False].')
     parser.add_argument('--use-udp', action='store_true', help='Whether to use raw UDP.')
     return parser
+
 
 def open_cam_rtsp(uri, width, height, latency):
     """Open an RTSP URI (IP CAM)."""
