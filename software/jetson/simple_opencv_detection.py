@@ -106,7 +106,9 @@ def detect(args):
                                 nms_thresh=args.nms_threshold, 
                                 model=args.model, 
                                 enable_gpu=enable_gpu, 
-                                show=show)
+                                show=show, 
+                                object_category=args.object_category, 
+                                filter_objects=not args.no_filter_object_category)
 
             if predictions is not None:
                 bbox, label, conf = predictions
