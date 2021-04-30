@@ -21,7 +21,7 @@ def add_output_args(parser):
     parser.add_argument('--no-show', action='store_true', help='Don\'t display live results on screen. Can improve FPS.')
     return parser
 
-def loop(args, objX=None, objY=None, centerX=None, centerY=None):
+def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Detection loop."""
     # Prepare arguments early.
     enable_gpu = not args.disable_gpu
@@ -106,17 +106,17 @@ def loop(args, objX=None, objY=None, centerX=None, centerY=None):
 
                 # Calculate the center of the frame since we will be trying to keep the object there.
                 (H, W) = frame.shape[:2]
-                #centerX.value = W // 2
-                #centerY.value = H // 2
+                #center_x.value = W // 2
+                #center_y.value = H // 2
 
-                #object_location = obj.update(predictions, frame, (centerX.value, centerY.value))
-                #((objX.value, objY.value), predictions) = object_location
+                #object_location = obj.update(predictions, frame, (center_x.value, center_y.value))
+                #((object_x.value, object_y.value), predictions) = object_location
 
-                centerX = W // 2
-                centerY = H // 2
+                center_x = W // 2
+                center_y = H // 2
 
-                object_location = obj.update(predictions, frame, (centerX, centerY))
-                ((objX, objY), predictions) = object_location
+                object_location = obj.update(predictions, frame, (center_x, center_y))
+                ((object_x, object_y), predictions) = object_location
 
                 if show:
                     # Draw bounding box over detected objects.

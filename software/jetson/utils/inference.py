@@ -20,6 +20,7 @@ def add_inference_args(parser):
 
 class ObjectCenter(object):
     def __init__(self, args, enable_gpu=False, show=False):
+        """Initialize variables."""
         self.args = args
         self.enable_gpu = enable_gpu
         self.show = show

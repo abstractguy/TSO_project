@@ -14,7 +14,6 @@ from pyuarm.protocol import *
 
 import logging, pyuarm, signal, sys
 
-
 logging.basicConfig()
 LOGLEVEL = logging.getLogger().getEffectiveLevel()
 
@@ -32,11 +31,9 @@ def signal_handler(sig, frame):
     pyuarm.set_servo_detach()
     sys.exit()
 
-
 def in_range(val, start, end):
     """Checks if the input value is in the supplied range."""
     return (val >= start and val <= end)
-
 
 def set_servos(pan, tilt):
     # Signal trap to handle keyboard interrupt.
@@ -57,7 +54,6 @@ def set_servos(pan, tilt):
         else:
             logging.info(f'tilt_angle not in range {tilt_angle}')
 
-
 def pid_process(output, p, i, d, box_coord, origin_coord, action):
     # Signal trap to handle keyboard interrupt.
     signal.signal(signal.SIGINT, signal_handler)
@@ -71,7 +67,6 @@ def pid_process(output, p, i, d, box_coord, origin_coord, action):
         error = origin_coord - box_coord.value
         output.value = p.update(error)
         # logging.info(f'{action} error {error} angle: {output.value}')
-
 
 # ('person',)
 #('orange', 'apple', 'sports ball')
@@ -119,7 +114,6 @@ def pantilt_process_manager():
         pan_process.join()
         tilt_process.join()
         servo_process.join()
-
 
 if __name__ == '__main__':
     pantilt_process_manager()
