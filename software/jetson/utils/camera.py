@@ -15,7 +15,7 @@ def add_input_args(parser):
     """Add parser arguments for input options."""
     parser.add_argument('--image', metavar='<image>', type=str, required=False, default='./doc/valid_test.png', help='Path of input image.')
     parser.add_argument('--video', metavar='<video>', type=str, required=False, default='./doc/valid_test.mp4', help='Path of input video.')
-    parser.add_argument('--input-type', metavar='<input-type>', type=str, required=False, choices=['image', 'video', 'camera'], default='video', help='Input type for inference.')
+    parser.add_argument('--input-type', metavar='<input-type>', type=str, required=False, choices=['image', 'video', 'camera'], default='camera', help='Input type for inference.')
     parser.add_argument('--video_looping', action='store_true', help='Loop around the video file [False].')
     parser.add_argument('--rtsp', type=str, default=None, help='RTSP H.264 stream, e.g. rtsp://admin:123456@192.168.1.64:554.')
     parser.add_argument('--rtsp_latency', type=int, default=200, help='RTSP latency in ms [200].')

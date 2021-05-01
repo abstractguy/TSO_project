@@ -33,13 +33,11 @@ class ObjectCenter(object):
             if filter_objects:
                 predictions = self.filter_inference_results(predictions, object_category=object_category)
 
-            bbox, label, conf = predictions
-
             if self.show:
                 # Show raw inference results.
-                print(bbox, label, conf)
+                print(predictions[0])
 
-        return bbox, label, conf
+        return predictions
 
     def filter_inference_results(self, predictions, object_category='person'):
         """Return bounding box of biggest object of selected category."""

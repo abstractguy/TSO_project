@@ -27,10 +27,13 @@ CENTER = (RESOLUTION[0] // 2, RESOLUTION[1] // 2)
 FLIP_VERTICALLY = True
 FLIP_HORIZONTALLY = False
 
+global uarm
+
 def signal_handler(sig, frame):
     """Handles keyboard interrupt."""
+    global uarm
     print("[INFO] You pressed `CTRL + C`! Exiting...")
-    pyuarm.set_servo_detach()
+    uarm.set_servo_detach()
     sys.exit()
 
 def in_range(val, start, end):
@@ -47,12 +50,12 @@ def set_servos(pan, tilt, flip_vertically=FLIP_VERTICALLY, flip_horizontally=FLI
 
         # If the pan angle is within the range: pan.
         if in_range(pan_angle, SERVO_MIN, SERVO_MAX):
-            pyuarm.set_servo_angle(SERVO_BOTTOM, pan_angle) # Verify this is the correct servo!!!
+            uarm.set_servo_angle(SERVO_BOTTOM, pan_angle) # Verify this is the correct servo!!!
         else:
             logging.info(f'pan_angle not in range {pan_angle}')
 
         if in_range(tilt_angle, SERVO_MIN, SERVO_MAX):
-            pyuarm.set_servo_angle(SERVO_LEFT, tilt_angle) # Verify this is the correct servo!!!
+            uarm.set_servo_angle(SERVO_LEFT, tilt_angle) # Verify this is the correct servo!!!
         else:
             logging.info(f'tilt_angle not in range {tilt_angle}')
 
@@ -72,8 +75,10 @@ def pid_process(output, p, i, d, box_coord, origin_coord, action):
 
 # ('person',)
 #('orange', 'apple', 'sports ball')
-def pantilt_process_manager(flip_vertically=FLIP_VERTICALLY, flip_horizontally=FLIP_HORIZONTALLY)
-):
+def pantilt_process_manager(args, flip_vertically=FLIP_VERTICALLY, flip_horizontally=FLIP_HORIZONTALLY):
+    initial_position = {'x': 21.6, 'y': 80.79, 'z': 186.11, 'speed': 150, 'relative': False, 'wait': True}
+
+    global uarm
     uarm = UArm(uart_delay=2, 
                 initial_position=initial_position, 
                 servo_attach_delay=5, 
