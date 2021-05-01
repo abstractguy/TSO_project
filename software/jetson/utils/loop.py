@@ -101,22 +101,16 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                                     object_category=args.object_category, 
                                     filter_objects=not args.no_filter_object_category)
 
-            if predictions is not None:
+            if predictions is not None and len(predictions) > 0:
                 bbox, label, conf = predictions
 
                 # Calculate the center of the frame since we will be trying to keep the object there.
                 (H, W) = frame.shape[:2]
-                #center_x.value = W // 2
-                #center_y.value = H // 2
+                center_x.value = W // 2
+                center_y.value = H // 2
 
-                #object_location = obj.update(predictions, frame, (center_x.value, center_y.value))
-                #((object_x.value, object_y.value), predictions) = object_location
-
-                center_x = W // 2
-                center_y = H // 2
-
-                object_location = obj.update(predictions, frame, (center_x, center_y))
-                ((object_x, object_y), predictions) = object_location
+                object_location = obj.update(predictions, frame, (center_x.value, center_y.value))
+                ((object_x.value, object_y.value), predictions) = object_location
 
                 if show:
                     # Draw bounding box over detected objects.
@@ -124,6 +118,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
             if show:
                 frame = show_fps(frame, fps)
+
                 # Show raw inference results.
                 cv2.imshow(args.video_name, frame)
             else:

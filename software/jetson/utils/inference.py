@@ -33,9 +33,10 @@ class ObjectCenter(object):
             if filter_objects:
                 predictions = self.filter_inference_results(predictions, object_category=object_category)
 
+        if predictions is not None:
             if self.show:
                 # Show raw inference results.
-                print(predictions[0])
+                print(predictions)
 
         return predictions
 

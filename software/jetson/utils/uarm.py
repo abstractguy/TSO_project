@@ -46,6 +46,10 @@ class UArm(object):
         self.uarm.set_servo_detach()
         time.sleep(self.servo_detach_delay)
 
+    def set_servo_angle(self, servo, angle):
+        self.uarm.set_servo_angle(servo, angle)
+        time.sleep(self.set_position_delay)
+
     def set_position(self, position=None):
         self.set_servo_attach()
         self.uarm.set_position(**position)

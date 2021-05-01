@@ -17,14 +17,15 @@ import logging, pyuarm, signal, sys
 logging.basicConfig()
 LOGLEVEL = logging.getLogger().getEffectiveLevel()
 
-RESOLUTION = (320, 320)
+#RESOLUTION = (320, 320)
+RESOLUTION = (480, 640)
 
 SERVO_MIN = -90
 SERVO_MAX = 90
 
 CENTER = (RESOLUTION[0] // 2, RESOLUTION[1] // 2)
 
-FLIP_VERTICALLY = True
+FLIP_VERTICALLY = False
 FLIP_HORIZONTALLY = False
 
 global uarm
@@ -42,6 +43,8 @@ def in_range(val, start, end):
 
 def set_servos(pan, tilt, flip_vertically=FLIP_VERTICALLY, flip_horizontally=FLIP_HORIZONTALLY):
     # Signal trap to handle keyboard interrupt.
+    global uarm
+
     signal.signal(signal.SIGINT, signal_handler)
 
     while True:
@@ -103,16 +106,28 @@ def pantilt_process_manager(args, flip_vertically=FLIP_VERTICALLY, flip_horizont
         pan = manager.Value('i', 0)
         tilt = manager.Value('i', 0)
 
+        ## PID gains for panning.
+        #pan_p = manager.Value('f', 0.05)
+        ## 0 time integral gain until inferencing is faster than ~50ms.
+        #pan_i = manager.Value('f', 0.1)
+        #pan_d = manager.Value('f', 0)
+        #
+        ## PID gains for tilting.
+        #tilt_p = manager.Value('f', 0.15)
+        ## 0 time integral gain until inferencing is faster than ~50ms.
+        #tilt_i = manager.Value('f', 0.2)
+        #tilt_d = manager.Value('f', 0)
+
         # PID gains for panning.
-        pan_p = manager.Value('f', 0.05)
+        pan_p = manager.Value('f', 1.0)
         # 0 time integral gain until inferencing is faster than ~50ms.
-        pan_i = manager.Value('f', 0.1)
+        pan_i = manager.Value('f', 0)
         pan_d = manager.Value('f', 0)
 
         # PID gains for tilting.
-        tilt_p = manager.Value('f', 0.15)
+        tilt_p = manager.Value('f', 1.0)
         # 0 time integral gain until inferencing is faster than ~50ms.
-        tilt_i = manager.Value('f', 0.2)
+        tilt_i = manager.Value('f', 0)
         tilt_d = manager.Value('f', 0)
 
         detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
