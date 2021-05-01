@@ -7,7 +7,7 @@
 # Description: This file implements a multiprocessing manager for motor control after object detection.
 
 from multiprocessing import Value, Process, Manager
-from simple_opencv_detection import detect
+from utils.loop import loop
 from utils.pid import PIDController
 from utils.uarm import UArm
 from pyuarm.protocol import *
