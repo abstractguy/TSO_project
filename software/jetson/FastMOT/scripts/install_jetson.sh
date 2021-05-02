@@ -16,6 +16,7 @@ sudo apt-get install python3-pip libhdf5-serial-dev hdf5-tools libcanberra-gtk-m
 sudo -H pip3 install cython
 sudo -H pip3 install --global-options=build_ext --global-options="-I/usr/local/cuda-10.2/targets/aarch-linux/include/" --global-options="-L/usr/local/cuda-10.2/targets/aarch-linux/lib/" pycuda
 sudo -H pip3 install numpy cython-bbox
+sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
 sudo -H pip3 install --no-cache-dir --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v44 tensorflow==1.15.2+nv20.4
 
 # install scipy
