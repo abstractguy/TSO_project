@@ -1,4 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# File:        utils/install_jetson.sh
+# By:          Samuel Duclos
+# For:         Myself
+# Usage:       bash install_jetson.sh
+# Description: Install FastMOT Jetson packages.
+
+BASEDIR=$(dirname "$0")
+DIR=$BASEDIR/../fastmot/models
 
 # Jetpack 4.4 (OpenCV, CUDA, TensorRT) is required before running this script
 DIR=$HOME

@@ -55,7 +55,7 @@ FastMOT has MOTA scores close to **state-of-the-art** trackers from the MOT Chal
 ### Install for Jetson (TX2/Xavier NX/Xavier)
 Make sure to have [JetPack 4.4](https://developer.nvidia.com/embedded/jetpack) installed and run the script:
   ```
-  $ scripts/install_jetson.sh
+  $ ./utils/install_jetson.sh
   ```
 ### Install for Ubuntu 18.04
 Make sure to have [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) installed. The image requires an NVIDIA Driver version >= 450. Build and run the docker image:
@@ -66,7 +66,7 @@ Make sure to have [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-nativ
 ### Download models
 This includes both pretrained OSNet, SSD, and my custom YOLOv4 ONNX model
   ```
-  $ scripts/download_models.sh
+  $ ./utils/download_models.sh
   ```
 ### Build YOLOv4 TensorRT plugin
 Modify `compute` [here](https://github.com/GeekAlexis/FastMOT/blob/2296fe414ca6a9515accb02ff88e8aa563ed2a05/fastmot/plugins/Makefile#L21) to match your [GPU compute capability](https://developer.nvidia.com/cuda-gpus#compute) for x86 PC
@@ -77,7 +77,7 @@ Modify `compute` [here](https://github.com/GeekAlexis/FastMOT/blob/2296fe414ca6a
 ### Download VOC dataset for INT8 calibration
 Only required if you want to use SSD
   ```
-  $ scripts/download_data.sh
+  $ ./utils/download_data.sh
   ```
 
 ## Usage
