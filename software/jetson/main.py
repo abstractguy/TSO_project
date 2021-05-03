@@ -14,7 +14,7 @@
 from utils.camera import add_input_args
 from utils.inference import add_inference_args
 from utils.loop import add_output_args
-from utils.uarm_payload import add_uarm_args
+from utils.uarm import add_uarm_args
 from utils.manager import process_manager
 import argparse
 

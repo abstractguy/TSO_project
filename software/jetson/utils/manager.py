@@ -12,21 +12,15 @@ from utils.pid import PIDController
 from utils.uarm import UArm
 from pyuarm.protocol import SERVO_BOTTOM, SERVO_LEFT, SERVO_RIGHT, SERVO_HAND
 
-import logging, pyuarm, sys
+import logging, pyuarm
 
 logging.basicConfig()
 LOGLEVEL = logging.getLogger().getEffectiveLevel()
 
-RESOLUTION = (480, 640)
-
-SERVO_MIN = -90
-SERVO_MAX = 90
-
-CENTER = (RESOLUTION[0] // 2, RESOLUTION[1] // 2)
-
 global uarm
 
 def set_servos(pan, tilt, flip_vertically=False, flip_horizontally=False):
+    """Servomotor loop for motor control."""
     global uarm
 
     try:
@@ -34,22 +28,21 @@ def set_servos(pan, tilt, flip_vertically=False, flip_horizontally=False):
             pan_angle = (-1 if flip_vertically else 1) * pan.value
             tilt_angle = (-1 if flip_horizontally else 1) * tilt.value
 
-            # If the pan angle is within the range: pan.
             uarm.set_servo_angle(SERVO_BOTTOM, pan_angle) # Verify this is the correct servo!!!
             uarm.set_servo_angle(SERVO_LEFT, tilt_angle) # Verify this is the correct servo!!!
-
-    except Exception as e:
-        print(e)
 
     except KeyboardInterrupt:
         print('User terminated servo process.')
 
-    finally: # Release resources.
-        uarm.set_servo_detach()
+    except Exception as e:
+        print(e)
+
+    finally:
+        # Release resources.
         print('Done.')
-        sys.exit()
 
 def pid_process(output, p, i, d, box_coord, origin_coord, action):
+    """PID loop for single motor control."""
     try:
         # Create a PID and initialize it.
         p = PIDController(p.value, i.value, d.value)
@@ -69,67 +62,71 @@ def pid_process(output, p, i, d, box_coord, origin_coord, action):
 
     finally: # Release resources.
         print('Done.')
-        sys.exit()
 
-# ('person',)
+#('person',)
 #('orange', 'apple', 'sports ball')
 def process_manager(args):
-    global uarm, height, width, image_shape
+    """Main process manager."""
+    global uarm
 
     image_shape = args.image_shape
     (height, width) = image_shape
 
-    initial_position = {'x': 21.6, 'y': 80.79, 'z': 186.11, 'speed': 100, 'relative': False, 'wait': True}
+    try:
+        uarm = UArm(uart_delay=args.uart_delay, 
+                    servo_attach_delay=args.servo_attach_delay, 
+                    set_position_delay=args.set_position_delay, 
+                    servo_detach_delay=args.servo_detach_delay, 
+                    pump_delay=args.pump_delay)
 
-    uarm = UArm(uart_delay=2, 
-                initial_position=initial_position, 
-                servo_attach_delay=5, 
-                set_position_delay=5, 
-                servo_detach_delay=5, 
-                pump_delay=5)
+        with Manager() as manager:
+            # Set initial bounding box (x, y)-coordinates to center of frame.
+            center_x = manager.Value('i', 0)
+            center_y = manager.Value('i', 0)
 
-    with Manager() as manager:
-        # Set initial bounding box (x, y)-coordinates to center of frame.
-        center_x = manager.Value('i', 0)
-        center_y = manager.Value('i', 0)
+            object_x = manager.Value('i', 0)
+            object_y = manager.Value('i', 0)
 
-        object_x = manager.Value('i', 0)
-        object_y = manager.Value('i', 0)
+            center_x.value = height // 2
+            center_y.value = width // 2
 
-        center_x.value = RESOLUTION[0] // 2
-        center_y.value = RESOLUTION[1] // 2
+            # Pan and tilt angles updated by independent PID processes.
+            pan = manager.Value('i', 0)
+            tilt = manager.Value('i', 0)
 
-        # Pan and tilt angles updated by independent PID processes.
-        pan = manager.Value('i', 0)
-        tilt = manager.Value('i', 0)
+            # PID gains for panning.
+            pan_p = manager.Value('f', 0.15)
+            # 0 time integral gain until inferencing is faster than ~50ms.
+            pan_i = manager.Value('f', 0.02)
+            pan_d = manager.Value('f', 0)
+        
+            # PID gains for tilting.
+            tilt_p = manager.Value('f', 0.15)
+            # 0 time integral gain until inferencing is faster than ~50ms.
+            tilt_i = manager.Value('f', 0.02)
+            tilt_d = manager.Value('f', 0)
 
-        # PID gains for panning.
-        pan_p = manager.Value('f', 0.15)
-        # 0 time integral gain until inferencing is faster than ~50ms.
-        pan_i = manager.Value('f', 0.2)
-        pan_d = manager.Value('f', 0)
+            detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
+            pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, center_x.value, 'pan'))
+            tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, center_y.value, 'tilt'))
+            servo_process = Process(target=set_servos, args=(pan, tilt, args.flip_vertically, args.flip_horizontally))
 
-        # PID gains for tilting.
-        tilt_p = manager.Value('f', 0.15)
-        # 0 time integral gain until inferencing is faster than ~50ms.
-        tilt_i = manager.Value('f', 0.2)
-        tilt_d = manager.Value('f', 0)
+            detect_process.start()
+            pan_process.start()
+            tilt_process.start()
+            servo_process.start()
 
-        detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
-        pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, CENTER[0], 'pan'))
-        tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, CENTER[1], 'tilt'))
-        servo_process = Process(target=set_servos, args=(pan, tilt, args.flip_vertically, args.flip_horizontally))
+            detect_process.join()
+            pan_process.join()
+            tilt_process.join()
+            servo_process.join()
 
-        detect_process.start()
-        pan_process.start()
-        tilt_process.start()
-        servo_process.start()
+    except KeyboardInterrupt:
+        print('User terminated manager process.')
 
-        detect_process.join()
-        pan_process.join()
-        tilt_process.join()
-        servo_process.join()
+    except Exception as e:
+        print(e)
 
-if __name__ == '__main__':
-    process_manager()
+    finally: # Release resources.
+        print('Done.')
 

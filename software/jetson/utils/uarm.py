@@ -8,27 +8,16 @@
 
 import logging, pyuarm, signal, time
 
-initial_position = {'x': 21.6, 'y': 80.79, 'z': 186.11, 'speed': 150, 'relative': False, 'wait': True}
-
 def add_uarm_args(parser):
-    parser.add_argument('--first-x-position', metavar='<first-x-position>', type=float, required=False, default=21.6, help='First position on X axis.')
-    parser.add_argument('--first-y-position', metavar='<first-y-position>', type=float, required=False, default=80.79, help='First position on Y axis.')
-    parser.add_argument('--first-z-position', metavar='<first-z-position>', type=float, required=False, default=186.11, help='First position on Z axis.')
-    parser.add_argument('--second-x-position', metavar='<second-x-position>', type=float, required=False, default=-232.97, help='Second absolute position to X axis.')
-    parser.add_argument('--second-y-position', metavar='<second-y-position>', type=float, required=False, default=120.86, help='Second absolute position to Y axis.')
-    parser.add_argument('--second-z-position', metavar='<second-z-position>', type=float, required=False, default=126.59, help='Second absolute position to Z axis.')
-    parser.add_argument('--third-x-position', metavar='<third-x-position>', type=float, required=False, default=313.93, help='Third absolute position to X axis.')
-    parser.add_argument('--third-y-position', metavar='<third-y-position>', type=float, required=False, default=18.76, help='Third absolute position to Y axis.')
-    parser.add_argument('--third-z-position', metavar='<third-z-position>', type=float, required=False, default=178.67, help='Third absolute position to Z axis.')
-    parser.add_argument('--speed', metavar='<speed>', type=int, required=False, default=100, help='Speed of uARM displacements.')
-    parser.add_argument('--uart-delay', metavar='<uart-delay>', type=float, required=False, default=2.0, help='Delay after configuring uARM\'s UART port.')
-    parser.add_argument('--grab-delay', metavar='<grab-delay>', type=float, required=False, default=5.0, help='Delay after uARM grabs object.')
-    parser.add_argument('--drop-delay', metavar='<drop-delay>', type=float, required=False, default=5.0, help='Delay after uARM drops object.')
-    parser.add_argument('--pump-delay', metavar='<pump-delay>', type=float, required=False, default=5.0, help='Delay after uARM (de-)pumps object.')
-    parser.add_argument('--servo-attach-delay', metavar='<servo-attach-delay>', type=float, required=False, default=5.0, help='Delay after uARM attaches servos.')
-    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=5.0, help='Delay after uARM detaches servos.')
-    parser.add_argument('--set-position-delay', metavar='<set-position-delay>', type=float, required=False, default=5.0, help='Delay after uARM set to position.')
-    parser.add_argument('--transition-delay', metavar='<transition-delay>', type=float, required=False, default=5.0, help='Delay after using uARM buzzer signals the end of a phase and allows world to react.')
+    parser.add_argument('--uarm-speed', metavar='<uarm-speed>', type=int, required=False, default=100, help='Speed of uARM displacements.')
+    parser.add_argument('--uart-delay', metavar='<uart-delay>', type=float, required=False, default=3.0, help='Delay after configuring uARM\'s UART port.')
+    parser.add_argument('--grab-delay', metavar='<grab-delay>', type=float, required=False, default=3.0, help='Delay after uARM grabs object.')
+    parser.add_argument('--drop-delay', metavar='<drop-delay>', type=float, required=False, default=3.0, help='Delay after uARM drops object.')
+    parser.add_argument('--pump-delay', metavar='<pump-delay>', type=float, required=False, default=3.0, help='Delay after uARM (de-)pumps object.')
+    parser.add_argument('--servo-attach-delay', metavar='<servo-attach-delay>', type=float, required=False, default=3.0, help='Delay after uARM attaches servos.')
+    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=3.0, help='Delay after uARM detaches servos.')
+    parser.add_argument('--set-position-delay', metavar='<set-position-delay>', type=float, required=False, default=3.0, help='Delay after uARM set to position.')
+    parser.add_argument('--transition-delay', metavar='<transition-delay>', type=float, required=False, default=3.0, help='Delay between whole payload iterations.')
     return parser
 
 class UArm(object):
@@ -37,14 +26,12 @@ class UArm(object):
 
     def __init__(self, 
                  uart_delay=2, 
-                 initial_position=initial_position, 
                  servo_attach_delay=5, 
                  set_position_delay=5, 
                  servo_detach_delay=5, 
                  pump_delay=5):
 
         self.uart_delay = uart_delay
-        self.initial_position = initial_position
         self.servo_attach_delay = servo_attach_delay
         self.set_position_delay = set_position_delay
         self.servo_detach_delay = servo_detach_delay
@@ -56,9 +43,7 @@ class UArm(object):
 
         self.set_servo_attach()
 
-    def in_range(self, val, start, end):
-        """Checks if the input value is in the supplied range."""
-        return (val >= start and val <= end)
+        self.initialize()
 
     def get_uarm(self):
         ports = pyuarm.tools.list_uarms.uarm_ports()
@@ -74,6 +59,10 @@ class UArm(object):
     def set_servo_detach(self):
         self.uarm.set_servo_detach()
         time.sleep(self.servo_detach_delay)
+
+    def in_range(self, val, start, end):
+        """Checks if the input value is in the supplied range."""
+        return (val >= start and val <= end)
 
     def get_servo_angle(self, servo_number=None):
         return self.uarm.get_servo_angle(servo_number=servo_number)
@@ -110,9 +99,16 @@ class UArm(object):
         self.drop(drop_position=drop_position)
         self.reset(detach=detach)
 
+    def initial_position(self):
+        """Homes back to the initial position."""
+        self.set_servo_angle(0, 90)
+        self.set_servo_angle(1, 90)
+        self.set_servo_angle(2, 90)
+        self.set_servo_angle(3, 90)
+
     def initialize(self):
         self.set_pump(on=False)
-        self.set_position(position=self.initial_position)
+        self.initial_position()
 
     def reset(self, detach=False):
         self.initialize()

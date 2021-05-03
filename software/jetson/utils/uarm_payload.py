@@ -19,15 +19,15 @@ def add_uarm_args(parser):
     parser.add_argument('--third-x-position', metavar='<third-x-position>', type=float, required=False, default=313.93, help='Third absolute position to X axis.')
     parser.add_argument('--third-y-position', metavar='<third-y-position>', type=float, required=False, default=18.76, help='Third absolute position to Y axis.')
     parser.add_argument('--third-z-position', metavar='<third-z-position>', type=float, required=False, default=178.67, help='Third absolute position to Z axis.')
-    parser.add_argument('--speed', metavar='<speed>', type=int, required=False, default=150, help='Speed of uARM displacements.')
+    parser.add_argument('--speed', metavar='<speed>', type=int, required=False, default=100, help='Speed of uARM displacements.')
     parser.add_argument('--uart-delay', metavar='<uart-delay>', type=float, required=False, default=2.0, help='Delay after configuring uARM\'s UART port.')
-    parser.add_argument('--grab-delay', metavar='<grab-delay>', type=float, required=False, default=5.0, help='Delay after uARM grabs object.')
-    parser.add_argument('--drop-delay', metavar='<drop-delay>', type=float, required=False, default=5.0, help='Delay after uARM drops object.')
-    parser.add_argument('--pump-delay', metavar='<pump-delay>', type=float, required=False, default=5.0, help='Delay after uARM (de-)pumps object.')
-    parser.add_argument('--servo-attach-delay', metavar='<servo-attach-delay>', type=float, required=False, default=5.0, help='Delay after uARM attaches servos.')
-    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=5.0, help='Delay after uARM detaches servos.')
-    parser.add_argument('--set-position-delay', metavar='<set-position-delay>', type=float, required=False, default=5.0, help='Delay after uARM set to position.')
-    parser.add_argument('--transition-delay', metavar='<transition-delay>', type=float, required=False, default=5.0, help='Delay after using uARM buzzer signals the end of a phase and allows world to react.')
+    parser.add_argument('--grab-delay', metavar='<grab-delay>', type=float, required=False, default=2.0, help='Delay after uARM grabs object.')
+    parser.add_argument('--drop-delay', metavar='<drop-delay>', type=float, required=False, default=2.0, help='Delay after uARM drops object.')
+    parser.add_argument('--pump-delay', metavar='<pump-delay>', type=float, required=False, default=2.0, help='Delay after uARM (de-)pumps object.')
+    parser.add_argument('--servo-attach-delay', metavar='<servo-attach-delay>', type=float, required=False, default=2.0, help='Delay after uARM attaches servos.')
+    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=2.0, help='Delay after uARM detaches servos.')
+    parser.add_argument('--set-position-delay', metavar='<set-position-delay>', type=float, required=False, default=2.0, help='Delay after uARM set to position.')
+    parser.add_argument('--transition-delay', metavar='<transition-delay>', type=float, required=False, default=2.0, help='Delay after using uARM buzzer signals the end of a phase and allows world to react.')
     return parser
 
 class UArm(object):
