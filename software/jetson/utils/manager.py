@@ -4,7 +4,7 @@
 # File:        software/jetson/utils/manager.py
 # By:          Samuel Duclos
 # For:         Myself
-# Description: This file implements a multiprocessing manager for motor control after object detection.
+# Description: This file implements a multiprocessing manager for PID motor control with object detection.
 
 from multiprocessing import Value, Process, Manager
 from utils.loop import loop
@@ -26,10 +26,6 @@ CENTER = (RESOLUTION[0] // 2, RESOLUTION[1] // 2)
 
 global uarm
 
-def in_range(val, start, end):
-    """Checks if the input value is in the supplied range."""
-    return (val >= start and val <= end)
-
 def set_servos(pan, tilt, flip_vertically=False, flip_horizontally=False):
     global uarm
 
@@ -39,15 +35,8 @@ def set_servos(pan, tilt, flip_vertically=False, flip_horizontally=False):
             tilt_angle = (-1 if flip_horizontally else 1) * tilt.value
 
             # If the pan angle is within the range: pan.
-            if in_range(pan_angle, SERVO_MIN, SERVO_MAX):
-                uarm.set_servo_angle(SERVO_BOTTOM, pan_angle) # Verify this is the correct servo!!!
-            else:
-                logging.info(f'pan_angle not in range {pan_angle}')
-
-            if in_range(tilt_angle, SERVO_MIN, SERVO_MAX):
-                uarm.set_servo_angle(SERVO_LEFT, tilt_angle) # Verify this is the correct servo!!!
-            else:
-                logging.info(f'tilt_angle not in range {tilt_angle}')
+            uarm.set_servo_angle(SERVO_BOTTOM, pan_angle) # Verify this is the correct servo!!!
+            uarm.set_servo_angle(SERVO_LEFT, tilt_angle) # Verify this is the correct servo!!!
 
     except Exception as e:
         print(e)
@@ -61,8 +50,6 @@ def set_servos(pan, tilt, flip_vertically=False, flip_horizontally=False):
         sys.exit()
 
 def pid_process(output, p, i, d, box_coord, origin_coord, action):
-    global uarm
-
     try:
         # Create a PID and initialize it.
         p = PIDController(p.value, i.value, d.value)
@@ -74,31 +61,32 @@ def pid_process(output, p, i, d, box_coord, origin_coord, action):
             output.value = p.update(error)
             logging.info(f'{action} error {error} angle: {output.value}')
 
-    except Exception as e:
-        print(e)
-
     except KeyboardInterrupt:
         print('User terminated PID process.')
 
+    except Exception as e:
+        print(e)
+
     finally: # Release resources.
-        uarm.set_servo_detach()
         print('Done.')
         sys.exit()
 
 # ('person',)
 #('orange', 'apple', 'sports ball')
 def process_manager(args):
+    global uarm, height, width, image_shape
+
+    image_shape = args.image_shape
+    (height, width) = image_shape
+
     initial_position = {'x': 21.6, 'y': 80.79, 'z': 186.11, 'speed': 100, 'relative': False, 'wait': True}
 
-    global uarm
     uarm = UArm(uart_delay=2, 
                 initial_position=initial_position, 
                 servo_attach_delay=5, 
                 set_position_delay=5, 
                 servo_detach_delay=5, 
                 pump_delay=5)
-
-    uarm.set_servo_attach()
 
     with Manager() as manager:
         # Set initial bounding box (x, y)-coordinates to center of frame.
@@ -115,28 +103,16 @@ def process_manager(args):
         pan = manager.Value('i', 0)
         tilt = manager.Value('i', 0)
 
-        ## PID gains for panning.
-        #pan_p = manager.Value('f', 0.05)
-        ## 0 time integral gain until inferencing is faster than ~50ms.
-        #pan_i = manager.Value('f', 0.1)
-        #pan_d = manager.Value('f', 0)
-        #
-        ## PID gains for tilting.
-        #tilt_p = manager.Value('f', 0.15)
-        ## 0 time integral gain until inferencing is faster than ~50ms.
-        #tilt_i = manager.Value('f', 0.2)
-        #tilt_d = manager.Value('f', 0)
-
         # PID gains for panning.
         pan_p = manager.Value('f', 0.15)
         # 0 time integral gain until inferencing is faster than ~50ms.
-        pan_i = manager.Value('f', 0)
+        pan_i = manager.Value('f', 0.2)
         pan_d = manager.Value('f', 0)
 
         # PID gains for tilting.
         tilt_p = manager.Value('f', 0.15)
         # 0 time integral gain until inferencing is faster than ~50ms.
-        tilt_i = manager.Value('f', 0)
+        tilt_i = manager.Value('f', 0.2)
         tilt_d = manager.Value('f', 0)
 
         detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
