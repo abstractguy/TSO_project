@@ -19,4 +19,3 @@ curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/do
 rm cookie
 echo "Downloaded ${FILE_NAME}..."
 
-
