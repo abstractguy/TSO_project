@@ -156,5 +156,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
         if args.input_type != 'image':
             cap.release()
 
+        cv2.destroyAllWindows()
+
         #overclock.underclock()
 

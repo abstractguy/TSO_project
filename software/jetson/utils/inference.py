@@ -14,8 +14,8 @@ def add_inference_args(parser):
     parser.add_argument('--confidence-threshold', metavar='<confidence-threshold>', type=float, required=False, default=0.25, help='Confidence threshold.') # 0.5
     parser.add_argument('--nms-threshold', metavar='<nms-threshold>', type=float, required=False, default=0.3, help='NMS threshold.')
     parser.add_argument('--model', metavar='<model>', type=str, required=False, default='yolov4', help='Path of input image.')
-    parser.add_argument('--disable-gpu', action='store_true', help='Disable GPU usage for inference.')
     parser.add_argument('--no-filter-object-category', action='store_true', help='Disable biggest single-object category selection.')
+    parser.add_argument('--disable-gpu', action='store_true', help='Disable GPU usage for inference.')
     return parser
 
 class ObjectCenter(object):

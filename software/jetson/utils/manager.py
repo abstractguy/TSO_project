@@ -10,14 +10,13 @@ from multiprocessing import Value, Process, Manager
 from utils.loop import loop
 from utils.pid import PIDController
 from utils.uarm import UArm
-from pyuarm.protocol import *
+from pyuarm.protocol import SERVO_BOTTOM, SERVO_LEFT, SERVO_RIGHT, SERVO_HAND
 
-import logging, pyuarm, signal, sys
+import logging, pyuarm, sys
 
 logging.basicConfig()
 LOGLEVEL = logging.getLogger().getEffectiveLevel()
 
-#RESOLUTION = (320, 320)
 RESOLUTION = (480, 640)
 
 SERVO_MIN = -90
@@ -25,61 +24,71 @@ SERVO_MAX = 90
 
 CENTER = (RESOLUTION[0] // 2, RESOLUTION[1] // 2)
 
-FLIP_VERTICALLY = False
-FLIP_HORIZONTALLY = False
-
 global uarm
-
-def signal_handler(sig, frame):
-    """Handles keyboard interrupt."""
-    global uarm
-    print("[INFO] You pressed `CTRL + C`! Exiting...")
-    uarm.set_servo_detach()
-    sys.exit()
 
 def in_range(val, start, end):
     """Checks if the input value is in the supplied range."""
     return (val >= start and val <= end)
 
-def set_servos(pan, tilt, flip_vertically=FLIP_VERTICALLY, flip_horizontally=FLIP_HORIZONTALLY):
-    # Signal trap to handle keyboard interrupt.
+def set_servos(pan, tilt, flip_vertically=False, flip_horizontally=False):
     global uarm
 
-    signal.signal(signal.SIGINT, signal_handler)
+    try:
+        while True:
+            pan_angle = (-1 if flip_vertically else 1) * pan.value
+            tilt_angle = (-1 if flip_horizontally else 1) * tilt.value
 
-    while True:
-        pan_angle = (-1 if flip_vertically else 1) * pan.value
-        tilt_angle = (-1 if flip_horizontally else 1) * tilt.value
+            # If the pan angle is within the range: pan.
+            if in_range(pan_angle, SERVO_MIN, SERVO_MAX):
+                uarm.set_servo_angle(SERVO_BOTTOM, pan_angle) # Verify this is the correct servo!!!
+            else:
+                logging.info(f'pan_angle not in range {pan_angle}')
 
-        # If the pan angle is within the range: pan.
-        if in_range(pan_angle, SERVO_MIN, SERVO_MAX):
-            uarm.set_servo_angle(SERVO_BOTTOM, pan_angle) # Verify this is the correct servo!!!
-        else:
-            logging.info(f'pan_angle not in range {pan_angle}')
+            if in_range(tilt_angle, SERVO_MIN, SERVO_MAX):
+                uarm.set_servo_angle(SERVO_LEFT, tilt_angle) # Verify this is the correct servo!!!
+            else:
+                logging.info(f'tilt_angle not in range {tilt_angle}')
 
-        if in_range(tilt_angle, SERVO_MIN, SERVO_MAX):
-            uarm.set_servo_angle(SERVO_LEFT, tilt_angle) # Verify this is the correct servo!!!
-        else:
-            logging.info(f'tilt_angle not in range {tilt_angle}')
+    except Exception as e:
+        print(e)
+
+    except KeyboardInterrupt:
+        print('User terminated servo process.')
+
+    finally: # Release resources.
+        uarm.set_servo_detach()
+        print('Done.')
+        sys.exit()
 
 def pid_process(output, p, i, d, box_coord, origin_coord, action):
-    # Signal trap to handle keyboard interrupt.
-    signal.signal(signal.SIGINT, signal_handler)
+    global uarm
 
-    # Create a PID and initialize it.
-    p = PIDController(p.value, i.value, d.value)
-    p.reset()
+    try:
+        # Create a PID and initialize it.
+        p = PIDController(p.value, i.value, d.value)
+        p.reset()
 
-    # Loop indefinitely.
-    while True:
-        error = origin_coord - box_coord.value
-        output.value = p.update(error)
-        # logging.info(f'{action} error {error} angle: {output.value}')
+        # Loop indefinitely.
+        while True:
+            error = origin_coord - box_coord.value
+            output.value = p.update(error)
+            logging.info(f'{action} error {error} angle: {output.value}')
+
+    except Exception as e:
+        print(e)
+
+    except KeyboardInterrupt:
+        print('User terminated PID process.')
+
+    finally: # Release resources.
+        uarm.set_servo_detach()
+        print('Done.')
+        sys.exit()
 
 # ('person',)
 #('orange', 'apple', 'sports ball')
-def pantilt_process_manager(args, flip_vertically=FLIP_VERTICALLY, flip_horizontally=FLIP_HORIZONTALLY):
-    initial_position = {'x': 21.6, 'y': 80.79, 'z': 186.11, 'speed': 150, 'relative': False, 'wait': True}
+def process_manager(args):
+    initial_position = {'x': 21.6, 'y': 80.79, 'z': 186.11, 'speed': 100, 'relative': False, 'wait': True}
 
     global uarm
     uarm = UArm(uart_delay=2, 
@@ -119,13 +128,13 @@ def pantilt_process_manager(args, flip_vertically=FLIP_VERTICALLY, flip_horizont
         #tilt_d = manager.Value('f', 0)
 
         # PID gains for panning.
-        pan_p = manager.Value('f', 1.0)
+        pan_p = manager.Value('f', 0.15)
         # 0 time integral gain until inferencing is faster than ~50ms.
         pan_i = manager.Value('f', 0)
         pan_d = manager.Value('f', 0)
 
         # PID gains for tilting.
-        tilt_p = manager.Value('f', 1.0)
+        tilt_p = manager.Value('f', 0.15)
         # 0 time integral gain until inferencing is faster than ~50ms.
         tilt_i = manager.Value('f', 0)
         tilt_d = manager.Value('f', 0)
@@ -133,7 +142,7 @@ def pantilt_process_manager(args, flip_vertically=FLIP_VERTICALLY, flip_horizont
         detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
         pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, CENTER[0], 'pan'))
         tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, CENTER[1], 'tilt'))
-        servo_process = Process(target=set_servos, args=(pan, tilt, flip_vertically, flip_horizontally))
+        servo_process = Process(target=set_servos, args=(pan, tilt, args.flip_vertically, args.flip_horizontally))
 
         detect_process.start()
         pan_process.start()
@@ -146,5 +155,5 @@ def pantilt_process_manager(args, flip_vertically=FLIP_VERTICALLY, flip_horizont
         servo_process.join()
 
 if __name__ == '__main__':
-    pantilt_process_manager()
+    process_manager()
 

@@ -43,7 +43,7 @@ class UArm(object):
                  third_z_position=178.67, 
                  second_position=None, 
                  third_position=None, 
-                 uarm_speed=150, 
+                 uarm_speed=100, 
                  uart_delay=2.0, 
                  servo_attach_delay=5.0, 
                  set_position_delay=5.0, 
