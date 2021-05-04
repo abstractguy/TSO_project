@@ -20,8 +20,6 @@ def parse_args():
     parser = add_input_args(parser)
     args = parser.parse_known_args()[0]
     args.image_shape *= 2 if len(args.image_shape) == 1 else 1
-    if args.mjpeg_port is not None:
-        args.no_show = True
     print(vars(args))
     return args
 

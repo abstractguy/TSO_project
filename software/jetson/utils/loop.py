@@ -16,7 +16,6 @@ def add_output_args(parser):
     parser.add_argument('--video-name', type=str, default='yolo_inference', help='Name of the video.')
     parser.add_argument('--image-shape', metavar='<image-shape>', nargs='+', type=int, required=False, default=[480, 640], help='Shape of image.')
     parser.add_argument('--output-image', metavar='<output-image>', type=str, required=False, default='./doc/object_detection_result.jpg', help='Path of saved output image.')
-    parser.add_argument('--mjpeg-port', metavar='<mjpeg-port>', type=int, required=False, default=None, help='MJPEG server port [8080]')
     parser.add_argument('--save', action='store_true', help='Save output inference results to file.')
     parser.add_argument('--no-show', action='store_true', help='Don\'t display live results on screen. Can improve FPS.')
     return parser
@@ -61,14 +60,6 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
         if show:
             open_window(args.video_name, 'Camera inference', width, height)
-
-        if args.mjpeg_port is None:
-            mjpeg_server = None
-
-        else:
-            from utils.mjpeg import MjpegServer
-            mjpeg_server = MjpegServer(port=args.mjpeg_port)
-            print('MJPEG server started...')
 
         # Loop through frames.
         while True:
@@ -124,9 +115,6 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
             else:
                 print('FPS:', fps)
 
-            if mjpeg_server is not None:
-                mjpeg_server.send_img(frame)
-
             if args.save:
                 # Save output.
                 cv2.imwrite('object_detection_result.jpg', inferred_image)
@@ -149,10 +137,8 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                 full_scrn = not full_scrn
                 set_display(args.video_name, full_scrn)
 
-    finally: # Release resources.
-        if args.mjpeg_port is not None:
-            mjpeg_server.shutdown()
-
+    finally:
+        # Release resources.
         if args.input_type != 'image':
             cap.release()
 
