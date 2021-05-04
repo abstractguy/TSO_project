@@ -73,7 +73,8 @@ def process_manager(args):
     (height, width) = image_shape
 
     try:
-        uarm = UArm(uart_delay=args.uart_delay, 
+        uarm = UArm(uarm_speed=args.uarm_speed, 
+                    uart_delay=args.uart_delay, 
                     servo_attach_delay=args.servo_attach_delay, 
                     set_position_delay=args.set_position_delay, 
                     servo_detach_delay=args.servo_detach_delay, 
@@ -95,15 +96,15 @@ def process_manager(args):
             tilt = manager.Value('i', 0)
 
             # PID gains for panning.
-            pan_p = manager.Value('f', 0.15)
+            pan_p = manager.Value('f', 1)
             # 0 time integral gain until inferencing is faster than ~50ms.
-            pan_i = manager.Value('f', 0.02)
+            pan_i = manager.Value('f', 0)
             pan_d = manager.Value('f', 0)
         
             # PID gains for tilting.
-            tilt_p = manager.Value('f', 0.15)
+            tilt_p = manager.Value('f', 1)
             # 0 time integral gain until inferencing is faster than ~50ms.
-            tilt_i = manager.Value('f', 0.02)
+            tilt_i = manager.Value('f', 0)
             tilt_d = manager.Value('f', 0)
 
             detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))

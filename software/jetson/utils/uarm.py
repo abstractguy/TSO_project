@@ -11,13 +11,10 @@ import logging, pyuarm, signal, time
 def add_uarm_args(parser):
     parser.add_argument('--uarm-speed', metavar='<uarm-speed>', type=int, required=False, default=100, help='Speed of uARM displacements.')
     parser.add_argument('--uart-delay', metavar='<uart-delay>', type=float, required=False, default=3.0, help='Delay after configuring uARM\'s UART port.')
-    parser.add_argument('--grab-delay', metavar='<grab-delay>', type=float, required=False, default=3.0, help='Delay after uARM grabs object.')
-    parser.add_argument('--drop-delay', metavar='<drop-delay>', type=float, required=False, default=3.0, help='Delay after uARM drops object.')
     parser.add_argument('--pump-delay', metavar='<pump-delay>', type=float, required=False, default=3.0, help='Delay after uARM (de-)pumps object.')
     parser.add_argument('--servo-attach-delay', metavar='<servo-attach-delay>', type=float, required=False, default=3.0, help='Delay after uARM attaches servos.')
-    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=3.0, help='Delay after uARM detaches servos.')
     parser.add_argument('--set-position-delay', metavar='<set-position-delay>', type=float, required=False, default=3.0, help='Delay after uARM set to position.')
-    parser.add_argument('--transition-delay', metavar='<transition-delay>', type=float, required=False, default=3.0, help='Delay between whole payload iterations.')
+    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=3.0, help='Delay after uARM detaches servos.')
     return parser
 
 class UArm(object):
@@ -25,12 +22,15 @@ class UArm(object):
     SERVO_MAX = 90
 
     def __init__(self, 
+                 uarm_speed=100, 
                  uart_delay=2, 
                  servo_attach_delay=5, 
                  set_position_delay=5, 
                  servo_detach_delay=5, 
                  pump_delay=5):
 
+        self.initial_position = {'x': 100, 'y': 100, 'z': 50, 'speed': uarm_speed, 'relative': False, 'wait': True}
+        self.uarm_speed = uarm_speed
         self.uart_delay = uart_delay
         self.servo_attach_delay = servo_attach_delay
         self.set_position_delay = set_position_delay
@@ -75,6 +75,7 @@ class UArm(object):
             logging.info(f'angle not in range {angle}')
 
     def set_position(self, position=None):
+        self.set_servo_attach()
         self.uarm.set_position(**position)
         time.sleep(self.set_position_delay)
         self.set_servo_detach()
@@ -99,16 +100,10 @@ class UArm(object):
         self.drop(drop_position=drop_position)
         self.reset(detach=detach)
 
-    def initial_position(self):
-        """Homes back to the initial position."""
-        self.set_servo_angle(0, 90)
-        self.set_servo_angle(1, 90)
-        self.set_servo_angle(2, 90)
-        self.set_servo_angle(3, 90)
-
     def initialize(self):
+        """Homes back to the initial position after disabling pump."""
         self.set_pump(on=False)
-        self.initial_position()
+        self.set_position(self.initial_position)
 
     def reset(self, detach=False):
         self.initialize()
