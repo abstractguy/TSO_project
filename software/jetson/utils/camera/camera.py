@@ -22,6 +22,57 @@ def putIterationsPerSec(frame, iterations_per_sec):
                 (255, 255, 255))
     return frame
 
+def noThreading(source=0):
+    """Grab and show video frames without multithreading."""
+
+    cap = cv2.VideoCapture(source)
+    cps = CountsPerSec().start()
+
+    while True:
+        grabbed, frame = cap.read()
+        if not grabbed or cv2.waitKey(1) == ord("q"):
+            break
+
+        frame = putIterationsPerSec(frame, cps.countsPerSec())
+        cv2.imshow("Video", frame)
+        cps.increment()
+
+def threadVideoGet(source=0):
+    """Dedicated thread for grabbing video frames with VideoGet object.
+       Main thread shows video frames."""
+
+    video_getter = VideoGet(source).start()
+    cps = CountsPerSec().start()
+
+    while True:
+        if (cv2.waitKey(1) == ord("q")) or video_getter.stopped:
+            video_getter.stop()
+            break
+
+        frame = video_getter.frame
+        frame = putIterationsPerSec(frame, cps.countsPerSec())
+        cv2.imshow("Video", frame)
+        cps.increment()
+
+def threadVideoShow(source=0):
+    """Dedicated thread for showing video frames with VideoShow object.
+       Main thread grabs video frames."""
+
+    cap = cv2.VideoCapture(source)
+    (grabbed, frame) = cap.read()
+    video_shower = VideoShow(frame).start()
+    cps = CountsPerSec().start()
+
+    while True:
+        (grabbed, frame) = cap.read()
+        if not grabbed or video_shower.stopped:
+            video_shower.stop()
+            break
+
+        frame = putIterationsPerSec(frame, cps.countsPerSec())
+        video_shower.frame = frame
+        cps.increment()
+
 def threadBoth(source=0):
     """Dedicated thread for grabbing video frames with VideoGet object.
        Dedicated thread for showing video frames with VideoShow object.
@@ -46,7 +97,14 @@ def threadBoth(source=0):
 def thread_camera(args):
     try:
         if args.input_type == 'camera':
-            threadBoth(source=0)
+            if args.thread == 'both':
+                threadBoth(source=0)
+            elif args.thread == 'get':
+                threadVideoGet(source=0)
+            elif args.thread == 'show':
+                threadVideoShow(source=0)
+            else:
+                noThreading(source=0)
 
         else:
             raise NotImplementedError("ERROR: 'image', 'video' and 'arducam' are not implemented yet!")
