@@ -129,7 +129,7 @@ def putIterationsPerSec(frame, iterations_per_sec):
                 (255, 255, 255))
     return frame
 
-def noThreading(source=0):
+def noThreading(args, source=0):
     """Grab and show video frames without multithreading."""
 
     cap = cv2.VideoCapture(source)
@@ -144,7 +144,7 @@ def noThreading(source=0):
         cv2.imshow("Video", frame)
         cps.increment()
 
-def threadVideoGet(source=0):
+def threadVideoGet(args, source=0):
     """Dedicated thread for grabbing video frames with VideoGet object.
        Main thread shows video frames."""
 
@@ -161,7 +161,7 @@ def threadVideoGet(source=0):
         cv2.imshow("Video", frame)
         cps.increment()
 
-def threadVideoShow(source=0):
+def threadVideoShow(args, source=0):
     """Dedicated thread for showing video frames with VideoShow object.
        Main thread grabs video frames."""
 
@@ -180,37 +180,112 @@ def threadVideoShow(source=0):
         video_shower.frame = frame
         cps.increment()
 
-def threadBoth(source=0):
+def captureImage_thread():
+    global handle, running
+
+    rtn_val = ArducamSDK.Py_ArduCam_beginCaptureImage(handle)
+
+    if rtn_val != 0:
+        print("Error beginning capture, rtn_val = ", rtn_val)
+
+        running = False
+
+        return
+
+    else:
+        print("Capture began, rtn_val = ", rtn_val)
+
+    while running:
+        rtn_val = ArducamSDK.Py_ArduCam_captureImage(handle)
+
+        if rtn_val > 255:
+            print("Error capture image, rtn_val = ", rtn_val)
+
+            if rtn_val == ArducamSDK.USB_CAMERA_USB_TASK_ERROR:
+                break
+
+        time.sleep(0.005)
+
+    running = False
+    ArducamSDK.Py_ArduCam_endCaptureImage(handle)
+
+def readImage_thread():
+    global handle, running, Width, Height, save_flag, cfg, color_mode, save_raw
+    global COLOR_BayerGB2BGR, COLOR_BayerRG2BGR, COLOR_BayerGR2BGR, COLOR_BayerBG2BGR
+
+    count = 0
+    totalFrame = 0
+
+    time0 = time.time()
+    time1 = time.time()
+
+    data = {}
+
+    cv2.namedWindow("ArduCam Camarray", 1)
+
+    if not os.path.exists("images"):
+        os.makedirs("images")
+
+    while running:
+        display_time = time.time()
+
+        if ArducamSDK.Py_ArduCam_availableImage(handle) > 0:		
+            rtn_val, data, rtn_cfg = ArducamSDK.Py_ArduCam_readImage(handle)
+            datasize = rtn_cfg['u32Size']
+
+            if rtn_val != 0 or datasize == 0:
+                ArducamSDK.Py_ArduCam_del(handle)
+
+                print("Read data fail!")
+
+                continue
+
+            image = convert_image(data, rtn_cfg, color_mode)
+
+            time1 = time.time()
+
+            if time1 - time0 >= 1:
+                print("%s %d %s\n" % ("fps:", count, "/s"))
+
+                count = 0
+                time0 = time1
+
+            count += 1
+
+            if save_flag:
+                cv2.imwrite("images/image%d.jpg" % totalFrame, image)
+
+                if save_raw:
+                    with open("images/image%d.raw" % totalFrame, 'wb') as f:
+                        f.write(data)
+
+                totalFrame += 1
+
+            image = cv2.resize(image, (640, 480), interpolation=cv2.INTER_LINEAR)
+
+            cv2.imshow("ArduCam Demo", image)
+            cv2.waitKey(10)
+
+            ArducamSDK.Py_ArduCam_del(handle)
+
+        else:
+            time.sleep(0.001)
+
+def threadBoth(args, source=0):
     """Dedicated thread for grabbing video frames with VideoGet object.
        Dedicated thread for showing video frames with VideoShow object.
        Main thread serves only to pass frames between VideoGet and
        VideoShow objects/threads."""
 
-    video_getter = VideoGet(source).start()
-    video_shower = VideoShow(video_getter.frame).start()
-    cps = CountsPerSec().start()
+    if args.input_type == 'arducam':
+        print(" usage: sudo python ArduCam_Py_Demo.py <path/config-file-name>	\
+            \n\n example: sudo python ArduCam_Py_Demo.py ../../../python_config/AR0134_960p_Color.json	\
+            \n\n While the program is running, you can press the following buttons in the terminal:	\
+            \n\n 's' + Enter:Save the image to the images folder.	\
+            \n\n 'c' + Enter:Stop saving images.	\
+            \n\n 'q' + Enter:Stop running the program.	\
+            \n\n")
 
-    while True:
-        if video_getter.stopped or video_shower.stopped:
-            video_shower.stop()
-            video_getter.stop()
-            break
-
-    frame = video_getter.frame
-    frame = putIterationsPerSec(frame, cps.countsPerSec())
-    video_shower.frame = frame
-    cps.increment()
-
-def stream(args):
-    print(" usage: sudo python ArduCam_Py_Demo.py <path/config-file-name>	\
-        \n\n example: sudo python ArduCam_Py_Demo.py ../../../python_config/AR0134_960p_Color.json	\
-        \n\n While the program is running, you can press the following buttons in the terminal:	\
-        \n\n 's' + Enter:Save the image to the images folder.	\
-        \n\n 'c' + Enter:Stop saving images.	\
-        \n\n 'q' + Enter:Stop running the program.	\
-        \n\n")
-
-    try:
         if camera_initFromFile(args.config_file_name):
             ArducamSDK.Py_ArduCam_setMode(handle, ArducamSDK.CONTINUOUS_MODE)
 
@@ -242,33 +317,42 @@ def stream(args):
             else:
                 print("device close fail!")
 
-    except KeyboardInterrupt:
-        print('User terminated stream process.')
+    else:
+        video_getter = VideoGet(source).start()
+        video_shower = VideoShow(video_getter.frame).start()
+        cps = CountsPerSec().start()
 
-    except Exception as e:
-        print(e)
+        while True:
+            if video_getter.stopped or video_shower.stopped:
+                video_shower.stop()
+                video_getter.stop()
+                break
 
-    finally:
-        # Release resources.
-        print('Done.')
+        frame = video_getter.frame
+        frame = putIterationsPerSec(frame, cps.countsPerSec())
+        video_shower.frame = frame
+        cps.increment()
 
 def thread(args):
     """Threading type selector for multi-threading strategy."""
     try:
         if args.input_type == 'arducam' or args.thread == 'both':
-            threadBoth(source=0)
+            threadBoth(args, source=0)
 
         elif args.thread == 'get':
-            threadVideoGet(source=0)
+            threadVideoGet(args, source=0)
 
         elif args.thread == 'show':
-            threadVideoShow(source=0)
+            threadVideoShow(args, source=0)
 
         elif args.thread is None:
-            noThreading(source=0)
+            noThreading(args, source=0)
 
         else:
             raise NotImplementedError('{} is not implemented!' % args.thread)
+
+    except KeyboardInterrupt:
+        print('User terminated stream process.')
 
     except Exception as e:
         print(e)
