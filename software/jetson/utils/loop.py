@@ -375,4 +375,3 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
         cv2.destroyAllWindows()
 
-
