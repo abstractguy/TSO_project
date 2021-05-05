@@ -7,12 +7,12 @@
 # Description: This file implements the main program for a multi-threaded camera I/O streamer.
 
 from utils.parsers import parse_args
-from utils.camera.camera import thread_camera
+from utils.camera.camera import thread
 
 def main():
     """Main program for a multi-threaded camera I/O streamer."""
     args = parse_args()
-    thread_camera(args)
+    thread(args)
 
 if __name__ == "__main__":
     main()

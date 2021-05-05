@@ -5,6 +5,7 @@
 # By:          Samuel Duclos
 # For:         Myself
 # Description: This file implements a multi-threaded occurence counter for the camera program.
+# Reference:   https://github.com/nrsyed/computer-vision.git
 
 from datetime import datetime
 
