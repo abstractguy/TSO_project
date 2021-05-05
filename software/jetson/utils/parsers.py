@@ -18,6 +18,7 @@ def parse_args():
     parser = add_output_args(parser)
     args = parser.parse_known_args()[0]
     args.image_shape *= 2 if len(args.image_shape) == 1 else 1
+    args.thread = 'both' if args.input_type == 'arducam' else 'get'
     print(vars(args))
     return args
 
