@@ -118,4 +118,5 @@ upx391w/
 images0/
 
 !electronics/assets/Gerber/gerber.zip
-
+!software/jetson/utils/ArducamSDK.cpython-36m-aarch64-linux-gnu.so
+!software/jetson/utils/ArducamSDK.so
