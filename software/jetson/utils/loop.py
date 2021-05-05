@@ -11,15 +11,6 @@ from utils.inference import ObjectCenter
 from copy import deepcopy
 import cv2, time
 
-def add_output_args(parser):
-    """Add parser arguments for output options."""
-    parser.add_argument('--video-name', type=str, default='yolo_inference', help='Name of the video.')
-    parser.add_argument('--image-shape', metavar='<image-shape>', nargs='+', type=int, required=False, default=[480, 640], help='Shape of image.')
-    parser.add_argument('--output-image', metavar='<output-image>', type=str, required=False, default='./doc/object_detection_result.jpg', help='Path of saved output image.')
-    parser.add_argument('--save', action='store_true', help='Save output inference results to file.')
-    parser.add_argument('--no-show', action='store_true', help='Don\'t display live results on screen. Can improve FPS.')
-    return parser
-
 def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Detection loop."""
     # Prepare arguments early.

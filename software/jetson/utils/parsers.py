@@ -28,8 +28,10 @@ def add_input_args(parser):
     parser.add_argument('--input-type', metavar='<input-type>', type=str, required=False, choices=['image', 'video', 'camera'], default='camera', help='Input type for inference.')
     parser.add_argument('--width', type=int, default=640, help='Image width [640].')
     parser.add_argument('--height', type=int, default=480, help='Image height [480].')
+    parser.add_argument('--config-file-name', metavar='<config-file-name>', type=str, required=False, default='./Config/USB2.0_UC-391_Rev.D/AR0134_RAW_8b_1280x964_31fps.cfg', help='Path of configuration file.')
     parser.add_argument('--flip-vertically', action='store_true', help='Flip image vertically.')
     parser.add_argument('--flip-horizontally', action='store_true', help='Flip image horizontally.')
+    parser.add_argument('--is-arducam', action='store_true', help='If camera is Arducam Camarray.')
     return parser
 
 def add_inference_args(parser):

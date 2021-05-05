@@ -56,6 +56,7 @@ def convert_color(image,color_mode):
     if color_mode < 0 and color_mode > 3:
         image = cv2.cvtColor(image,COLOR_BayerGB2BGR)
     return image
+
 def convert_image(data,cfg,color_mode):
     Width = cfg["u32Width"]
     Height = cfg["u32Height"]
@@ -89,3 +90,4 @@ def convert_image(data,cfg,color_mode):
         image = separationImage(data,Width,Height)
         pass
     return image
+
