@@ -37,14 +37,13 @@ def configBoard(config):
     ArducamSDK.Py_ArduCam_setboardConfig(handle, config.params[0], \
         config.params[1], config.params[2], config.params[3], \
             config.params[4:config.params_length])
+
 pass
 
 def camera_initFromFile(fileName):
     global cfg, handle, Width, Height, color_mode, save_raw
 
-    # Load config file.
     #config = json.load(open(fileName, "r"))
-
     config = arducam_config_parser.LoadConfigFile(fileName)
 
     camera_parameter = config.camera_param.getdict()
@@ -53,44 +52,54 @@ def camera_initFromFile(fileName):
 
     BitWidth = camera_parameter["BIT_WIDTH"]
     ByteLength = 1
+
     if BitWidth > 8 and BitWidth <= 16:
         ByteLength = 2
         save_raw = True
+
     FmtMode = camera_parameter["FORMAT"][0]
     color_mode = camera_parameter["FORMAT"][1]
-    print("color mode",color_mode)
+    print("color mode", color_mode)
 
     I2CMode = camera_parameter["I2C_MODE"]
     I2cAddr = camera_parameter["I2C_ADDR"]
     TransLvl = camera_parameter["TRANS_LVL"]
-    cfg = {"u32CameraType":0x00,
-            "u32Width":Width,"u32Height":Height,
-            "usbType":0,
-            "u8PixelBytes":ByteLength,
-            "u16Vid":0,
-            "u32Size":0,
-            "u8PixelBits":BitWidth,
-            "u32I2cAddr":I2cAddr,
-            "emI2cMode":I2CMode,
-            "emImageFmtMode":FmtMode,
-            "u32TransLvl":TransLvl }
+    cfg = {
+        "u32CameraType": 0x00,
+        "u32Width": Width,
+        "u32Height": Height,
+        "usbType": 0,
+        "u8PixelBytes": ByteLength,
+        "u16Vid": 0,
+        "u32Size": 0,
+        "u8PixelBits": BitWidth,
+        "u32I2cAddr": I2cAddr,
+        "emI2cMode": I2CMode,
+        "emImageFmtMode": FmtMode,
+        "u32TransLvl": TransLvl
+    }
 
-    #ret,handle,rtn_cfg = ArducamSDK.Py_ArduCam_open(cfg,0)
-    ret,handle,rtn_cfg = ArducamSDK.Py_ArduCam_autoopen(cfg)
-    if ret == 0:
-       
-        #ArducamSDK.Py_ArduCam_writeReg_8_8(handle,0x46,3,0x00)
+    #ret, handle, rtn_cfg = ArducamSDK.Py_ArduCam_open(cfg, 0)
+    ret, handle, rtn_cfg = ArducamSDK.Py_ArduCam_autoopen(cfg)
+
+    if ret == 0:       
+        #ArducamSDK.Py_ArduCam_writeReg_8_8(handle, 0x46, 3, 0x00)
         usb_version = rtn_cfg['usbType']
         configs = config.configs
         configs_length = config.configs_length
+
         for i in range(configs_length):
             type = configs[i].type
+
             if ((type >> 16) & 0xFF) != 0 and ((type >> 16) & 0xFF) != usb_version:
                 continue
+
             if type & 0xFFFF == arducam_config_parser.CONFIG_TYPE_REG:
                 ArducamSDK.Py_ArduCam_writeSensorReg(handle, configs[i].params[0], configs[i].params[1])
+
             elif type & 0xFFFF == arducam_config_parser.CONFIG_TYPE_DELAY:
-                time.sleep(float(configs[i].params[0])/1000)
+                time.sleep(float(configs[i].params[0]) / 1000)
+
             elif type & 0xFFFF == arducam_config_parser.CONFIG_TYPE_VRCMD:
                 configBoard(configs[i])
 
@@ -98,34 +107,46 @@ def camera_initFromFile(fileName):
         ArducamSDK.Py_ArduCam_setCtrl(handle, "setFramerate", 5)
 
         rtn_val, datas = ArducamSDK.Py_ArduCam_readUserData(handle, 0x400 - 16, 16)
-        print("Serial: %c%c%c%c-%c%c%c%c-%c%c%c%c"%(datas[0],datas[1],datas[2],datas[3],
-                                                    datas[4],datas[5],datas[6],datas[7],
-                                                    datas[8],datas[9],datas[10],datas[11]))
+        print("Serial: %c%c%c%c-%c%c%c%c-%c%c%c%c" % (
+                  datas[0], datas[1], datas[2], datas[3],
+                  datas[4], datas[5], datas[6], datas[7],
+                  datas[8], datas[9], datas[10], datas[11]
+              ))
 
         return True
+
     else:
         print("open fail, rtn_val = ", ret)
         return False
+
 pass
 
 def captureImage_thread():
     global handle, running
 
     rtn_val = ArducamSDK.Py_ArduCam_beginCaptureImage(handle)
+
     if rtn_val != 0:
         print("Error beginning capture, rtn_val = ", rtn_val)
+
         running = False
+
         return
+
     else:
         print("Capture began, rtn_val = ", rtn_val)
 
     while running:
         #print('capture')
+
         rtn_val = ArducamSDK.Py_ArduCam_captureImage(handle)
+
         if rtn_val > 255:
             print("Error capture image, rtn_val = ", rtn_val)
+
             if rtn_val == ArducamSDK.USB_CAMERA_USB_TASK_ERROR:
                 break
+
         time.sleep(0.005)
 
     running = False
@@ -143,45 +164,58 @@ def readImage_thread():
 
     data = {}
 
-    cv2.namedWindow("ArduCam Demo", 1)
+    cv2.namedWindow("ArduCam Camarray", 1)
 
     if not os.path.exists("images"):
         os.makedirs("images")
 
     while running:
         display_time = time.time()
+
         if ArducamSDK.Py_ArduCam_availableImage(handle) > 0:		
             rtn_val, data, rtn_cfg = ArducamSDK.Py_ArduCam_readImage(handle)
             datasize = rtn_cfg['u32Size']
+
             if rtn_val != 0 or datasize == 0:
                 ArducamSDK.Py_ArduCam_del(handle)
+
                 print("Read data fail!")
+
                 continue
 
             image = convert_image(data, rtn_cfg, color_mode)
-        
+
             time1 = time.time()
+
             if time1 - time0 >= 1:
-                print("%s %d %s\n"%("fps:", count, "/s"))
+                print("%s %d %s\n" % ("fps:", count, "/s"))
+
                 count = 0
                 time0 = time1
+
             count += 1
+
             if save_flag:
                 cv2.imwrite("images/image%d.jpg" % totalFrame, image)
+
                 if save_raw:
                     with open("images/image%d.raw" % totalFrame, 'wb') as f:
                         f.write(data)
+
                 totalFrame += 1
-                
+
             image = cv2.resize(image, (640, 480), interpolation=cv2.INTER_LINEAR)
 
             cv2.imshow("ArduCam Demo", image)
             cv2.waitKey(10)
+
             ArducamSDK.Py_ArduCam_del(handle)
+
             #print("------------------------display time:", (time.time() - display_time))
+
         else:
             time.sleep(0.001)
-        
+
 def showHelp():
     print(" usage: sudo python ArduCam_Py_Demo.py <path/config-file-name>	\
         \n\n example: sudo python ArduCam_Py_Demo.py ../../../python_config/AR0134_960p_Color.json	\
