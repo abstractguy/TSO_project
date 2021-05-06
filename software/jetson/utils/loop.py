@@ -268,7 +268,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     elif args.input_type == 'camera':
         cap = cv2.VideoCapture(0)
 
-    elif not cap.isOpened():
+    if not cap.isOpened():
         raise SystemExit('ERROR: failed to open camera!')
 
     # Prepare arguments early.

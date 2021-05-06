@@ -19,6 +19,8 @@ from utils.camera.VideoGet import VideoGet
 from utils.camera.VideoShow import VideoShow
 
 from utils.inference import ObjectCenter
+from cvlib.object_detection import draw_bbox
+
 from copy import deepcopy
 
 import cv2, os, sys, threading, time
@@ -119,67 +121,6 @@ def camera_initFromFile(fileName):
 
         return False
 
-def putIterationsPerSec(frame, iterations_per_sec):
-    """Add iterations per second text to lower-left corner of a frame."""
-    cv2.putText(frame, 
-                "{:.0f} iterations/sec".format(iterations_per_sec), 
-                (10, 450), 
-                cv2.FONT_HERSHEY_SIMPLEX, 
-                1.0, 
-                (255, 255, 255))
-    return frame
-
-def noThreading(args, source=0):
-    """Grab and show video frames without multithreading."""
-
-    cap = cv2.VideoCapture(source)
-    cps = CountsPerSec().start()
-
-    while True:
-        grabbed, frame = cap.read()
-        if not grabbed or cv2.waitKey(1) == ord("q"):
-            break
-
-        frame = putIterationsPerSec(frame, cps.countsPerSec())
-        cv2.imshow("Video", frame)
-        cps.increment()
-
-def threadVideoGet(args, source=0):
-    """Dedicated thread for grabbing video frames with VideoGet object.
-       Main thread shows video frames."""
-
-    video_getter = VideoGet(source).start()
-    cps = CountsPerSec().start()
-
-    while True:
-        if (cv2.waitKey(1) == ord("q")) or video_getter.stopped:
-            video_getter.stop()
-            break
-
-        frame = video_getter.frame
-        frame = putIterationsPerSec(frame, cps.countsPerSec())
-        cv2.imshow("Video", frame)
-        cps.increment()
-
-def threadVideoShow(args, source=0):
-    """Dedicated thread for showing video frames with VideoShow object.
-       Main thread grabs video frames."""
-
-    cap = cv2.VideoCapture(source)
-    (grabbed, frame) = cap.read()
-    video_shower = VideoShow(frame).start()
-    cps = CountsPerSec().start()
-
-    while True:
-        (grabbed, frame) = cap.read()
-        if not grabbed or video_shower.stopped:
-            video_shower.stop()
-            break
-
-        frame = putIterationsPerSec(frame, cps.countsPerSec())
-        video_shower.frame = frame
-        cps.increment()
-
 def captureImage_thread():
     global handle, running
 
@@ -271,11 +212,106 @@ def readImage_thread():
         else:
             time.sleep(0.001)
 
-def threadBoth(args, source=0):
+def putIterationsPerSec(frame, iterations_per_sec):
+    """Add iterations per second text to lower-left corner of a frame."""
+    cv2.putText(frame, 
+                "{:.0f} iterations/sec".format(iterations_per_sec), 
+                (10, 450), 
+                cv2.FONT_HERSHEY_SIMPLEX, 
+                1.0, 
+                (255, 255, 255))
+    return frame
+
+def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
+    """Grab and show video frames without multithreading."""
+    obj = ObjectCenter(args, enable_gpu=not args.disable_gpu, show=not args.no_show)
+
+    cap = cv2.VideoCapture(source)
+    cps = CountsPerSec().start()
+
+    while True:
+        grabbed, frame = cap.read()
+        if not grabbed or cv2.waitKey(1) == ord("q"):
+            break
+
+        frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+        frame = putIterationsPerSec(frame, cps.countsPerSec())
+        cv2.imshow("Video", frame)
+        cps.increment()
+
+def threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
+    """Dedicated thread for grabbing video frames with VideoGet object.
+       Main thread shows video frames."""
+
+    obj = ObjectCenter(args, enable_gpu=not args.disable_gpu, show=not args.no_show)
+
+    video_getter = VideoGet(source).start()
+    cps = CountsPerSec().start()
+
+    while True:
+        if (cv2.waitKey(1) == ord("q")) or video_getter.stopped:
+            video_getter.stop()
+            break
+
+        frame = video_getter.frame
+        frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+        frame = putIterationsPerSec(frame, cps.countsPerSec())
+        cv2.imshow("Video", frame)
+        cps.increment()
+
+def threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
+    """Dedicated thread for showing video frames with VideoShow object.
+       Main thread grabs video frames."""
+    # Read input.
+    if args.input_type == 'image':
+        image = cv2.imread(args.image)
+
+    elif args.input_type == 'video':
+        cap = cv2.VideoCapture(args.video)
+
+    elif args.input_type == 'camera':
+        cap = cv2.VideoCapture(0)
+
+    if not cap.isOpened():
+        raise SystemExit('ERROR: failed to open camera!')
+
+    # Prepare arguments early.
+    (height, width) = args.image_shape
+
+    if args.no_show:
+        out = cv2.VideoWriter(args.video_name, cv2.VideoWriter_fourcc(*'mp4v'), 30, (width, height))
+
+    obj = ObjectCenter(args, enable_gpu=not args.disable_gpu, show=not args.no_show)
+
+    (grabbed, frame) = cap.read()
+    video_shower = VideoShow(frame).start()
+    cps = CountsPerSec().start()
+
+    while True:
+        # Read frame from video/camera.
+        if args.input_type == 'image':
+            frame = deepcopy(image)
+            grabbed = True
+
+        else:
+            (grabbed, frame) = cap.read()
+
+        if not grabbed or video_shower.stopped:
+            video_shower.stop()
+            break
+
+        frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+        frame = putIterationsPerSec(frame, cps.countsPerSec())
+        video_shower.frame = frame
+        cps.increment()
+
+def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
     """Dedicated thread for grabbing video frames with VideoGet object.
        Dedicated thread for showing video frames with VideoShow object.
        Main thread serves only to pass frames between VideoGet and
        VideoShow objects/threads."""
+
+    obj = ObjectCenter(args, enable_gpu=not args.disable_gpu, show=not args.no_show)
 
     if args.input_type == 'arducam':
         print(" usage: sudo python ArduCam_Py_Demo.py <path/config-file-name>	\
@@ -329,24 +365,59 @@ def threadBoth(args, source=0):
                 break
 
         frame = video_getter.frame
+        frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
         frame = putIterationsPerSec(frame, cps.countsPerSec())
         video_shower.frame = frame
         cps.increment()
 
-def thread(args):
+def infer(frame, args, obj=None, object_x=None, object_y=None, center_x=None, center_y=None):
+    if args.flip_vertically:
+       frame = cv2.flip(frame, 0)
+
+    if args.flip_horizontally:
+       frame = cv2.flip(frame, 1)
+
+    # Apply object detection.
+    predictions = obj.infer(frame, 
+                            confidence=args.confidence_threshold, 
+                            nms_thresh=args.nms_threshold, 
+                            model=args.model, 
+                            object_category=args.object_category, 
+                            filter_objects=not args.no_filter_object_category)
+
+    if predictions is not None and len(predictions) > 0:
+        bbox, label, conf = predictions
+
+        # Calculate the center of the frame since we will be trying to keep the object there.
+        (H, W) = frame.shape[:2]
+        center_x.value = W // 2
+        center_y.value = H // 2
+
+        object_location = obj.update(predictions, frame, (center_x.value, center_y.value))
+        ((object_x.value, object_y.value), predictions) = object_location
+
+        if args.no_show:
+            return None
+
+        else:
+            # Draw bounding box over detected objects.
+            inferred_image = draw_bbox(frame, bbox, label, conf, write_conf=True)
+            return inferred_image
+
+def thread(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Threading type selector for multi-threading strategy."""
     try:
         if args.input_type == 'arducam' or args.thread == 'both':
-            threadBoth(args, source=0)
+            threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None)
 
         elif args.thread == 'get':
-            threadVideoGet(args, source=0)
+            threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None)
 
         elif args.thread == 'show':
-            threadVideoShow(args, source=0)
+            threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None)
 
         elif args.thread is None:
-            noThreading(args, source=0)
+            noThreading(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None)
 
         else:
             raise NotImplementedError('{} is not implemented!' % args.thread)

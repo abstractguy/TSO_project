@@ -7,7 +7,8 @@
 # Description: This file implements a multiprocessing manager for PID motor control with object detection.
 
 from multiprocessing import Value, Process, Manager
-from utils.loop import loop
+#from utils.loop import loop
+from utils.camera.camera import thread
 from utils.pid import PIDController
 from utils.uarm import UArm
 from pyuarm.protocol import SERVO_BOTTOM, SERVO_LEFT, SERVO_RIGHT, SERVO_HAND
@@ -107,7 +108,8 @@ def process_manager(args):
             tilt_i = manager.Value('f', 0)
             tilt_d = manager.Value('f', 0)
 
-            detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
+            #detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
+            detect_process = Process(target=thread, args=(args, object_x, object_y, center_x, center_y))
             pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, center_x.value, 'pan'))
             tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, center_y.value, 'tilt'))
             servo_process = Process(target=set_servos, args=(pan, tilt, args.flip_vertically, args.flip_horizontally))
