@@ -20,6 +20,12 @@ def add_uarm_args(parser):
 class UArm(object):
     SERVO_MIN = -90
     SERVO_MAX = 90
+    X_MIN_RELATIVE = -316
+    X_MAX_RELATIVE = 316
+    Y_MIN_RELATIVE = -212
+    Y_MAX_RELATIVE = 212
+    Z_MIN_RELATIVE = -253
+    Z_MAX_RELATIVE = 253
 
     def __init__(self, 
                  uarm_speed=100, 
@@ -29,7 +35,6 @@ class UArm(object):
                  servo_detach_delay=5, 
                  pump_delay=5):
 
-        self.initial_position = {'x': 100, 'y': 100, 'z': 50, 'speed': uarm_speed, 'relative': False, 'wait': True}
         self.uarm_speed = uarm_speed
         self.uart_delay = uart_delay
         self.servo_attach_delay = servo_attach_delay
@@ -42,6 +47,8 @@ class UArm(object):
         time.sleep(self.uart_delay)
 
         self.set_servo_attach()
+
+        self.get_initial_absolute_position()
 
         self.initialize()
 
@@ -80,6 +87,40 @@ class UArm(object):
         time.sleep(self.set_position_delay)
         self.set_servo_detach()
 
+    def set_relative_position_from_center_in_grad(self, 
+                                                  x=0, 
+                                                  y=0, 
+                                                  z=0, 
+                                                  speed=None, 
+                                                  height=200.0, 
+                                                  width=200.0):
+
+        """Set relative position from center in grad."""
+
+        speed = self.uarm_speed if speed is None else speed
+
+        x_orig, y_orig, z_orig = self.initial_position
+
+        x = max(-100, x) if x < 0 else min(x, 100)
+        y = max(-100, y) if y < 0 else min(y, 100)
+        z = max(-100, z) if z < 0 else min(z, 100)
+
+        x /= 100.0
+        y /= 100.0
+        z /= 100.0
+
+        x *= X_MAX_RELATIVE
+        y *= Y_MAX_RELATIVE
+        z *= Z_MAX_RELATIVE
+
+        x += x_orig
+        y += y_orig
+        z += z_orig
+
+        self.uarm.set_position(x=x, y=y, z=z, speed=speed, relative=False, wait=True)
+
+        time.sleep(self.set_position_delay)
+
     def set_pump(self, on=False):
         self.uarm.set_pump(ON=on)
         time.sleep(self.pump_delay)
@@ -99,6 +140,18 @@ class UArm(object):
         self.grab(grab_position=grab_position, condition=sensor)
         self.drop(drop_position=drop_position)
         self.reset(detach=detach)
+
+    def get_initial_absolute_position(self):
+        """Get initial absolute position."""
+        initial_position = self.uarm.get_position()
+        self.initial_position = {
+            'x': initial_position[0], 
+            'y': initial_position[1], 
+            'z': initial_position[2], 
+            'speed': self.uarm_speed, 
+            'relative': False, 
+            'wait': True
+        }
 
     def initialize(self):
         """Homes back to the initial position after disabling pump."""

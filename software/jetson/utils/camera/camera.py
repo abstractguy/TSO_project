@@ -22,7 +22,7 @@ from copy import deepcopy
 
 import cv2, os, sys, threading, time
 
-global obj, cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
+global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
 
 running = True
 save_flag = False
@@ -202,7 +202,7 @@ def readImage_thread():
 
             image = cv2.resize(image, (640, 480), interpolation=cv2.INTER_LINEAR)
 
-            cv2.imshow("ArduCam Demo", image)
+            cv2.imshow("ArduCam", image)
             cv2.waitKey(10)
 
             ArducamSDK.Py_ArduCam_del(handle)
@@ -223,11 +223,9 @@ def putIterationsPerSec(frame, iterations_per_sec):
 def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
     """Grab and show video frames without multithreading."""
 
-    global obj, cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
+    global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
 
     try:
-        obj = ObjectCenter(args)
-
         cap = cv2.VideoCapture(source)
         cps = CountsPerSec().start()
 
@@ -236,9 +234,10 @@ def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, cen
             if not grabbed or cv2.waitKey(1) == ord("q"):
                 break
 
-            frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
             frame = putIterationsPerSec(frame, cps.countsPerSec())
-            cv2.imshow('uARM', frame)
+            if frame is not None:
+                cv2.imshow('uARM', frame)
             cps.increment()
 
     except KeyboardInterrupt:
@@ -258,8 +257,6 @@ def threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, 
     global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
 
     try:
-        obj = ObjectCenter(args)
-
         video_getter = VideoGet(source).start()
         cps = CountsPerSec().start()
 
@@ -269,9 +266,10 @@ def threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, 
                 break
 
             frame = video_getter.frame
-            frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
             frame = putIterationsPerSec(frame, cps.countsPerSec())
-            cv2.imshow('uARM', frame)
+            if frame is not None:
+                cv2.imshow('uARM', frame)
             cps.increment()
 
     except KeyboardInterrupt:
@@ -308,9 +306,10 @@ def threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None,
         (height, width) = args.image_shape
 
         if args.no_show:
-            out = cv2.VideoWriter(args.video_name, cv2.VideoWriter_fourcc(*'mp4v'), 30, (width, height))
-
-        obj = ObjectCenter(args)
+            out = cv2.VideoWriter(args.video_name, 
+                                  cv2.VideoWriter_fourcc(*'mp4v'), 
+                                  30, 
+                                  (width, height))
 
         (grabbed, frame) = cap.read()
         video_shower = VideoShow(frame).start()
@@ -329,10 +328,12 @@ def threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None,
                 video_shower.stop()
                 break
 
-            frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
-            frame = putIterationsPerSec(frame, cps.countsPerSec())
-            video_shower.frame = frame
-            cps.increment()
+            frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+
+            if frame is not None:
+                frame = putIterationsPerSec(frame, cps.countsPerSec())
+                video_shower.frame = frame
+                cps.increment()
 
     except KeyboardInterrupt:
         print('User terminated stream process.')
@@ -353,8 +354,6 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
     global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
 
     try:
-        obj = ObjectCenter(args)
-
         if args.input_type == 'arducam':
             print(" usage: sudo python ArduCam_Py_Demo.py <path/config-file-name>	\
                 \n\n example: sudo python ArduCam_Py_Demo.py ../../../python_config/AR0134_960p_Color.json	\
@@ -407,10 +406,14 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
                     break
 
             frame = video_getter.frame
-            frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
-            frame = putIterationsPerSec(frame, cps.countsPerSec())
-            video_shower.frame = frame
-            cps.increment()
+
+            if frame is not None:
+                frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+
+            if frame is not None:
+                frame = putIterationsPerSec(frame, cps.countsPerSec())
+                video_shower.frame = frame
+                cps.increment()
 
     except KeyboardInterrupt:
         print('User terminated stream process.')
@@ -422,8 +425,11 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
         # Release resources.
         print('Stream process done.')
 
-def infer(frame, args, obj=None, object_x=None, object_y=None, center_x=None, center_y=None):
-    # Apply object detection.
+def infer(frame, args, object_x=None, object_y=None, center_x=None, center_y=None):
+    """Apply object detection."""
+
+    obj = ObjectCenter(args)
+
     predictions = obj.infer(frame, 
                             confidence=args.confidence_threshold, 
                             nms_thresh=args.nms_threshold, 
