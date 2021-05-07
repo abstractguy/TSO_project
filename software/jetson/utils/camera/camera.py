@@ -464,16 +464,16 @@ def thread(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Threading type selector for multi-threading strategy."""
     try:
         if args.input_type == 'arducam' or args.thread == 'both':
-            threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None)
+            threadBoth(args, source=0, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
 
         elif args.thread == 'get':
-            threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None)
+            threadVideoGet(args, source=0, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
 
         elif args.thread == 'show':
-            threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None)
+            threadVideoShow(args, source=0, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
 
         elif args.thread is None:
-            noThreading(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None)
+            noThreading(args, source=0, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
 
         else:
             raise NotImplementedError('{} is not implemented!' % args.thread)

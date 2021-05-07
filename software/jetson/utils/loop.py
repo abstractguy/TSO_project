@@ -256,8 +256,11 @@ def stream(args):
         # Release resources.
         print('Done.')
 
-def infer(frame, args, obj=None, object_x=None, object_y=None, center_x=None, center_y=None):
+def infer(frame, args, object_x=None, object_y=None, center_x=None, center_y=None):
     # Apply object detection.
+
+    obj = ObjectCenter(args)
+
     predictions = obj.infer(frame, 
                             confidence=args.confidence_threshold, 
                             nms_thresh=args.nms_threshold, 
@@ -312,8 +315,6 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     else:
         out = cv2.VideoWriter(args.video_name, cv2.VideoWriter_fourcc(*'mp4v'), 30, (width, height))
 
-    obj = ObjectCenter(args)
-
     tic = time.time()
 
     try:
@@ -337,7 +338,6 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
             inferred_image = infer(frame, 
                                    args, 
-                                   obj=obj, 
                                    object_x=object_x, 
                                    object_y=object_y, 
                                    center_x=center_x, 
