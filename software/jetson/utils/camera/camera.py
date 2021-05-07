@@ -10,22 +10,19 @@
 IS_ARDUCAM = False
 
 if IS_ARDUCAM:
-    from utils import arducam_config_parser
-    from utils import ArducamSDK
-    from utils.ImageConvert import *
+    import arducam_config_parser, ArducamSDK
+    from ImageConvert import *
 
 from utils.camera.CountsPerSec import CountsPerSec
 from utils.camera.VideoGet import VideoGet
 from utils.camera.VideoShow import VideoShow
-
 from utils.inference import ObjectCenter
 from cvlib.object_detection import draw_bbox
-
 from copy import deepcopy
 
 import cv2, os, sys, threading, time
 
-global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
+global obj, cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
 
 running = True
 save_flag = False
@@ -182,6 +179,7 @@ def readImage_thread():
                 continue
 
             image = convert_image(data, rtn_cfg, color_mode)
+            image = infer(frame=image, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
 
             time1 = time.time()
 
@@ -224,86 +222,127 @@ def putIterationsPerSec(frame, iterations_per_sec):
 
 def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
     """Grab and show video frames without multithreading."""
-    obj = ObjectCenter(args, enable_gpu=not args.disable_gpu, show=not args.no_show)
 
-    cap = cv2.VideoCapture(source)
-    cps = CountsPerSec().start()
+    global obj, cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
 
-    while True:
-        grabbed, frame = cap.read()
-        if not grabbed or cv2.waitKey(1) == ord("q"):
-            break
+    try:
+        obj = ObjectCenter(args)
 
-        frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
-        frame = putIterationsPerSec(frame, cps.countsPerSec())
-        cv2.imshow("Video", frame)
-        cps.increment()
+        cap = cv2.VideoCapture(source)
+        cps = CountsPerSec().start()
+
+        while True:
+            grabbed, frame = cap.read()
+            if not grabbed or cv2.waitKey(1) == ord("q"):
+                break
+
+            frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = putIterationsPerSec(frame, cps.countsPerSec())
+            cv2.imshow('uARM', frame)
+            cps.increment()
+
+    except KeyboardInterrupt:
+        print('User terminated stream process.')
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        # Release resources.
+        print('Stream process done.')
 
 def threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
     """Dedicated thread for grabbing video frames with VideoGet object.
        Main thread shows video frames."""
 
-    obj = ObjectCenter(args, enable_gpu=not args.disable_gpu, show=not args.no_show)
+    global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
 
-    video_getter = VideoGet(source).start()
-    cps = CountsPerSec().start()
+    try:
+        obj = ObjectCenter(args)
 
-    while True:
-        if (cv2.waitKey(1) == ord("q")) or video_getter.stopped:
-            video_getter.stop()
-            break
+        video_getter = VideoGet(source).start()
+        cps = CountsPerSec().start()
 
-        frame = video_getter.frame
-        frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
-        frame = putIterationsPerSec(frame, cps.countsPerSec())
-        cv2.imshow("Video", frame)
-        cps.increment()
+        while True:
+            if (cv2.waitKey(1) == ord("q")) or video_getter.stopped:
+                video_getter.stop()
+                break
+
+            frame = video_getter.frame
+            frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = putIterationsPerSec(frame, cps.countsPerSec())
+            cv2.imshow('uARM', frame)
+            cps.increment()
+
+    except KeyboardInterrupt:
+        print('User terminated stream process.')
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        # Release resources.
+        print('Stream process done.')
 
 def threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
     """Dedicated thread for showing video frames with VideoShow object.
        Main thread grabs video frames."""
-    # Read input.
-    if args.input_type == 'image':
-        image = cv2.imread(args.image)
 
-    elif args.input_type == 'video':
-        cap = cv2.VideoCapture(args.video)
+    global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
 
-    elif args.input_type == 'camera':
-        cap = cv2.VideoCapture(0)
-
-    if not cap.isOpened():
-        raise SystemExit('ERROR: failed to open camera!')
-
-    # Prepare arguments early.
-    (height, width) = args.image_shape
-
-    if args.no_show:
-        out = cv2.VideoWriter(args.video_name, cv2.VideoWriter_fourcc(*'mp4v'), 30, (width, height))
-
-    obj = ObjectCenter(args, enable_gpu=not args.disable_gpu, show=not args.no_show)
-
-    (grabbed, frame) = cap.read()
-    video_shower = VideoShow(frame).start()
-    cps = CountsPerSec().start()
-
-    while True:
-        # Read frame from video/camera.
+    try:
+        # Read input.
         if args.input_type == 'image':
-            frame = deepcopy(image)
-            grabbed = True
+            image = cv2.imread(args.image)
 
-        else:
-            (grabbed, frame) = cap.read()
+        elif args.input_type == 'video':
+            cap = cv2.VideoCapture(args.video)
 
-        if not grabbed or video_shower.stopped:
-            video_shower.stop()
-            break
+        elif args.input_type == 'camera':
+            cap = cv2.VideoCapture(0)
 
-        frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
-        frame = putIterationsPerSec(frame, cps.countsPerSec())
-        video_shower.frame = frame
-        cps.increment()
+        if not cap.isOpened():
+            raise SystemExit('ERROR: failed to open camera!')
+
+        # Prepare arguments early.
+        (height, width) = args.image_shape
+
+        if args.no_show:
+            out = cv2.VideoWriter(args.video_name, cv2.VideoWriter_fourcc(*'mp4v'), 30, (width, height))
+
+        obj = ObjectCenter(args)
+
+        (grabbed, frame) = cap.read()
+        video_shower = VideoShow(frame).start()
+        cps = CountsPerSec().start()
+
+        while True:
+            # Read frame from video/camera.
+            if args.input_type == 'image':
+                frame = deepcopy(image)
+                grabbed = True
+
+            else:
+                (grabbed, frame) = cap.read()
+
+            if not grabbed or video_shower.stopped:
+                video_shower.stop()
+                break
+
+            frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = putIterationsPerSec(frame, cps.countsPerSec())
+            video_shower.frame = frame
+            cps.increment()
+
+    except KeyboardInterrupt:
+        print('User terminated stream process.')
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        # Release resources.
+        print('Stream process done.')
 
 def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
     """Dedicated thread for grabbing video frames with VideoGet object.
@@ -311,72 +350,79 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
        Main thread serves only to pass frames between VideoGet and
        VideoShow objects/threads."""
 
-    obj = ObjectCenter(args, enable_gpu=not args.disable_gpu, show=not args.no_show)
+    global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
 
-    if args.input_type == 'arducam':
-        print(" usage: sudo python ArduCam_Py_Demo.py <path/config-file-name>	\
-            \n\n example: sudo python ArduCam_Py_Demo.py ../../../python_config/AR0134_960p_Color.json	\
-            \n\n While the program is running, you can press the following buttons in the terminal:	\
-            \n\n 's' + Enter:Save the image to the images folder.	\
-            \n\n 'c' + Enter:Stop saving images.	\
-            \n\n 'q' + Enter:Stop running the program.	\
-            \n\n")
+    try:
+        obj = ObjectCenter(args)
 
-        if camera_initFromFile(args.config_file_name):
-            ArducamSDK.Py_ArduCam_setMode(handle, ArducamSDK.CONTINUOUS_MODE)
+        if args.input_type == 'arducam':
+            print(" usage: sudo python ArduCam_Py_Demo.py <path/config-file-name>	\
+                \n\n example: sudo python ArduCam_Py_Demo.py ../../../python_config/AR0134_960p_Color.json	\
+                \n\n While the program is running, you can press the following buttons in the terminal:	\
+                \n\n 's' + Enter:Save the image to the images folder.	\
+                \n\n 'c' + Enter:Stop saving images.	\
+                \n\n 'q' + Enter:Stop running the program.	\
+                \n\n")
 
-            ct = threading.Thread(target=captureImage_thread)
-            rt = threading.Thread(target=readImage_thread)
-            ct.start()
-            rt.start()
+            if camera_initFromFile(args.config_file_name):
+                ArducamSDK.Py_ArduCam_setMode(handle, ArducamSDK.CONTINUOUS_MODE)
 
-            while running:
-                input_kb = str(sys.stdin.readline()).strip("\n")
+                ct = threading.Thread(target=captureImage_thread)
+                rt = threading.Thread(target=readImage_thread)
+                ct.start()
+                rt.start()
 
-                if input_kb == 'q' or input_kb == 'Q':
-                    running = False
+                while running:
+                    input_kb = str(sys.stdin.readline()).strip("\n")
 
-                if input_kb == 's' or input_kb == 'S':
-                    save_flag = True
+                    if input_kb == 'q' or input_kb == 'Q':
+                        running = False
 
-                if input_kb == 'c' or input_kb == 'C':
-                    save_flag = False
+                    if input_kb == 's' or input_kb == 'S':
+                        save_flag = True
 
-            ct.join()
-            rt.join()
+                    if input_kb == 'c' or input_kb == 'C':
+                        save_flag = False
 
-            rtn_val = ArducamSDK.Py_ArduCam_close(handle)
+                ct.join()
+                rt.join()
 
-            if rtn_val == 0:
-                print("device close success!")
+                rtn_val = ArducamSDK.Py_ArduCam_close(handle)
 
-            else:
-                print("device close fail!")
+                if rtn_val == 0:
+                    print("device close success!")
 
-    else:
-        video_getter = VideoGet(source).start()
-        video_shower = VideoShow(video_getter.frame).start()
-        cps = CountsPerSec().start()
+                else:
+                    print("device close fail!")
 
-        while True:
-            if video_getter.stopped or video_shower.stopped:
-                video_shower.stop()
-                video_getter.stop()
-                break
+        else:
+            video_getter = VideoGet(source).start()
+            video_shower = VideoShow(video_getter.frame).start()
+            cps = CountsPerSec().start()
 
-        frame = video_getter.frame
-        frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
-        frame = putIterationsPerSec(frame, cps.countsPerSec())
-        video_shower.frame = frame
-        cps.increment()
+            while True:
+                if video_getter.stopped or video_shower.stopped:
+                    video_shower.stop()
+                    video_getter.stop()
+                    break
+
+            frame = video_getter.frame
+            frame = infer(frame=frame, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = putIterationsPerSec(frame, cps.countsPerSec())
+            video_shower.frame = frame
+            cps.increment()
+
+    except KeyboardInterrupt:
+        print('User terminated stream process.')
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        # Release resources.
+        print('Stream process done.')
 
 def infer(frame, args, obj=None, object_x=None, object_y=None, center_x=None, center_y=None):
-    if args.flip_vertically:
-       frame = cv2.flip(frame, 0)
-
-    if args.flip_horizontally:
-       frame = cv2.flip(frame, 1)
-
     # Apply object detection.
     predictions = obj.infer(frame, 
                             confidence=args.confidence_threshold, 
@@ -430,5 +476,5 @@ def thread(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
     finally:
         # Release resources.
-        print('Done.')
+        print('Stream process done.')
 

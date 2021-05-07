@@ -9,10 +9,10 @@
 IS_ARDUCAM = False
 
 if IS_ARDUCAM:
-    from utils import arducam_config_parser
-    from utils import ArducamSDK
-    from utils.ImageConvert import *
+    import arducam_config_parser, ArducamSDK
+    from ImageConvert import *
 
+from cvlib.object_detection import draw_bbox
 from utils.inference import ObjectCenter
 from copy import deepcopy
 
@@ -256,6 +256,34 @@ def stream(args):
         # Release resources.
         print('Done.')
 
+def infer(frame, args, obj=None, object_x=None, object_y=None, center_x=None, center_y=None):
+    # Apply object detection.
+    predictions = obj.infer(frame, 
+                            confidence=args.confidence_threshold, 
+                            nms_thresh=args.nms_threshold, 
+                            model=args.model, 
+                            object_category=args.object_category, 
+                            filter_objects=not args.no_filter_object_category)
+
+    if predictions is not None and len(predictions) > 0:
+        bbox, label, conf = predictions
+
+        # Calculate the center of the frame since we will be trying to keep the object there.
+        (H, W) = frame.shape[:2]
+        center_x.value = W // 2
+        center_y.value = H // 2
+
+        object_location = obj.update(predictions, frame, (center_x.value, center_y.value))
+        ((object_x.value, object_y.value), predictions) = object_location
+
+        if args.no_show:
+            return None
+
+        else:
+            # Draw bounding box over detected objects.
+            inferred_image = draw_bbox(frame, bbox, label, conf, write_conf=True)
+            return inferred_image
+
 def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Detection loop."""
     # Read input.
@@ -272,21 +300,19 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
         raise SystemExit('ERROR: failed to open camera!')
 
     # Prepare arguments early.
-    enable_gpu = not args.disable_gpu
     show = not args.no_show
     (height, width) = args.image_shape
     full_scrn = False
     fps = 0.0
 
     if show:
-        from cvlib.object_detection import draw_bbox
         from utils.display import open_window, set_display, show_fps
         open_window(args.video_name, 'Camera inference', width, height)
 
     else:
         out = cv2.VideoWriter(args.video_name, cv2.VideoWriter_fourcc(*'mp4v'), 30, (width, height))
 
-    obj = ObjectCenter(args, enable_gpu=enable_gpu, show=show)
+    obj = ObjectCenter(args)
 
     tic = time.time()
 
@@ -309,34 +335,13 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                 if not status:
                     break
 
-            if args.flip_vertically:
-               frame = cv2.flip(frame, 0)
-
-            if args.flip_horizontally:
-               frame = cv2.flip(frame, 1)
-
-            # Apply object detection.
-            predictions = obj.infer(frame, 
-                                    confidence=args.confidence_threshold, 
-                                    nms_thresh=args.nms_threshold, 
-                                    model=args.model, 
-                                    object_category=args.object_category, 
-                                    filter_objects=not args.no_filter_object_category)
-
-            if predictions is not None and len(predictions) > 0:
-                bbox, label, conf = predictions
-
-                # Calculate the center of the frame since we will be trying to keep the object there.
-                (H, W) = frame.shape[:2]
-                center_x.value = W // 2
-                center_y.value = H // 2
-
-                object_location = obj.update(predictions, frame, (center_x.value, center_y.value))
-                ((object_x.value, object_y.value), predictions) = object_location
-
-                if show:
-                    # Draw bounding box over detected objects.
-                    inferred_image = draw_bbox(frame, bbox, label, conf, write_conf=True)
+            inferred_image = infer(frame, 
+                                   args, 
+                                   obj=obj, 
+                                   object_x=object_x, 
+                                   object_y=object_y, 
+                                   center_x=center_x, 
+                                   center_y=center_y)
 
             if show:
                 frame = show_fps(frame, fps)

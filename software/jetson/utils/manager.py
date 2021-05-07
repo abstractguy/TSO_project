@@ -40,7 +40,7 @@ def set_servos(pan, tilt, flip_vertically=False, flip_horizontally=False):
 
     finally:
         # Release resources.
-        print('Done.')
+        print('Servo process done.')
 
 def pid_process(output, p, i, d, box_coord, origin_coord, action):
     """PID loop for single motor control."""
@@ -62,7 +62,7 @@ def pid_process(output, p, i, d, box_coord, origin_coord, action):
         print(e)
 
     finally: # Release resources.
-        print('Done.')
+        print('PID process done.')
 
 #('person',)
 #('orange', 'apple', 'sports ball')
@@ -131,5 +131,5 @@ def process_manager(args):
         print(e)
 
     finally: # Release resources.
-        print('Done.')
+        print('Manager process done.')
 
