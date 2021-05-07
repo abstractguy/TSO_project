@@ -99,7 +99,7 @@ class UArm(object):
 
         speed = self.uarm_speed if speed is None else speed
 
-        x_orig, y_orig, z_orig = self.initial_position
+        position = self.initial_position.copy()
 
         x = max(-100, x) if x < 0 else min(x, 100)
         y = max(-100, y) if y < 0 else min(y, 100)
@@ -109,17 +109,16 @@ class UArm(object):
         y /= 100.0
         z /= 100.0
 
-        x *= X_MAX_RELATIVE
-        y *= Y_MAX_RELATIVE
-        z *= Z_MAX_RELATIVE
+        x *= self.X_MAX_RELATIVE
+        y *= self.Y_MAX_RELATIVE
+        z *= self.Z_MAX_RELATIVE
 
-        x += x_orig
-        y += y_orig
-        z += z_orig
+        position['x'] += x
+        position['y'] += y
+        position['z'] += z
 
-        self.uarm.set_position(x=x, y=y, z=z, speed=speed, relative=False, wait=True)
-
-        time.sleep(self.set_position_delay)
+        print('position:', position)
+        self.set_position(position)
 
     def set_pump(self, on=False):
         self.uarm.set_pump(ON=on)
@@ -157,6 +156,7 @@ class UArm(object):
         """Homes back to the initial position after disabling pump."""
         self.set_pump(on=False)
         self.set_position(self.initial_position)
+        print('Initial position:', self.initial_position)
 
     def reset(self, detach=False):
         self.initialize()
