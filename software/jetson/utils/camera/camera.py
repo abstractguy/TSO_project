@@ -192,17 +192,21 @@ def readImage_thread():
             count += 1
 
             if save_flag:
-                cv2.imwrite("images/image%d.jpg" % totalFrame, image)
+                if image is not None:
+                    cv2.imwrite("images/image%d.jpg" % totalFrame, image)
 
-                if save_raw:
-                    with open("images/image%d.raw" % totalFrame, 'wb') as f:
-                        f.write(data)
+                    if save_raw:
+                        with open("images/image%d.raw" % totalFrame, 'wb') as f:
+                            f.write(data)
 
-                totalFrame += 1
+                    totalFrame += 1
 
-            image = cv2.resize(image, (640, 480), interpolation=cv2.INTER_LINEAR)
+            if image is not None:
+                image = cv2.resize(image, (640, 480), interpolation=cv2.INTER_LINEAR)
 
-            cv2.imshow("ArduCam", image)
+            if image is not None:
+                cv2.imshow("ArduCam", image)
+
             cv2.waitKey(10)
 
             ArducamSDK.Py_ArduCam_del(handle)
