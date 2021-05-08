@@ -7,10 +7,10 @@
 # Description: This file implements a multiprocessing manager for PID motor control with object detection.
 
 from multiprocessing import Value, Process, Manager
+from pyuarm import UArm
 from utils.loop import loop
 from utils.camera.camera import thread
 from utils.pid import PIDController
-from utils.uarm import UArm
 
 import logging
 
@@ -25,9 +25,9 @@ def set_servos(pan, tilt, uarm, height, width, flip_vertically=False, flip_horiz
             tilt_grad = (-1 if flip_horizontally else 1) * tilt.value
 
             # Remember depth!
-            uarm.set_relative_position_from_center_in_grad(x=0, 
-                                                           y=pan_grad, 
-                                                           z=tilt_grad, 
+            uarm.set_relative_position_from_center_in_grad(x=pan_grad, 
+                                                           y=tilt_grad, 
+                                                           z=0, 
                                                            speed=25, 
                                                            height=height, 
                                                            width=width)

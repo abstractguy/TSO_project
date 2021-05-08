@@ -151,22 +151,17 @@ def readImage_thread():
     global handle, running, Width, Height, save_flag, cfg, color_mode, save_raw
     global COLOR_BayerGB2BGR, COLOR_BayerRG2BGR, COLOR_BayerGR2BGR, COLOR_BayerBG2BGR
 
-    count = 0
     totalFrame = 0
-
-    time0 = time.time()
-    time1 = time.time()
-
     data = {}
 
-    cv2.namedWindow("ArduCam Camarray", 1)
+    cv2.namedWindow('uARM', 1)
 
-    if not os.path.exists("images"):
-        os.makedirs("images")
+    if not os.path.exists('images'):
+        os.makedirs('images')
+
+    cps = CountsPerSec().start()
 
     while running:
-        display_time = time.time()
-
         if ArducamSDK.Py_ArduCam_availableImage(handle) > 0:		
             rtn_val, data, rtn_cfg = ArducamSDK.Py_ArduCam_readImage(handle)
             datasize = rtn_cfg['u32Size']
@@ -174,29 +169,22 @@ def readImage_thread():
             if rtn_val != 0 or datasize == 0:
                 ArducamSDK.Py_ArduCam_del(handle)
 
-                print("Read data fail!")
+                print('Read data fail!')
 
                 continue
 
             image = convert_image(data, rtn_cfg, color_mode)
-            image = infer(frame=image, args=args, obj=obj, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            image = infer(frame=image, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
 
-            time1 = time.time()
-
-            if time1 - time0 >= 1:
-                print("%s %d %s\n" % ("fps:", count, "/s"))
-
-                count = 0
-                time0 = time1
-
-            count += 1
+            image = putIterationsPerSec(image, cps.countsPerSec())
+            cps.increment()
 
             if save_flag:
                 if image is not None:
-                    cv2.imwrite("images/image%d.jpg" % totalFrame, image)
+                    cv2.imwrite('images/image%d.jpg' % totalFrame, image)
 
                     if save_raw:
-                        with open("images/image%d.raw" % totalFrame, 'wb') as f:
+                        with open('images/image%d.raw' % totalFrame, 'wb') as f:
                             f.write(data)
 
                     totalFrame += 1
@@ -205,7 +193,7 @@ def readImage_thread():
                 image = cv2.resize(image, (640, 480), interpolation=cv2.INTER_LINEAR)
 
             if image is not None:
-                cv2.imshow("ArduCam", image)
+                cv2.imshow('uARM', image)
 
             cv2.waitKey(10)
 
@@ -367,48 +355,54 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
                 \n\n 'q' + Enter:Stop running the program.	\
                 \n\n")
 
-            if camera_initFromFile(args.config_file_name):
-                ArducamSDK.Py_ArduCam_setMode(handle, ArducamSDK.CONTINUOUS_MODE)
+            assert camera_initFromFile(args.config_file_name)
+            ArducamSDK.Py_ArduCam_setMode(handle, ArducamSDK.CONTINUOUS_MODE)
 
-                ct = threading.Thread(target=captureImage_thread)
-                rt = threading.Thread(target=readImage_thread)
-                ct.start()
-                rt.start()
-
-                while running:
-                    input_kb = str(sys.stdin.readline()).strip("\n")
-
-                    if input_kb == 'q' or input_kb == 'Q':
-                        running = False
-
-                    if input_kb == 's' or input_kb == 'S':
-                        save_flag = True
-
-                    if input_kb == 'c' or input_kb == 'C':
-                        save_flag = False
-
-                ct.join()
-                rt.join()
-
-                rtn_val = ArducamSDK.Py_ArduCam_close(handle)
-
-                if rtn_val == 0:
-                    print("device close success!")
-
-                else:
-                    print("device close fail!")
+            ct = threading.Thread(target=captureImage_thread)
+            rt = threading.Thread(target=readImage_thread)
+            ct.start()
+            rt.start()
 
         else:
             video_getter = VideoGet(source).start()
             video_shower = VideoShow(video_getter.frame).start()
             cps = CountsPerSec().start()
 
+        if args.input_type == 'arducam':
+            while running:
+                input_kb = str(sys.stdin.readline()).strip("\n")
+
+                if input_kb == 'q' or input_kb == 'Q':
+                    running = False
+
+                if input_kb == 's' or input_kb == 'S':
+                    save_flag = True
+
+                if input_kb == 'c' or input_kb == 'C':
+                    save_flag = False
+
+            ct.join()
+            rt.join()
+
+            rtn_val = ArducamSDK.Py_ArduCam_close(handle)
+
+            if rtn_val == 0:
+                print("device close success!")
+
+            else:
+                print("device close fail!")
+
+        else:
             while True:
                 if video_getter.stopped or video_shower.stopped:
                     video_shower.stop()
                     video_getter.stop()
                     break
 
+        if args.input_type == 'arducam':
+            pass # Might have to move inference here.
+
+        else:
             frame = video_getter.frame
 
             if frame is not None:

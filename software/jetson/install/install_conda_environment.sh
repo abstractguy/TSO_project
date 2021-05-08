@@ -6,7 +6,7 @@
 # Usage:     cd ~/school/Projets/Final/TSO_project/software && bash install/install_conda_environment.sh
 
 CONDA_ENV_NAME="school"
-PYTHON_VERSION="3.7"
+PYTHON_VERSION="3.6"
 PYTORCH_VERSION="1.7"
 TORCHVISION_VERSION="0.8"
 
@@ -18,7 +18,7 @@ if [[ "$(echo $PS1 | cut -d' ' -f1 | tr -d '()')" == "${CONDA_ENV_NAME}" ]]
 then
     yes | python -m pip install --upgrade cvlib onnxruntime scikit-multilearn && \
     cd jetson/pyuarm && \
-    python pyuarm/setup.py install --user
+    pip install --upgrade -e pyuarm
 else
     echo "Could not source activate ${CONDA_ENV_NAME}..."
 fi

@@ -1,5 +1,5 @@
 ===============================
-pyuarm-2.2.5.1
+pyuarm-custom (based on pyuarm-2.2.5.1)
 ===============================
 
 Overview
@@ -7,6 +7,8 @@ Overview
 
 This module encapsulates the operations for uArm. It provides basic Movement on Python.
 Also provides Firmware_helper and Calibration. The module named "pyuarm" makes the API more pythonic.
+
+It was heavily modified and customized by Samuel Duclos to patch bugs and add useful features.
 
 Other pages (online)
 

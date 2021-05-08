@@ -31,7 +31,7 @@ def main():
     finally:
         # Release resources.
         #overclock.underclock()
-        print('Done.')
+        print('Main function done.')
 
 if __name__ == '__main__':
     main()
