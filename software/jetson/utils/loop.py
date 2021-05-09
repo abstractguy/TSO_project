@@ -20,6 +20,8 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Detection loop."""
     arducam_utils = None
 
+    obj = ObjectCenter(args)
+
     # Read input.
     if args.input_type == 'image':
         image = cv2.imread(args.image)
@@ -92,11 +94,12 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                 if not status:
                     break
 
-            inferred_image = ObjectCenter(args).infer(frame, 
-                                                      object_x=object_x, 
-                                                      object_y=object_y, 
-                                                      center_x=center_x, 
-                                                      center_y=center_y)
+            if frame is not None:
+                frame = obj.infer(frame, 
+                                  object_x=object_x, 
+                                  object_y=object_y, 
+                                  center_x=center_x, 
+                                  center_y=center_y)
 
             if show:
                 frame = show_fps(frame, fps)

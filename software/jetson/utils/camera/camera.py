@@ -58,9 +58,11 @@ def putIterationsPerSec(frame, iterations_per_sec):
 def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
     """Grab and show video frames without multithreading."""
 
-    try:
-        arducam_utils = None
+    arducam_utils = None
 
+    obj = ObjectCenter(args)
+
+    try:
         if IS_ARDUCAM:
             # Open camera.
             cap = cv2.VideoCapture(source, cv2.CAP_V4L2)
@@ -96,11 +98,11 @@ def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, cen
             if not grabbed or cv2.waitKey(1) == ord('q'):
                 break
 
-            frame = ObjectCenter(args).infer(frame, 
-                                             object_x=object_x, 
-                                             object_y=object_y, 
-                                             center_x=center_x, 
-                                             center_y=center_y)
+            frame = obj.infer(frame, 
+                              object_x=object_x, 
+                              object_y=object_y, 
+                              center_x=center_x, 
+                              center_y=center_y)
 
             frame = putIterationsPerSec(frame, cps.countsPerSec())
 
@@ -131,8 +133,11 @@ def threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, 
     """Dedicated thread for grabbing video frames with VideoGet object.
        Main thread shows video frames."""
 
+    arducam_utils = None
+
+    obj = ObjectCenter(args)
+
     try:
-        arducam_utils = None
 
         if IS_ARDUCAM:
             # Open camera.
@@ -178,11 +183,11 @@ def threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, 
 
                 frame = arducam_utils.convert(frame)
 
-            frame = ObjectCenter(args).infer(frame, 
-                                             object_x=object_x, 
-                                             object_y=object_y, 
-                                             center_x=center_x, 
-                                             center_y=center_y)
+            frame = obj.infer(frame, 
+                              object_x=object_x, 
+                              object_y=object_y, 
+                              center_x=center_x, 
+                              center_y=center_y)
 
             frame = putIterationsPerSec(frame, cps.countsPerSec())
 
@@ -205,8 +210,11 @@ def threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None,
     """Dedicated thread for showing video frames with VideoShow object.
        Main thread grabs video frames."""
 
+    arducam_utils = None
+
+    obj = ObjectCenter(args)
+
     try:
-        arducam_utils = None
 
         # Read input.
         if args.input_type == 'image':
@@ -247,11 +255,11 @@ def threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None,
                 video_shower.stop()
                 break
 
-            frame = ObjectCenter(args).infer(frame, 
-                                             object_x=object_x, 
-                                             object_y=object_y, 
-                                             center_x=center_x, 
-                                             center_y=center_y)
+            frame = obj.infer(frame, 
+                              object_x=object_x, 
+                              object_y=object_y, 
+                              center_x=center_x, 
+                              center_y=center_y)
 
             if frame is not None:
                 frame = putIterationsPerSec(frame, cps.countsPerSec())
@@ -274,8 +282,11 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
        Main thread serves only to pass frames between VideoGet and
        VideoShow objects/threads."""
 
+    arducam_utils = None
+
+    obj = ObjectCenter(args)
+
     try:
-        arducam_utils = None
 
         video_getter = VideoGet(source).start()
         video_shower = VideoShow(video_getter.frame).start()
@@ -290,11 +301,11 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
         frame = video_getter.frame
 
         if frame is not None:
-            frame = ObjectCenter(args).infer(frame, 
-                                             object_x=object_x, 
-                                             object_y=object_y, 
-                                             center_x=center_x, 
-                                             center_y=center_y)
+            frame = obj.infer(frame, 
+                              object_x=object_x, 
+                              object_y=object_y, 
+                              center_x=center_x, 
+                              center_y=center_y)
 
         if frame is not None:
             frame = putIterationsPerSec(frame, cps.countsPerSec())
