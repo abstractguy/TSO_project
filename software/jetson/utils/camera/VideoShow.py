@@ -24,8 +24,8 @@ class VideoShow:
         while not self.stopped:
             if self.frame is not None:
                 cv2.imshow('uARM', self.frame)
-            key = cv2.waitKey(1)
-            if key == ord("q"):
+
+            if cv2.waitKey(1) == ord('q'):
                 self.stopped = True
 
     def stop(self):

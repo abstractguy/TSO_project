@@ -10,197 +10,42 @@
 IS_ARDUCAM = False
 
 if IS_ARDUCAM:
-    import arducam_config_parser, ArducamSDK
-    from ImageConvert import *
+    from utils import ArducamUtils
 
 from utils.camera.CountsPerSec import CountsPerSec
 from utils.camera.VideoGet import VideoGet
 from utils.camera.VideoShow import VideoShow
 from utils.inference import ObjectCenter
 from cvlib.object_detection import draw_bbox
+from datetime import datetime
 from copy import deepcopy
 
-import cv2, os, sys, threading, time
+import cv2, numpy as np, os, sys, threading, time
 
-global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
+def fourcc(a, b, c, d):
+    return ord(a) | (ord(b) << 8) | (ord(c) << 16) | (ord(d) << 24)
 
-running = True
-save_flag = False
-save_raw = False
-cfg = {}
-handle = {}
-
-def configBoard(config):
-    global handle
-    ArducamSDK.Py_ArduCam_setboardConfig(handle, 
-                                         config.params[0], 
-                                         config.params[1], 
-                                         config.params[2], 
-                                         config.params[3], 
-                                         config.params[4:config.params_length])
-
-def camera_initFromFile(fileName):
-    global cfg, handle, Width, Height, color_mode, save_raw
-
-    config = arducam_config_parser.LoadConfigFile(fileName)
-
-    camera_parameter = config.camera_param.getdict()
-    Width = camera_parameter["WIDTH"]
-    Height = camera_parameter["HEIGHT"]
-
-    BitWidth = camera_parameter["BIT_WIDTH"]
-    ByteLength = 1
-
-    if BitWidth > 8 and BitWidth <= 16:
-        ByteLength = 2
-        save_raw = True
-
-    FmtMode = camera_parameter["FORMAT"][0]
-    color_mode = camera_parameter["FORMAT"][1]
-    print("color mode", color_mode)
-
-    I2CMode = camera_parameter["I2C_MODE"]
-    I2cAddr = camera_parameter["I2C_ADDR"]
-    TransLvl = camera_parameter["TRANS_LVL"]
-
-    cfg = {
-        "u32CameraType": 0x00,
-        "u32Width": Width,
-        "u32Height": Height,
-        "usbType": 0,
-        "u8PixelBytes": ByteLength,
-        "u16Vid": 0,
-        "u32Size": 0,
-        "u8PixelBits": BitWidth,
-        "u32I2cAddr": I2cAddr,
-        "emI2cMode": I2CMode,
-        "emImageFmtMode": FmtMode,
-        "u32TransLvl": TransLvl
-    }
-
-    ret, handle, rtn_cfg = ArducamSDK.Py_ArduCam_autoopen(cfg)
-
-    if ret == 0:
-        usb_version = rtn_cfg['usbType']
-        configs = config.configs
-        configs_length = config.configs_length
-
-        for i in range(configs_length):
-            type = configs[i].type
-
-            if ((type >> 16) & 0xFF) != 0 and ((type >> 16) & 0xFF) != usb_version:
-                continue
-
-            if type & 0xFFFF == arducam_config_parser.CONFIG_TYPE_REG:
-                ArducamSDK.Py_ArduCam_writeSensorReg(handle, configs[i].params[0], configs[i].params[1])
-
-            elif type & 0xFFFF == arducam_config_parser.CONFIG_TYPE_DELAY:
-                time.sleep(float(configs[i].params[0]) / 1000)
-
-            elif type & 0xFFFF == arducam_config_parser.CONFIG_TYPE_VRCMD:
-                configBoard(configs[i])
-
-        ArducamSDK.Py_ArduCam_registerCtrls(handle, config.controls, config.controls_length)
-        ArducamSDK.Py_ArduCam_setCtrl(handle, "setFramerate", 5)
-
-        rtn_val, datas = ArducamSDK.Py_ArduCam_readUserData(handle, 0x400 - 16, 16)
-
-        print("Serial: %c%c%c%c-%c%c%c%c-%c%c%c%c" % (
-                  datas[0], datas[1], datas[2], datas[3],
-                  datas[4], datas[5], datas[6], datas[7],
-                  datas[8], datas[9], datas[10], datas[11]
-              ))
-
-        return True
-
+def pixelformat(string):
+    if len(string) != 3 and len(string) != 4:
+        msg = "{} is not a pixel format".format(string)
+        raise argparse.ArgumentTypeError(msg)
+    if len(string) == 3:
+        return fourcc(string[0], string[1], string[2], ' ')
     else:
-        print("open fail, rtn_val = ", ret)
+        return fourcc(string[0], string[1], string[2], string[3])
 
-        return False
+def show_info(arducam_utils):
+    _, firmware_version = arducam_utils.read_dev(ArducamUtils.FIRMWARE_VERSION_REG)
+    _, sensor_id = arducam_utils.read_dev(ArducamUtils.FIRMWARE_SENSOR_ID_REG)
+    _, serial_number = arducam_utils.read_dev(ArducamUtils.SERIAL_NUMBER_REG)
+    print("Firmware Version: {}".format(firmware_version))
+    print("Sensor ID: 0x{:04X}".format(sensor_id))
+    print("Serial Number: 0x{:08X}".format(serial_number))
 
-def captureImage_thread():
-    global handle, running
-
-    rtn_val = ArducamSDK.Py_ArduCam_beginCaptureImage(handle)
-
-    if rtn_val != 0:
-        print("Error beginning capture, rtn_val = ", rtn_val)
-
-        running = False
-
-        return
-
-    else:
-        print("Capture began, rtn_val = ", rtn_val)
-
-    while running:
-        rtn_val = ArducamSDK.Py_ArduCam_captureImage(handle)
-
-        if rtn_val > 255:
-            print("Error capture image, rtn_val = ", rtn_val)
-
-            if rtn_val == ArducamSDK.USB_CAMERA_USB_TASK_ERROR:
-                break
-
-        time.sleep(0.005)
-
-    running = False
-    ArducamSDK.Py_ArduCam_endCaptureImage(handle)
-
-def readImage_thread():
-    global handle, running, Width, Height, save_flag, cfg, color_mode, save_raw
-    global COLOR_BayerGB2BGR, COLOR_BayerRG2BGR, COLOR_BayerGR2BGR, COLOR_BayerBG2BGR
-
-    totalFrame = 0
-    data = {}
-
-    cv2.namedWindow('uARM', 1)
-
-    if not os.path.exists('images'):
-        os.makedirs('images')
-
-    cps = CountsPerSec().start()
-
-    while running:
-        if ArducamSDK.Py_ArduCam_availableImage(handle) > 0:		
-            rtn_val, data, rtn_cfg = ArducamSDK.Py_ArduCam_readImage(handle)
-            datasize = rtn_cfg['u32Size']
-
-            if rtn_val != 0 or datasize == 0:
-                ArducamSDK.Py_ArduCam_del(handle)
-
-                print('Read data fail!')
-
-                continue
-
-            image = convert_image(data, rtn_cfg, color_mode)
-            image = infer(frame=image, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
-
-            image = putIterationsPerSec(image, cps.countsPerSec())
-            cps.increment()
-
-            if save_flag:
-                if image is not None:
-                    cv2.imwrite('images/image%d.jpg' % totalFrame, image)
-
-                    if save_raw:
-                        with open('images/image%d.raw' % totalFrame, 'wb') as f:
-                            f.write(data)
-
-                    totalFrame += 1
-
-            if image is not None:
-                image = cv2.resize(image, (640, 480), interpolation=cv2.INTER_LINEAR)
-
-            if image is not None:
-                cv2.imshow('uARM', image)
-
-            cv2.waitKey(10)
-
-            ArducamSDK.Py_ArduCam_del(handle)
-
-        else:
-            time.sleep(0.001)
+def resize(frame, dst_width):
+    height, width = frame.shape[:2]
+    scale = dst_width * 1.0 / width
+    return cv2.resize(frame, (int(scale * width), int(scale * height)))
 
 def putIterationsPerSec(frame, iterations_per_sec):
     """Add iterations per second text to lower-left corner of a frame."""
@@ -215,21 +60,59 @@ def putIterationsPerSec(frame, iterations_per_sec):
 def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
     """Grab and show video frames without multithreading."""
 
-    global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
-
     try:
-        cap = cv2.VideoCapture(source)
+        arducam_utils = None
+
+        if IS_ARDUCAM:
+            # Open camera.
+            cap = cv2.VideoCapture(source, cv2.CAP_V4L2)
+
+            # Set pixel format.
+            
+            if not cap.set(cv2.CAP_PROP_FOURCC, pixelformat):
+                print("Failed to set pixel format.")
+
+            arducam_utils = ArducamUtils(source)
+
+            show_info(arducam_utils)
+
+            # Turn off RGB conversion.
+            if arducam_utils.convert2rgb == 0:
+                cap.set(cv2.CAP_PROP_CONVERT_RGB, arducam_utils.convert2rgb)
+
+            # Set width.
+            if args.width != None:
+                cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.width)
+
+            # Set height.
+            if args.height != None:
+                cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.height)
+
+        else:
+            cap = cv2.VideoCapture(source)
+
         cps = CountsPerSec().start()
 
         while True:
             grabbed, frame = cap.read()
-            if not grabbed or cv2.waitKey(1) == ord("q"):
+            if not grabbed or cv2.waitKey(1) == ord('q'):
                 break
 
             frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
             frame = putIterationsPerSec(frame, cps.countsPerSec())
+
             if frame is not None:
+                if arducam_utils is not None:
+                    if arducam_utils.convert2rgb == 0:
+                        w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+                        h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+                        frame = frame.reshape(int(h), int(w))
+
+                    frame = arducam_utils.convert(frame)
+                    frame = resize(frame, 1280.0)
+
                 cv2.imshow('uARM', frame)
+
             cps.increment()
 
     except KeyboardInterrupt:
@@ -246,22 +129,60 @@ def threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, 
     """Dedicated thread for grabbing video frames with VideoGet object.
        Main thread shows video frames."""
 
-    global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
-
     try:
-        video_getter = VideoGet(source).start()
+        arducam_utils = None
+
+        if IS_ARDUCAM:
+            # Open camera.
+            cap = cv2.VideoCapture(source, cv2.CAP_V4L2)
+
+            # Set pixel format.
+            
+            if not cap.set(cv2.CAP_PROP_FOURCC, pixelformat):
+                print("Failed to set pixel format.")
+
+            arducam_utils = ArducamUtils(source)
+
+            show_info(arducam_utils)
+
+            # Turn off RGB conversion.
+            if arducam_utils.convert2rgb == 0:
+                cap.set(cv2.CAP_PROP_CONVERT_RGB, arducam_utils.convert2rgb)
+
+            # Set width.
+            if args.width != None:
+                cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.width)
+
+            # Set height.
+            if args.height != None:
+                cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.height)
+
+        else:
+            video_getter = VideoGet(source).start()
+
         cps = CountsPerSec().start()
 
         while True:
-            if (cv2.waitKey(1) == ord("q")) or video_getter.stopped:
+            if (cv2.waitKey(1) == ord('q')) or video_getter.stopped:
                 video_getter.stop()
                 break
 
             frame = video_getter.frame
+            if arducam_utils is not None:
+                if arducam_utils.convert2rgb == 0:
+                    w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+                    h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+                    frame = frame.reshape(int(h), int(w))
+
+                frame = arducam_utils.convert(frame)
+                frame = resize(frame, 1280.0)
+
             frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
             frame = putIterationsPerSec(frame, cps.countsPerSec())
+
             if frame is not None:
                 cv2.imshow('uARM', frame)
+
             cps.increment()
 
     except KeyboardInterrupt:
@@ -278,9 +199,9 @@ def threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None,
     """Dedicated thread for showing video frames with VideoShow object.
        Main thread grabs video frames."""
 
-    global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
-
     try:
+        arducam_utils = None
+
         # Read input.
         if args.input_type == 'image':
             image = cv2.imread(args.image)
@@ -343,75 +264,28 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
        Main thread serves only to pass frames between VideoGet and
        VideoShow objects/threads."""
 
-    global cfg, handle, running, Width, Height, save_flag, color_mode, save_raw
-
     try:
-        if args.input_type == 'arducam':
-            print(" usage: sudo python ArduCam_Py_Demo.py <path/config-file-name>	\
-                \n\n example: sudo python ArduCam_Py_Demo.py ../../../python_config/AR0134_960p_Color.json	\
-                \n\n While the program is running, you can press the following buttons in the terminal:	\
-                \n\n 's' + Enter:Save the image to the images folder.	\
-                \n\n 'c' + Enter:Stop saving images.	\
-                \n\n 'q' + Enter:Stop running the program.	\
-                \n\n")
+        arducam_utils = None
 
-            assert camera_initFromFile(args.config_file_name)
-            ArducamSDK.Py_ArduCam_setMode(handle, ArducamSDK.CONTINUOUS_MODE)
+        video_getter = VideoGet(source).start()
+        video_shower = VideoShow(video_getter.frame).start()
+        cps = CountsPerSec().start()
 
-            ct = threading.Thread(target=captureImage_thread)
-            rt = threading.Thread(target=readImage_thread)
-            ct.start()
-            rt.start()
+        while True:
+            if video_getter.stopped or video_shower.stopped:
+                video_shower.stop()
+                video_getter.stop()
+                break
 
-        else:
-            video_getter = VideoGet(source).start()
-            video_shower = VideoShow(video_getter.frame).start()
-            cps = CountsPerSec().start()
+        frame = video_getter.frame
 
-        if args.input_type == 'arducam':
-            while running:
-                input_kb = str(sys.stdin.readline()).strip("\n")
+        if frame is not None:
+            frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
 
-                if input_kb == 'q' or input_kb == 'Q':
-                    running = False
-
-                if input_kb == 's' or input_kb == 'S':
-                    save_flag = True
-
-                if input_kb == 'c' or input_kb == 'C':
-                    save_flag = False
-
-            ct.join()
-            rt.join()
-
-            rtn_val = ArducamSDK.Py_ArduCam_close(handle)
-
-            if rtn_val == 0:
-                print("device close success!")
-
-            else:
-                print("device close fail!")
-
-        else:
-            while True:
-                if video_getter.stopped or video_shower.stopped:
-                    video_shower.stop()
-                    video_getter.stop()
-                    break
-
-        if args.input_type == 'arducam':
-            pass # Might have to move inference here.
-
-        else:
-            frame = video_getter.frame
-
-            if frame is not None:
-                frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
-
-            if frame is not None:
-                frame = putIterationsPerSec(frame, cps.countsPerSec())
-                video_shower.frame = frame
-                cps.increment()
+        if frame is not None:
+            frame = putIterationsPerSec(frame, cps.countsPerSec())
+            video_shower.frame = frame
+            cps.increment()
 
     except KeyboardInterrupt:
         print('User terminated stream process.')

@@ -24,10 +24,10 @@ def set_servos(pan, tilt, uarm, height, width, flip_vertically=False, flip_horiz
             pan_grad = (-1 if flip_vertically else 1) * pan.value
             tilt_grad = (-1 if flip_horizontally else 1) * tilt.value
 
-            # Remember depth!
-            uarm.set_relative_position_from_center_in_grad(x=pan_grad, 
-                                                           y=tilt_grad, 
-                                                           z=0, 
+            # Remember about depth!
+            uarm.set_relative_position_from_center_in_grad(x=0, 
+                                                           y=pan_grad, 
+                                                           z=tilt_grad, 
                                                            speed=25, 
                                                            height=height, 
                                                            width=width)
