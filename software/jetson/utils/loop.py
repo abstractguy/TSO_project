@@ -11,48 +11,14 @@ IS_ARDUCAM = False
 if IS_ARDUCAM:
     from utils import ArducamUtils
 
-from cvlib.object_detection import draw_bbox
 from utils.inference import ObjectCenter
 from copy import deepcopy
 
-import cv2, os, sys, threading, time
-
-def infer(frame, args, object_x=None, object_y=None, center_x=None, center_y=None):
-    # Apply object detection.
-
-    obj = ObjectCenter(args)
-
-    predictions = obj.infer(frame, 
-                            confidence=args.confidence_threshold, 
-                            nms_thresh=args.nms_threshold, 
-                            model=args.model, 
-                            object_category=args.object_category, 
-                            filter_objects=not args.no_filter_object_category)
-
-    if predictions is not None and len(predictions) > 0:
-        bbox, label, conf = predictions
-
-        # Calculate the center of the frame since we will be trying to keep the object there.
-        (H, W) = frame.shape[:2]
-        center_x.value = W // 2
-        center_y.value = H // 2
-
-        object_location = obj.update(predictions, frame, (center_x.value, center_y.value))
-        ((object_x.value, object_y.value), predictions) = object_location
-
-        if args.no_show:
-            return None
-
-        else:
-            # Draw bounding box over detected objects.
-            inferred_image = draw_bbox(frame, bbox, label, conf, write_conf=True)
-            return inferred_image
+import cv2, time
 
 def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Detection loop."""
     arducam_utils = None
-
-    
 
     # Read input.
     if args.input_type == 'image':
@@ -68,7 +34,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
             # Set pixel format.
             if not cap.set(cv2.CAP_PROP_FOURCC, pixelformat):
-                print("Failed to set pixel format.")
+                print('Failed to set pixel format.')
 
             arducam_utils = ArducamUtils(source)
 
@@ -126,12 +92,11 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                 if not status:
                     break
 
-            inferred_image = infer(frame, 
-                                   args, 
-                                   object_x=object_x, 
-                                   object_y=object_y, 
-                                   center_x=center_x, 
-                                   center_y=center_y)
+            inferred_image = ObjectCenter(args).infer(frame, 
+                                                      object_x=object_x, 
+                                                      object_y=object_y, 
+                                                      center_x=center_x, 
+                                                      center_y=center_y)
 
             if show:
                 frame = show_fps(frame, fps)

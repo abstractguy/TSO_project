@@ -16,7 +16,6 @@ from utils.camera.CountsPerSec import CountsPerSec
 from utils.camera.VideoGet import VideoGet
 from utils.camera.VideoShow import VideoShow
 from utils.inference import ObjectCenter
-from cvlib.object_detection import draw_bbox
 from copy import deepcopy
 
 import cv2
@@ -97,7 +96,12 @@ def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, cen
             if not grabbed or cv2.waitKey(1) == ord('q'):
                 break
 
-            frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = ObjectCenter(args).infer(frame, 
+                                             object_x=object_x, 
+                                             object_y=object_y, 
+                                             center_x=center_x, 
+                                             center_y=center_y)
+
             frame = putIterationsPerSec(frame, cps.countsPerSec())
 
             if frame is not None:
@@ -108,7 +112,6 @@ def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, cen
                         frame = frame.reshape(int(h), int(w))
 
                     frame = arducam_utils.convert(frame)
-                    frame = resize(frame, 1280.0)
 
                 cv2.imshow('uARM', frame)
 
@@ -174,9 +177,13 @@ def threadVideoGet(args, source=0, object_x=None, object_y=None, center_x=None, 
                     frame = frame.reshape(int(h), int(w))
 
                 frame = arducam_utils.convert(frame)
-                frame = resize(frame, 1280.0)
 
-            frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = ObjectCenter(args).infer(frame, 
+                                             object_x=object_x, 
+                                             object_y=object_y, 
+                                             center_x=center_x, 
+                                             center_y=center_y)
+
             frame = putIterationsPerSec(frame, cps.countsPerSec())
 
             if frame is not None:
@@ -240,7 +247,11 @@ def threadVideoShow(args, source=0, object_x=None, object_y=None, center_x=None,
                 video_shower.stop()
                 break
 
-            frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = ObjectCenter(args).infer(frame, 
+                                             object_x=object_x, 
+                                             object_y=object_y, 
+                                             center_x=center_x, 
+                                             center_y=center_y)
 
             if frame is not None:
                 frame = putIterationsPerSec(frame, cps.countsPerSec())
@@ -279,7 +290,11 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
         frame = video_getter.frame
 
         if frame is not None:
-            frame = infer(frame=frame, args=args, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
+            frame = ObjectCenter(args).infer(frame, 
+                                             object_x=object_x, 
+                                             object_y=object_y, 
+                                             center_x=center_x, 
+                                             center_y=center_y)
 
         if frame is not None:
             frame = putIterationsPerSec(frame, cps.countsPerSec())
@@ -296,37 +311,6 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
         # Release resources.
         print('Stream process done.')
 
-def infer(frame, args, object_x=None, object_y=None, center_x=None, center_y=None):
-    """Apply object detection."""
-
-    obj = ObjectCenter(args)
-
-    predictions = obj.infer(frame, 
-                            confidence=args.confidence_threshold, 
-                            nms_thresh=args.nms_threshold, 
-                            model=args.model, 
-                            object_category=args.object_category, 
-                            filter_objects=not args.no_filter_object_category)
-
-    if predictions is not None and len(predictions) > 0:
-        bbox, label, conf = predictions
-
-        # Calculate the center of the frame since we will be trying to keep the object there.
-        (H, W) = frame.shape[:2]
-        center_x.value = W // 2
-        center_y.value = H // 2
-
-        object_location = obj.update(predictions, frame, (center_x.value, center_y.value))
-        ((object_x.value, object_y.value), predictions) = object_location
-
-        if args.no_show:
-            return None
-
-        else:
-            # Draw bounding box over detected objects.
-            inferred_image = draw_bbox(frame, bbox, label, conf, write_conf=True)
-            return inferred_image
-
 def thread(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Threading type selector for multi-threading strategy."""
     try:
@@ -339,7 +323,7 @@ def thread(args, object_x=None, object_y=None, center_x=None, center_y=None):
         elif args.thread == 'show':
             threadVideoShow(args, source=0, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
 
-        elif args.thread is None:
+        elif args.thread == 'none':
             noThreading(args, source=0, object_x=object_x, object_y=object_y, center_x=center_x, center_y=center_y)
 
         else:

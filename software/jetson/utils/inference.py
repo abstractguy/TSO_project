@@ -6,6 +6,7 @@
 # For:         Myself
 # Description: This file returns detection results from an image.
 
+from cvlib.object_detection import draw_bbox
 import cvlib
 
 class ObjectCenter(object):
@@ -13,7 +14,7 @@ class ObjectCenter(object):
         """Initialize variables."""
         self.args = args
 
-    def infer(self, frame, confidence=0.25, nms_thresh=0.3, model='yolov4', object_category='person', filter_objects=False):
+    def _infer_(self, frame, confidence=0.25, nms_thresh=0.3, model='yolov4', object_category='person', filter_objects=False):
         """Apply object detection."""
 
         if self.args.flip_vertically:
@@ -71,4 +72,33 @@ class ObjectCenter(object):
 
         else:
             return (frameCenter, None)
+
+    def infer(self, frame, object_x=None, object_y=None, center_x=None, center_y=None):
+        """Apply object detection."""
+
+        predictions = self._infer_(frame, 
+                                   confidence=self.args.confidence_threshold, 
+                                   nms_thresh=self.args.nms_threshold, 
+                                   model=self.args.model, 
+                                   object_category=self.args.object_category, 
+                                   filter_objects=not self.args.no_filter_object_category)
+
+        if predictions is not None and len(predictions) > 0:
+            bbox, label, conf = predictions
+
+            # Calculate the center of the frame since we will be trying to keep the object there.
+            (H, W) = frame.shape[:2]
+            center_x.value = W // 2
+            center_y.value = H // 2
+
+            object_location = self.update(predictions, frame, (center_x.value, center_y.value))
+            ((object_x.value, object_y.value), predictions) = object_location
+
+            if self.args.no_show:
+                return None
+
+            else:
+                # Draw bounding box over detected objects.
+                inferred_image = draw_bbox(frame, bbox, label, conf, write_conf=True)
+                return inferred_image
 

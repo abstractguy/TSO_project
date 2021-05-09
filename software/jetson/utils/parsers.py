@@ -27,13 +27,11 @@ def add_input_args(parser):
     parser.add_argument('--image', metavar='<image>', type=str, required=False, default='./doc/valid_test.png', help='Path of input image.')
     parser.add_argument('--video', metavar='<video>', type=str, required=False, default='./doc/valid_test.mp4', help='Path of input video.')
     parser.add_argument('--input-type', metavar='<input-type>', type=str, required=False, choices=['image', 'video', 'camera', 'arducam'], default='camera', help='Input type for inference ["image", "video", "camera", "arducam"].')
-    parser.add_argument('--thread', metavar='<thread>', type=str, required=False, choices=['both', 'get', 'show', 'none', 'old'], default='show', help='Threading type ["both", "get", "show", "none", "old"].')
+    parser.add_argument('--thread', metavar='<thread>', type=str, required=False, choices=['both', 'get', 'show', 'none', 'old'], default='get', help='Threading type ["both", "get", "show", "none", "old"].')
     parser.add_argument('--width', type=int, default=640, help='Image width [640].')
     parser.add_argument('--height', type=int, default=480, help='Image height [480].')
-    parser.add_argument('--config-file-name', metavar='<config-file-name>', type=str, required=False, default='./utils/Config/USB2.0_UC-391_Rev.E+UC-625_Rev.B/OV9281/OV9281_1Lane/640x400/8b/OV9281_comb_A_640x400.cfg', help='Path of configuration file.')
     parser.add_argument('--flip-vertically', action='store_true', help='Flip image vertically.')
     parser.add_argument('--flip-horizontally', action='store_true', help='Flip image horizontally.')
-    parser.add_argument('--is-arducam', action='store_true', help='If camera is Arducam Camarray.')
     return parser
 
 def add_inference_args(parser):
