@@ -17,10 +17,9 @@ from utils.camera.VideoGet import VideoGet
 from utils.camera.VideoShow import VideoShow
 from utils.inference import ObjectCenter
 from cvlib.object_detection import draw_bbox
-from datetime import datetime
 from copy import deepcopy
 
-import cv2, numpy as np, os, sys, threading, time
+import cv2
 
 def fourcc(a, b, c, d):
     return ord(a) | (ord(b) << 8) | (ord(c) << 16) | (ord(d) << 24)
