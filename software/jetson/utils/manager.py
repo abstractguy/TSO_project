@@ -51,10 +51,11 @@ def pid_process(output, p, i, d, box_coord, origin_coord, action):
 
         # Loop indefinitely.
         while True:
-            #error = ((origin_coord - box_coord.value) / origin_coord) * 100.0 # Grad.
             error = origin_coord - box_coord.value
 
-            output.value = p.update(error)
+            out = p.update(error)
+            out = (error / origin_coord) * 100.0 # Grad.
+            output.value = out
             logging.info(f'{action} error {error} angle: {output.value}')
 
     except KeyboardInterrupt:
