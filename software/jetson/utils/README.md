@@ -2,10 +2,10 @@
 
 Python code for the following cameras:
 
-- OV9281 (1MP Global Shutter Camera)
+- Dual ArduCAM camera array HAT style with OV9281 sensors (1MP Global Shutter Camera)
 
-# Install library and OpenCV V4L2 prerequisites
-## Install arducam_config_parser
+# Install V4L2 prerequisites on Jetson Nano
+## Install ArduCAM camarray drivers
 - Install  
 ```Bash
   sudo chmod +x ArduCAM/install.sh
