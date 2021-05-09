@@ -3,8 +3,8 @@
 # File:        utils/cloud/download_from_google_drive.sh
 # By:          Samuel Duclos
 # For:         Myself
-# Usage:       bash download_from_google_drive.sh <FILE_ID> <FILE_NAME>
-# Example:     bash download_from_google_drive.sh 10m_3MlpQwRtZetQxtksm9jqHrPTHZ6vo yolov3-tiny.pt
+# Usage:       bash utils/cloud/download_from_google_drive.sh <FILE_ID> <FILE_NAME>
+# Example:     bash utils/cloud/download_from_google_drive.sh 10m_3MlpQwRtZetQxtksm9jqHrPTHZ6vo yolov3-tiny.pt
 # Description: Google Drive Downloader.
 
 # FILE_ID can be extracted from the shared link.

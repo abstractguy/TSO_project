@@ -20,6 +20,7 @@
             "max_area": 130000,
             "merge_thresh": 0.6
         },
+
         "yolo_detector": {
             "model": "YOLOv4",
             "class_ids": [1],
@@ -27,11 +28,13 @@
             "max_area": 800000,
             "nms_thresh": 0.5
         },
+
         "public_detector": {
             "sequence": "eval/data/MOT20-03",
             "conf_thresh": 0.5,
             "max_area": 800000
         },
+
         "feature_extractor": {
             "model": "OSNet025",
             "batch_size": 16
@@ -70,12 +73,14 @@
                 "ransac_conf": 0.99,
                 "max_error": 100,
                 "inlier_thresh": 4,
-                "bg_feat_thresh": 15,
+                "bg_feat_thresh": 10,
+
                 "target_feat_params": {
                     "maxCorners": 1000,
                     "qualityLevel": 0.06,
                     "blockSize": 3
                 },
+
                 "opt_flow_params": {
                     "winSize": [5, 5],
                     "maxLevel": 5,
@@ -85,3 +90,4 @@
         }
     }
 }
+

@@ -3,15 +3,21 @@
 # File:        utils/install_jetson.sh
 # By:          Samuel Duclos
 # For:         Myself
-# Usage:       bash install_jetson.sh
+# Usage:       bash utils/install_jetson.sh
 # Description: Install FastMOT Jetson packages.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
 
-BASEDIR=$(dirname "$0")
-DIR=$BASEDIR/../fastmot/models
-
-# Jetpack 4.4 (OpenCV, CUDA, TensorRT) is required before running this script
 DIR=$HOME
 
+## Jetpack 4.4+ (OpenCV, CUDA, TensorRT) is required
+#JP_VERSION=44
+#TF_VERSION=1.15.2
+#NV_VERSION=20.4
+
+# Jetpack 4.5 (4.4+) (OpenCV, CUDA, TensorRT) is required
+JP_VERSION=45
+TF_VERSION=1.15.4
+NV_VERSION=20.12
 set -e
 
 # set up environment variables
@@ -23,10 +29,10 @@ source ~/.bashrc
 sudo apt-get update
 sudo apt-get install python3-pip libhdf5-serial-dev hdf5-tools libcanberra-gtk-module
 sudo -H pip3 install cython
-sudo -H pip3 install --global-options=build_ext --global-options="-I/usr/local/cuda-10.2/targets/aarch-linux/include/" --global-options="-L/usr/local/cuda-10.2/targets/aarch-linux/lib/" pycuda
 sudo -H pip3 install numpy cython-bbox
-sudo ln -fs /usr/include/locale.h /usr/include/xlocale.h
-sudo -H pip3 install --no-cache-dir --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v44 tensorflow==1.15.2+nv20.4
+sudo -H pip3 install --global-option=build_ext --global-option="-I/usr/local/cuda/include" --global-option="-L/usr/local/cuda/lib64" pycuda
+#sudo ln -fs /usr/include/locale.h /usr/include/xlocale.h
+sudo -H pip3 install --no-cache-dir --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v$JP_VERSION tensorflow==$TF_VERSION+nv$NV_VERSION
 
 # install scipy
 sudo apt-get install libatlas-base-dev gfortran
