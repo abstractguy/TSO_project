@@ -14,7 +14,14 @@ class ObjectCenter(object):
         """Initialize variables."""
         self.args = args
 
-    def _infer_(self, frame, confidence=0.25, nms_thresh=0.3, model='yolov4', object_category='person', filter_objects=False):
+    def _infer_(self, 
+                frame, 
+                confidence=0.25, 
+                nms_thresh=0.3, 
+                model='yolov4', 
+                object_category='person', 
+                filter_objects=False):
+
         """Apply object detection."""
 
         if self.args.flip_vertically:
@@ -23,11 +30,20 @@ class ObjectCenter(object):
         if self.args.flip_horizontally:
             frame = cv2.flip(frame, 1)
 
-        predictions = cvlib.detect_common_objects(frame, confidence=confidence, nms_thresh=nms_thresh, model=model, enable_gpu=not self.args.disable_gpu)
+        if self.args.inference_type == 'fastmot':
+            pass
+
+        elif self.args.inference_type == 'cvlib':
+            predictions = cvlib.detect_common_objects(frame, 
+                                                      confidence=confidence, 
+                                                      nms_thresh=nms_thresh, 
+                                                      model=model, 
+                                                      enable_gpu=not self.args.disable_gpu)
 
         if predictions is not None:
             if filter_objects:
-                predictions = self.filter_inference_results(predictions, object_category=object_category)
+                predictions = self.filter_inference_results(predictions, 
+                                                            object_category=object_category)
 
         return predictions
 
@@ -37,7 +53,13 @@ class ObjectCenter(object):
             bboxes, labels, confs = predictions
 
             # Only return bounding boxes for the selected object category.
-            category_bboxes = [(bbox, label, conf) for (bbox, label, conf) in zip(bboxes, labels, confs) if label == object_category]
+            category_bboxes = [(bbox, 
+                                label, 
+                                conf) for (bbox, 
+                                           label, 
+                                           conf) in zip(bboxes, 
+                                                        labels, 
+                                                        confs) if label == object_category]
 
             if len(category_bboxes) > 0:
                 # Choose biggest object of selected category.

@@ -3,7 +3,6 @@ import pycuda.autoinit
 import pycuda.driver as cuda
 import tensorrt as trt
 
-
 class HostDeviceMem:
     def __init__(self, host_mem, device_mem):
         self.host = host_mem
@@ -14,7 +13,6 @@ class HostDeviceMem:
 
     def __repr__(self):
         return self.__str__()
-
 
 class InferenceBackend:
     # initialize TensorRT
@@ -103,3 +101,4 @@ class InferenceBackend:
     def get_infer_time(self):
         self.end.synchronize()
         return self.start.time_till(self.end)
+

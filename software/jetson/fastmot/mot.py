@@ -9,15 +9,12 @@ from .utils import Profiler
 from .utils.visualization import draw_tracks, draw_detections
 from .utils.visualization import draw_flow_bboxes, draw_background_flow
 
-
 LOGGER = logging.getLogger(__name__)
-
 
 class DetectorType(Enum):
     SSD = 0
     YOLO = 1
     PUBLIC = 2
-
 
 class MOT:
     """
@@ -129,3 +126,4 @@ class MOT:
             draw_background_flow(frame, self.tracker)
         cv2.putText(frame, f'visible: {len(self.visible_tracks)}', (30, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, 0, 2, cv2.LINE_AA)
+

@@ -28,5 +28,13 @@ RPi.GPIO==0.7.0
 scipy==1.1.0
 sysv-ipc==1.0.1
 werkzeug>=0.15.3
+
+# FastMOT.
 wrapt==1.12.1
+numpy<1.19
+scipy>=1.5
+numba==0.48
+tensorflow<2.0 
+pycuda
+cython-bbox
 
