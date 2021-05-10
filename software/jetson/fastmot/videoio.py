@@ -220,8 +220,7 @@ class VideoIO:
         # use hardware encoder if found
         if IS_ARDUCAM:
             h264_encoder = (
-                'omxh264enc profile=high cabac-entropy-coding=true insert-sps-pps=true iframeinterval=60 ! '
-                'video/x-h264, level=(string)4.2, stream-format=(string)byte-stream'
+                'omxh264enc profile=high cabac-entropy-coding=true insert-sps-pps=true iframeinterval=60' #' ! video/x-h264, level=(string)4.2, stream-format=(string)byte-stream'
             )
         elif 'omxh264enc' in gst_elements:
             h264_encoder = 'omxh264enc preset-level=2'
