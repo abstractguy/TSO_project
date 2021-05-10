@@ -9,6 +9,9 @@
 from multiprocessing import Value, Process, Manager
 from pyuarm import UArm
 from utils.pid import PIDController
+from fastmot.loop import loop
+#from utils.loop import loop
+#from utils.camera.camera import thread
 
 import logging
 
@@ -107,15 +110,8 @@ def process_manager(args):
             tilt_i = manager.Value('f', 0)
             tilt_d = manager.Value('f', 0)
 
-            if args.inference_type == 'fastmot':
-                from fastmot.loop import loop
-                detector = loop
-            elif args.thread == 'old':
-                from utils.loop import loop
-                detector = loop
-            else:
-                from utils.camera.camera import thread
-                detector = thread
+            #detector = thread
+            detector = loop
 
             detect_process = Process(target=detector, args=(args, object_x, object_y, center_x, center_y))
             pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, center_x.value, 'pan'))
