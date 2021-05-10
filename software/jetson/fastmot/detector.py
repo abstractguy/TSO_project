@@ -306,3 +306,4 @@ class PublicDetector(Detector):
         detections = np.asarray(self.detections[self.frame_id], dtype=DET_DTYPE).view(np.recarray)
         self.frame_id += self.frame_skip
         return detections
+

@@ -79,7 +79,7 @@ def main():
                             log.write(f'{mot.frame_count},{track.trk_id},{tl[0]:.6f},{tl[1]:.6f},{w:.6f},{h:.6f},-1,-1,-1\n')
 
                 if args.gui:
-                    cv2.imshow('Video', frame)
+                    cv2.imshow('uARM', frame)
 
                     if cv2.waitKey(1) & 0xFF == 27:
                         break

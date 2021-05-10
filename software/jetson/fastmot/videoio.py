@@ -7,10 +7,9 @@ import threading
 import logging
 import cv2
 
-
 LOGGER = logging.getLogger(__name__)
-WITH_GSTREAMER = True
 
+WITH_GSTREAMER = True
 
 class Protocol(Enum):
     IMAGE = 0
@@ -19,7 +18,6 @@ class Protocol(Enum):
     V4L2  = 3
     RTSP  = 4
     HTTP  = 5
-
 
 class VideoIO:
     """
@@ -259,3 +257,4 @@ class VideoIO:
     def _img_format(uri):
         img_format = Path(uri).suffix[1:]
         return 'jpeg' if img_format == 'jpg' else img_format
+

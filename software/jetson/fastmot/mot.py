@@ -104,6 +104,8 @@ class MOT:
                 with Profiler('track'):
                     self.tracker.track(frame)
 
+        LOGGER.info(str(detections))
+
         if self.draw:
             self._draw(frame, detections)
         self.frame_count += 1
