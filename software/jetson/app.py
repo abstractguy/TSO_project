@@ -9,6 +9,11 @@ import cv2
 import fastmot
 from fastmot.utils import ConfigDecoder, Profiler
 
+IS_ARDUCAM = False
+
+if IS_ARDUCAM:
+    from utils import ArducamUtils
+
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-i', '--input_uri', metavar='<URI>', required=True, 
@@ -56,6 +61,9 @@ def main():
     if args.gui:
         cv2.namedWindow('uARM', cv2.WINDOW_AUTOSIZE)
 
+    if IS_ARDUCAM:
+        arducam_utils = ArducamUtils(0)
+
     logger.info('Starting video capture...')
 
     stream.start_capture()
@@ -67,6 +75,10 @@ def main():
 
                 if frame is None:
                     break
+
+                if IS_ARDUCAM:
+                    frame = arducam_utils.convert(frame)
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2YUV_I420)
 
                 if args.mot:
                     mot.step(frame)
