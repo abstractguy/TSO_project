@@ -41,7 +41,6 @@ then
     yes | python -m pip install "torch${TORCH_VERSION}" "torchvision${TORCHVISION_VERSION}" "torchaudio${TORCHAUDIO_VERSION}" -f https://download.pytorch.org/whl/torch_stable.html
 
     # Install custom pyuarm.
-    cd pyuarm && \
     yes | python -m pip install -e pyuarm
 else
     echo "Could not source activate ${CONDA_ENV_NAME}..."

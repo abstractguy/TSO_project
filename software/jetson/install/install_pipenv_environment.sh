@@ -28,7 +28,8 @@ cd ${BASE_PATH} && \
 pipenv install "torch${TORCH_VERSION}" "torchvision${TORCHVISION_VERSION}" "torchaudio${TORCHAUDIO_VERSION}" -f https://download.pytorch.org/whl/torch_stable.html
 
 # Install custom pyuarm.
-pipenv install -e pyuarm/pyuarm
+cd ${BASE_PATH} && \
+pipenv install -e pyuarm
 
 #pipenv run python3 main.py
 
