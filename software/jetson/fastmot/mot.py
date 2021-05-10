@@ -8,6 +8,7 @@ from .tracker import MultiTracker
 from .utils import Profiler
 from .utils.visualization import draw_tracks, draw_detections
 from .utils.visualization import draw_flow_bboxes, draw_background_flow
+from .utils.sot import ObjectCenter
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,7 +35,8 @@ class MOT:
         Flag to toggle output verbosity.
     """
 
-    def __init__(self, size, cap_dt, config, draw=False, verbose=False):
+    def __init__(self, size, cap_dt, config, obj=None, draw=False, verbose=False):
+        self.obj = obj
         self.size = size
         self.draw = draw
         self.verbose = verbose
@@ -55,22 +57,20 @@ class MOT:
         self.tracker = MultiTracker(self.size, cap_dt, self.extractor.metric,
                                     config['multi_tracker'])
 
-        # reset counter
+        # Reset counter.
         self.frame_count = 0
 
     @property
     def visible_tracks(self):
-        # retrieve confirmed and active tracks from the tracker
+        # Retrieve confirmed and active tracks from the tracker.
         return [track for track in self.tracker.tracks.values()
                 if track.confirmed and track.active]
 
     def initiate(self):
-        """
-        Resets multiple object tracker.
-        """
+        """Resets multiple object tracker."""
         self.frame_count = 0
 
-    def step(self, frame):
+    def step(self, frame, object_x=None, object_y=None, center_x=None, center_y=None):
         """
         Runs multiple object tracker on the next frame.
         Parameters
@@ -103,6 +103,12 @@ class MOT:
             else:
                 with Profiler('track'):
                     self.tracker.track(frame)
+
+        frame = self.obj.infer(frame, 
+                               object_x=object_x, 
+                               object_y=object_y, 
+                               center_x=center_x, 
+                               center_y=center_y)
 
         LOGGER.info(str(detections))
 

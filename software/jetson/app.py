@@ -1,37 +1,17 @@
 #!/usr/bin/env python3
 
+from fastmot.utils import ConfigDecoder, ObjectCenter, Profiler
+from utils.parsers import parse_args
 from pathlib import Path
-import argparse
-import logging
-import json
-import cv2
 
-import fastmot
-from fastmot.utils import ConfigDecoder, Profiler
+import argparse, cv2, fastmot, json
 
 IS_ARDUCAM = False
 
+WITH_GSTREAMER = True
+
 if IS_ARDUCAM:
     from utils import ArducamUtils
-
-def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('-i', '--input_uri', metavar='<URI>', required=True, 
-                        help='URI to input stream\n'
-                             '1) image sequence (e.g. img_%%06d.jpg)\n'
-                             '2) video file (e.g. video.mp4)\n'
-                             '3) MIPI CSI camera (e.g. csi://0)\n'
-                             '4) USB/V4L2 camera (e.g. /dev/video0)\n'
-                             '5) RTSP stream (rtsp://<user>:<password>@<ip>:<port>/<path>)\n'
-                             '6) HTTP stream (http://<user>:<password>@<ip>:<port>/<path>)\n')
-    parser.add_argument('-c', '--config', metavar='<FILE>', default=Path(__file__).parent / 'cfg' / 'mot.json', help='Path to configuration JSON file.')
-    parser.add_argument('-o', '--output_uri', metavar='<URI>', help='URI to output video (e.g. output.mp4).')
-    parser.add_argument('-l', '--log', metavar='<FILE>', help='Output a MOT Challenge format log (e.g. eval/results/mot17-04.txt).')
-    parser.add_argument('-m', '--mot', action='store_true', help='Run multiple object tracker.')
-    parser.add_argument('-g', '--gui', action='store_true', help='Enable display.')
-    parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output for debugging.')
-    args = parser.parse_args()
-    return args
 
 def main():
     args = parse_args()
@@ -48,11 +28,21 @@ def main():
     mot = None
     log = None
 
-    stream = fastmot.VideoIO(config['resize_to'], config['video_io'], args.input_uri, args.output_uri)
+    stream = fastmot.VideoIO(config['resize_to'], config['video_io'], args.input_uri, args.output_uri, flip_vertically=args.flip_vertically, flip_horizontally=args.flip_horizontally)
 
     if args.mot:
+        object_x = None
+        object_y = None
+        center_x = None
+        center_y = None
         draw = args.gui or args.output_uri is not None
-        mot = fastmot.MOT(config['resize_to'], stream.cap_dt, config['mot'], draw=draw, verbose=args.verbose)
+        obj = ObjectCenter(args)
+        mot = fastmot.MOT(config['resize_to'], 
+                          stream.cap_dt, 
+                          config['mot'], 
+                          obj=obj, 
+                          draw=draw, 
+                          verbose=args.verbose)
 
         if args.log is not None:
             Path(args.log).parent.mkdir(parents=True, exist_ok=True)
@@ -78,10 +68,19 @@ def main():
 
                 if IS_ARDUCAM:
                     frame = arducam_utils.convert(frame)
-                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2YUV_I420)
+
+                    if WITH_GSTREAMER:
+                        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2YUV_I420)
+
+                    else:
+                        frame = resize(frame, 1280.0)
 
                 if args.mot:
-                    mot.step(frame)
+                    mot.step(frame, 
+                             object_x=object_x, 
+                             object_y=object_y, 
+                             center_x=center_x, 
+                             center_y=center_y)
 
                     if log is not None:
                         for track in mot.visible_tracks:

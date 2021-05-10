@@ -9,4 +9,5 @@
 from .fastmot_inference import InferenceBackend
 from .decoder import ConfigDecoder
 from .profiler import Profiler
+from .sot import ObjectCenter
 

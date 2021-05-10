@@ -16,6 +16,7 @@ def parse_args():
     parser = add_uarm_args(parser)
     parser = add_input_args(parser)
     parser = add_inference_args(parser)
+    parser = add_sot_args(parser)
     parser = add_output_args(parser)
     args = parser.parse_known_args()[0]
     args.image_shape *= 2 if len(args.image_shape) == 1 else 1
@@ -43,6 +44,23 @@ def add_inference_args(parser):
     parser.add_argument('--model', metavar='<model>', type=str, required=False, default='yolov4', help='Path of input image.')
     parser.add_argument('--no-filter-object-category', action='store_true', help='Disable biggest single-object category selection.')
     parser.add_argument('--disable-gpu', action='store_true', help='Disable GPU usage for inference.')
+    return parser
+
+def add_sot_args(parser):
+    parser.add_argument('-i', '--input_uri', metavar='<URI>', required=True, 
+                        help='URI to input stream\n'
+                             '1) image sequence (e.g. img_%%06d.jpg)\n'
+                             '2) video file (e.g. video.mp4)\n'
+                             '3) MIPI CSI camera (e.g. csi://0)\n'
+                             '4) USB/V4L2 camera (e.g. /dev/video0)\n'
+                             '5) RTSP stream (rtsp://<user>:<password>@<ip>:<port>/<path>)\n'
+                             '6) HTTP stream (http://<user>:<password>@<ip>:<port>/<path>)\n')
+    parser.add_argument('-c', '--config', metavar='<FILE>', default=Path(__file__).parent / 'cfg' / 'mot.json', help='Path to configuration JSON file.')
+    parser.add_argument('-o', '--output_uri', metavar='<URI>', help='URI to output video (e.g. output.mp4).')
+    parser.add_argument('-l', '--log', metavar='<FILE>', help='Output a MOT Challenge format log (e.g. eval/results/mot17-04.txt).')
+    parser.add_argument('-m', '--mot', action='store_true', help='Run multiple object tracker.')
+    parser.add_argument('-g', '--gui', action='store_true', help='Enable display.')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output for debugging.')
     return parser
 
 def add_output_args(parser):

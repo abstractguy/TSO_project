@@ -21,7 +21,7 @@ class Protocol(Enum):
     RTSP  = 4
     HTTP  = 5
 
-class VideoIO:
+class VideoIO(object):
     """
     Class for capturing from a video file, an image sequence, or a camera, and saving video output.
     Encoding, decoding, and scaling can be accelerated using the GStreamer backend.
@@ -39,7 +39,15 @@ class VideoIO:
         Estimated processing speed. This depends on compute and scene complexity.
     """
 
-    def __init__(self, size, config, input_uri, output_uri=None, proc_fps=30):
+    def __init__(self, 
+                 size, 
+                 config, 
+                 input_uri, 
+                 output_uri=None, 
+                 proc_fps=30, 
+                 flip_vertically=False, 
+                 flip_horizontally=False):
+
         self.size = size
         self.input_uri = input_uri
         self.output_uri = output_uri
@@ -51,6 +59,7 @@ class VideoIO:
 
         self.protocol = self._parse_uri(self.input_uri)
         self.is_live = self.protocol != Protocol.IMAGE and self.protocol != Protocol.VIDEO
+
         if WITH_GSTREAMER:
             self.source = cv2.VideoCapture(self._gst_cap_pipeline(), cv2.CAP_GSTREAMER)
         else:
@@ -240,12 +249,19 @@ class VideoIO:
     def _capture_frames(self):
         while not self.exit_event.is_set():
             ret, frame = self.source.read()
+
+            if self.flip_vertically:
+                frame = cv2.flip(frame, 0)
+
+            if self.flip_horizontally:
+                frame = cv2.flip(frame, 1)
+
             with self.cond:
                 if not ret:
                     self.exit_event.set()
                     self.cond.notify()
                     break
-                # keep unprocessed frames in the buffer for file
+                # Keep unprocessed frames in the buffer for file.
                 if not self.is_live:
                     while (len(self.frame_queue) == self.buffer_size and
                            not self.exit_event.is_set()):
