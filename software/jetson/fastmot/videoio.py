@@ -9,6 +9,8 @@ import cv2
 
 LOGGER = logging.getLogger(__name__)
 
+IS_ARDUCAM = False
+
 WITH_GSTREAMER = True
 
 class Protocol(Enum):
@@ -140,21 +142,28 @@ class VideoIO:
 
     def _gst_cap_pipeline(self):
         gst_elements = str(subprocess.check_output('gst-inspect-1.0'))
-        if 'nvvidconv' in gst_elements and self.protocol != Protocol.V4L2:
-            # format conversion for hardware decoder
+        if IS_ARDUCAM:
             cvt_pipeline = (
-                'nvvidconv interpolation-method=5 ! '
-                'video/x-raw, width=%d, height=%d, format=BGRx !'
+                'nvvidconv interpolation-method=5 ! ' #'nvvidconv ! '
+                'video/x-raw(memory:NVMM), format=(string)I420 ! '
                 'videoconvert ! appsink sync=false'
-                % self.size
             )
         else:
-            cvt_pipeline = (
-                'videoscale ! '
-                'video/x-raw, width=%d, height=%d !'
-                'videoconvert ! appsink sync=false'
-                % self.size
-            )
+            if 'nvvidconv' in gst_elements and self.protocol != Protocol.V4L2:
+                # format conversion for hardware decoder
+                cvt_pipeline = (
+                    'nvvidconv interpolation-method=5 ! '
+                    'video/x-raw, width=%d, height=%d, format=BGRx !'
+                    'videoconvert ! appsink sync=false'
+                    % self.size
+                )
+            else:
+                cvt_pipeline = (
+                    'videoscale ! '
+                    'video/x-raw, width=%d, height=%d !'
+                    'videoconvert ! appsink sync=false'
+                    % self.size
+                )
 
         if self.protocol == Protocol.IMAGE:
             pipeline = (
@@ -168,7 +177,12 @@ class VideoIO:
         elif self.protocol == Protocol.VIDEO:
             pipeline = 'filesrc location=%s ! decodebin ! ' % self.input_uri
         elif self.protocol == Protocol.CSI:
-            if 'nvarguscamerasrc' in gst_elements:
+            if IS_ARDUCAM:
+                pipeline = (
+                    'nvarguscamerasrc sensor_id=%s ! '
+                    'video/x-raw, format=(string)I420, width=(int)%d, height=(int)%d, framerate=(fraction)80/1 ! ' % (*self.resolution)
+
+            elif 'nvarguscamerasrc' in gst_elements:
                 pipeline = (
                     'nvarguscamerasrc sensor_id=%s ! '
                     'video/x-raw(memory:NVMM), width=%d, height=%d, '
@@ -204,7 +218,12 @@ class VideoIO:
     def _gst_write_pipeline(self):
         gst_elements = str(subprocess.check_output('gst-inspect-1.0'))
         # use hardware encoder if found
-        if 'omxh264enc' in gst_elements:
+        if IS_ARDUCAM:
+            h264_encoder = (
+                'omxh264enc profile=high cabac-entropy-coding=true insert-sps-pps=true iframeinterval=60 ! '
+                'video/x-h264, level=(string)4.2, stream-format=(string)byte-stream'
+            )
+        elif 'omxh264enc' in gst_elements:
             h264_encoder = 'omxh264enc preset-level=2'
         elif 'x264enc' in gst_elements:
             h264_encoder = 'x264enc'
