@@ -16,7 +16,7 @@ WITH_GSTREAMER = True
 from fastmot.utils import ConfigDecoder, ObjectCenter, Profiler
 from pathlib import Path
 
-import cv2, fastmot, json, time
+import cv2, fastmot, json, logging, time
 
 def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     # Set up logging.

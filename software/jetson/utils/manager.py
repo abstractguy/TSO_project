@@ -100,7 +100,7 @@ def process_manager(args):
             # 0 time integral gain until inferencing is faster than ~50ms.
             pan_i = manager.Value('f', 0)
             pan_d = manager.Value('f', 0)
-        
+
             # PID gains for tilting.
             tilt_p = manager.Value('f', 1.0)
             # 0 time integral gain until inferencing is faster than ~50ms.
