@@ -189,8 +189,8 @@ class VideoIO(object):
             if IS_ARDUCAM:
                 pipeline = (
                     'nvarguscamerasrc sensor_id=%s ! '
-                    'video/x-raw, format=(string)I420, width=(int)%d, height=(int)%d, framerate=(fraction)80/1 ! ' % (*self.resolution)
-
+                    'video/x-raw, format=(string)I420, width=(int)%d, height=(int)%d, framerate=(fraction)80/1 ! ' % self.resolution
+                )
             elif 'nvarguscamerasrc' in gst_elements:
                 pipeline = (
                     'nvarguscamerasrc sensor_id=%s ! '

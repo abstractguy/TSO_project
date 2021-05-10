@@ -5,6 +5,7 @@
 # By:          Samuel Duclos
 # For:         Myself
 # Before:      sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.firmware -d
+# Usage:       sudo /opt/conda/envs/test/bin/python3 main.py --inference-type fastmot --no-filter-object-category --input_uri /dev/video0 --mot --gui
 # Usage:       sudo /opt/conda/envs/school/bin/python3 main.py
 # Usage:       sudo /opt/conda/envs/school/bin/python3 main.py --input-type camera
 # Usage:       sudo /opt/conda/envs/school/bin/python3 main.py --video doc/valid_test.mp4 --input-type video
