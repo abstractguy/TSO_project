@@ -19,6 +19,7 @@ def display(cap, arducam_utils, fps = False):
     start_time = datetime.now()
     frame_count = 0
     start = time.time()
+    #f = open("/dev/stdout", "wb")
     while True:
         ret, frame = cap.read()
         counter += 1
@@ -30,7 +31,7 @@ def display(cap, arducam_utils, fps = False):
             frame = frame.reshape(int(h), int(w))
 
         frame = arducam_utils.convert(frame)
-        
+
         frame = resize(frame, 1280.0)
         # display
         cv2.imshow("Arducam", frame)
@@ -42,7 +43,10 @@ def display(cap, arducam_utils, fps = False):
         if fps and time.time() - start >= 1:
             print("fps: {}".format(frame_count),end='\r')
             start = time.time()
-            frame_count = 0 
+            frame_count = 0
+        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2YUV_I420)
+        ## frame.tofile(sys.stdout.buffer)
+        #f.write(frame.data)
 
     end_time = datetime.now()
     elapsed_time = end_time - start_time
