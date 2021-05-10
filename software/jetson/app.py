@@ -42,7 +42,8 @@ def main():
                           config['mot'], 
                           obj=obj, 
                           draw=draw, 
-                          verbose=args.verbose)
+                          verbose=args.verbose, 
+                          sot=not args.no_filter_object_category)
 
         if args.log is not None:
             Path(args.log).parent.mkdir(parents=True, exist_ok=True)

@@ -35,11 +35,12 @@ class MOT:
         Flag to toggle output verbosity.
     """
 
-    def __init__(self, size, cap_dt, config, obj=None, draw=False, verbose=False):
+    def __init__(self, size, cap_dt, config, obj=None, draw=False, verbose=False, sot=False):
         self.obj = obj
         self.size = size
         self.draw = draw
         self.verbose = verbose
+        self.sot = sot
         self.detector_type = DetectorType[config['detector_type']]
         self.detector_frame_skip = config['detector_frame_skip']
 
@@ -104,11 +105,12 @@ class MOT:
                 with Profiler('track'):
                     self.tracker.track(frame)
 
-        frame = self.obj.infer(frame, 
-                               object_x=object_x, 
-                               object_y=object_y, 
-                               center_x=center_x, 
-                               center_y=center_y)
+        if self.sot:
+            frame = self.obj.infer(frame, 
+                                   object_x=object_x, 
+                                   object_y=object_y, 
+                                   center_x=center_x, 
+                                   center_y=center_y)
 
         LOGGER.info(str(detections))
 
