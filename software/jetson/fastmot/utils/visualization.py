@@ -1,10 +1,17 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/utils/visualization.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 import colorsys
 import numpy as np
 import cv2
 
-
 GOLDEN_RATIO = 0.618033988749895
-
 
 def draw_tracks(frame, tracks, show_flow=False, show_cov=False):
     for track in tracks:
@@ -14,16 +21,13 @@ def draw_tracks(frame, tracks, show_flow=False, show_cov=False):
         if show_cov:
             draw_covariance(frame, track.tlbr, track.state[1])
 
-
 def draw_detections(frame, detections):
     for det in detections:
         draw_bbox(frame, det.tlbr, (255, 255, 255), 1)
 
-
 def draw_flow_bboxes(frame, tracker):
     for tlbr in tracker.flow_bboxes.values():
         draw_bbox(frame, tlbr, 0, 1)
-
 
 def draw_tiles(frame, detector):
     assert hasattr(detector, 'tiles')
@@ -31,18 +35,15 @@ def draw_tiles(frame, detector):
         tlbr = np.rint(tile * np.tile(detector.scale_factor, 2))
         draw_bbox(frame, tlbr, 0, 1)
 
-
 def draw_background_flow(frame, tracker):
     draw_feature_match(frame, tracker.flow.prev_bg_keypoints,
                        tracker.flow.bg_keypoints, (0, 0, 255))
-
 
 def get_color(idx, s=0.8, vmin=0.7):
     h = np.fmod(idx * GOLDEN_RATIO, 1.)
     v = 1. - np.fmod(idx * GOLDEN_RATIO, 1. - vmin)
     r, g, b = colorsys.hsv_to_rgb(h, s, v)
     return int(255 * b), int(255 * g), int(255 * r)
-
 
 def draw_bbox(frame, tlbr, color, thickness, text=None):
     tlbr = tlbr.astype(int)
@@ -54,7 +55,6 @@ def draw_bbox(frame, tlbr, color, thickness, text=None):
                       color, cv2.FILLED)
         cv2.putText(frame, text, (tl[0], tl[1] + text_height - 1), cv2.FONT_HERSHEY_DUPLEX,
                     0.5, 0, 1, cv2.LINE_AA)
-
 
 def draw_feature_match(frame, prev_pts, cur_pts, color):
     if len(cur_pts) > 0:
@@ -84,3 +84,4 @@ def draw_covariance(frame, tlbr, covariance):
     cv2.ellipse(frame, tl, axes, angle, 0, 360, (255, 255, 255), 1, cv2.LINE_AA)
     axes, angle = ellipse(covariance[2:4, 2:4])
     cv2.ellipse(frame, br, axes, angle, 0, 360, (255, 255, 255), 1, cv2.LINE_AA)
+

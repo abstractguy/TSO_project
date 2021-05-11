@@ -1,12 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/models/yolo.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 from pathlib import Path
 import logging
 import numpy as np
 import tensorrt as trt
 
-
 EXPLICIT_BATCH = 1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH)
 LOGGER = logging.getLogger(__name__)
-
 
 class YOLO:
     PLUGIN_PATH = Path(__file__).parents[1] / 'plugins' / 'libyolo_layer.so'
@@ -99,7 +106,6 @@ class YOLO:
                 engine_file.write(engine.serialize())
             return engine
 
-
 class YOLOv4(YOLO):
     ENGINE_PATH = Path(__file__).parent / 'yolov4_crowdhuman.trt'
     MODEL_PATH = Path(__file__).parent /  'yolov4_crowdhuman.onnx'
@@ -110,3 +116,4 @@ class YOLOv4(YOLO):
     ANCHORS = [[11, 22, 24, 60, 37, 116],
                [54, 186, 69, 268, 89, 369],
                [126, 491, 194, 314, 278, 520]]
+

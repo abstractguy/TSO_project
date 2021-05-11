@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/detector.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 from collections import defaultdict
 from pathlib import Path
 import configparser
@@ -10,14 +19,12 @@ from .utils import InferenceBackend
 from .utils.rect import as_rect, to_tlbr, get_size, area
 from .utils.rect import union, crop, multi_crop, iom, diou_nms
 
-
 DET_DTYPE = np.dtype(
     [('tlbr', float, 4),
      ('label', int),
      ('conf', float)],
     align=True
 )
-
 
 class Detector:
     def __init__(self, size):
@@ -40,7 +47,6 @@ class Detector:
         This function should be called after `detect_async`.
         """
         raise NotImplementedError
-
 
 class SSDDetector(Detector):
     def __init__(self, size, config):
@@ -170,7 +176,6 @@ class SSDDetector(Detector):
         keep = np.asarray(list(keep))
         return dets[keep]
 
-
 class YOLODetector(Detector):
     def __init__(self, size, config):
         super().__init__(size)
@@ -267,7 +272,6 @@ class YOLODetector(Detector):
             if 0 < area(tlbr) <= max_area:
                 detections.append((tlbr, label, conf))
         return detections
-
 
 class PublicDetector(Detector):
     def __init__(self, size, frame_skip, config):

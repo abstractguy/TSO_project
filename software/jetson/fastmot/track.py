@@ -1,8 +1,16 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/track.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 import numpy as np
 
 from .models import LABEL_MAP
 from .utils.rect import get_center
-
 
 class Track:
     def __init__(self, frame_id, trk_id, tlbr, state, label):
@@ -66,3 +74,4 @@ class Track:
         else:
             self.smooth_feature = self.alpha * self.smooth_feature + (1. - self.alpha) * embedding
             self.smooth_feature /= np.linalg.norm(self.smooth_feature)
+

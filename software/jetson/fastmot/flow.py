@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/flow.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 import logging
 import itertools
 import numpy as np
@@ -7,9 +16,7 @@ import cv2
 from .utils.rect import to_tlbr, get_size, get_center
 from .utils.rect import mask_area, intersection, crop, transform
 
-
 LOGGER = logging.getLogger(__name__)
-
 
 class Flow:
     """
@@ -296,3 +303,4 @@ class Flow:
     def _get_inliers(prev_pts, cur_pts, inlier_mask):
         keep = np.where(inlier_mask.ravel())
         return prev_pts[keep], cur_pts[keep]
+

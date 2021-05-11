@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/feature_extractor.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 from multiprocessing.pool import ThreadPool
 import numpy as np
 import numba as nb
@@ -6,7 +15,6 @@ import cv2
 from . import models
 from .utils import InferenceBackend
 from .utils.rect import multi_crop
-
 
 class FeatureExtractor:
     def __init__(self, config):
@@ -78,3 +86,4 @@ class FeatureExtractor:
         img[1, ...] = (img[1, ...] - 0.456) / 0.224
         img[2, ...] = (img[2, ...] - 0.406) / 0.225
         out[offset:offset + stride] = img.ravel()
+

@@ -1,6 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/utils/rect.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 import numpy as np
 import numba as nb
-
 
 @nb.njit(cache=True)
 def as_rect(tlbr):
@@ -8,35 +16,29 @@ def as_rect(tlbr):
     tlbr = np.rint(tlbr)
     return tlbr
 
-
 @nb.njit(cache=True)
 def get_size(tlbr):
     tl, br = tlbr[:2], tlbr[2:]
     size = br - tl + 1
     return size
 
-
 @nb.njit(cache=True)
 def area(tlbr):
     size = get_size(tlbr)
     return int(size[0] * size[1])
 
-
 @nb.njit(cache=True)
 def mask_area(mask):
     return np.count_nonzero(mask)
-
 
 @nb.njit(cache=True)
 def get_center(tlbr):
     xmin, ymin, xmax, ymax = tlbr
     return np.array([(xmin + xmax) / 2, (ymin + ymax) / 2])
 
-
 @nb.njit(cache=True)
 def to_tlwh(tlbr):
     return np.append(tlbr[:2], get_size(tlbr))
-
 
 @nb.njit(cache=True)
 def to_tlbr(tlwh):
@@ -45,7 +47,6 @@ def to_tlbr(tlwh):
     tl, size = tlwh[:2], tlwh[2:]
     br = tl + size - 1
     return np.append(tl, br)
-
 
 @nb.njit(cache=True)
 def intersection(tlbr1, tlbr2):
@@ -58,7 +59,6 @@ def intersection(tlbr1, tlbr2):
         return None
     return tlbr
 
-
 @nb.njit(cache=True)
 def union(tlbr1, tlbr2):
     tl1, br1 = tlbr1[:2], tlbr1[2:]
@@ -68,7 +68,6 @@ def union(tlbr1, tlbr2):
     tlbr = np.append(tl, br)
     return tlbr
 
-
 @nb.njit(cache=True)
 def crop(img, tlbr, chw=False):
     xmin, ymin, xmax, ymax = tlbr.astype(np.int_)
@@ -76,13 +75,11 @@ def crop(img, tlbr, chw=False):
         return img[..., ymin:ymax + 1, xmin:xmax + 1]
     return img[ymin:ymax + 1, xmin:xmax + 1]
 
-
 @nb.njit(cache=True)
 def multi_crop(img, tlbrs):
     tlbrs_ = tlbrs.astype(np.int_)
     return [img[tlbrs_[i][1]:tlbrs_[i][3] + 1, tlbrs_[i][0]:tlbrs_[i][2] + 1]
             for i in range(len(tlbrs_))]
-
 
 @nb.njit(fastmath=True, cache=True)
 def iom(tlbr1, tlbr2):
@@ -96,7 +93,6 @@ def iom(tlbr1, tlbr2):
     area_minimum = min(area(tlbr1), area(tlbr2))
     return area_intersection / area_minimum
 
-
 @nb.njit(fastmath=True, cache=True)
 def transform(pts, m):
     """
@@ -107,7 +103,6 @@ def transform(pts, m):
     augment = np.ones((len(pts), 1))
     pts = np.concatenate((pts, augment), axis=1)
     return pts @ m.T
-
 
 @nb.njit(fastmath=True, cache=True)
 def perspective_transform(pts, m):
@@ -121,7 +116,6 @@ def perspective_transform(pts, m):
     pts = m @ pts
     pts = pts / pts[-1]
     return pts[:2].T
-
 
 @nb.njit(fastmath=True, cache=True)
 def nms(tlwhs, scores, nms_thresh):
@@ -160,7 +154,6 @@ def nms(tlwhs, scores, nms_thresh):
         ordered = ordered[idx + 1]
     keep = np.asarray(keep)
     return keep
-
 
 @nb.njit(fastmath=True, cache=True)
 def diou_nms(tlwhs, scores, nms_thresh, beta=0.6):
@@ -211,3 +204,4 @@ def diou_nms(tlwhs, scores, nms_thresh, beta=0.6):
         ordered = ordered[idx + 1]
     keep = np.asarray(keep)
     return keep
+

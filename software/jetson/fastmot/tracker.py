@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/tracker.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
+
 from collections import OrderedDict
 import itertools
 import logging
@@ -328,3 +338,4 @@ class MultiTracker:
                 gate = (cost[i] > thresh) | (trk_labels[i] != det_labels)
                 cost[i][gate] = INF_COST
         return cost
+

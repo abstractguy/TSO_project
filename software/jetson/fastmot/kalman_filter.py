@@ -1,14 +1,21 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/kalman_filter.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 from enum import Enum
 import numpy as np
 import numba as nb
 
 from .utils.rect import get_size
 
-
 class MeasType(Enum):
     FLOW = 0
     DETECTOR = 1
-
 
 class KalmanFilter:
     """
@@ -290,3 +297,4 @@ class KalmanFilter:
         L = np.linalg.cholesky(covariance)
         y = np.linalg.solve(L, diff.T)
         return np.sum(y**2, axis=0)
+

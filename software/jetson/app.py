@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/app.py
+# By:          Samuel Duclos
+# For:         Myself
+# Usage:       sudo /opt/conda/envs/school/bin/python3 app.py --input_uri doc/valid_test.png --mot
+# Description: This file launches standalone detection/tracking/etc. stream (without uARM payload).
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
 
 from fastmot.utils import ConfigDecoder, ObjectCenter, Profiler
 from utils.parsers import parse_args

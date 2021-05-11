@@ -1,6 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/utils/profiler.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 import time
 from collections import Counter
-
 
 class Profiler:
     __call_count = Counter()
@@ -26,3 +34,4 @@ class Profiler:
         if call_count == 0:
             return 0.
         return cls.__time_elapsed[name] * 1000 / call_count
+

@@ -1,10 +1,18 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# File:        software/jetson/fastmot/models/calibrator.py
+# By:          Samuel Duclos
+# For:         Myself
+# Description: This file was adapted from FastMOT for uARM feedback control.
+# Reference:   https://github.com/GeekAlexis/FastMOT.git
+
 import os
 import numpy as np
 import pycuda.driver as cuda
 import pycuda.autoinit
 import tensorrt as trt
 import cv2
-
 
 class SSDEntropyCalibrator(trt.IInt8EntropyCalibrator2):
     def __init__(self, model_shape, data_dir, cache_file):
@@ -65,3 +73,4 @@ class SSDEntropyCalibrator(trt.IInt8EntropyCalibrator2):
     def write_calibration_cache(self, cache):
         with open(self.cache_file, "wb") as f:
             f.write(cache)
+

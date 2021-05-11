@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# File:        software/main.py
+# File:        software/jetson/main.py
 # By:          Samuel Duclos
 # For:         Myself
 # Before:      sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.firmware -d
