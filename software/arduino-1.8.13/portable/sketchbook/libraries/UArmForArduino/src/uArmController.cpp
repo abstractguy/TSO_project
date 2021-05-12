@@ -9,9 +9,9 @@
   ******************************************************************************
   */
 
+#include <EEPROM.h>
 #include "uArmController.h"
 #include "uArmAPI.h"
-#include "uArmIIC.h"
 
 uArmController controller;
 
@@ -42,12 +42,6 @@ void uArmController::init() {
 		unsigned char data[2];
 
 		delay(10);
-
-		iic_readbuf(data, EXTERNAL_EEPROM_SYS_ADDRESS, offset, 2); // Fix this.
-
-		mMaxAdcPos[k] = (data[0] << 8) + data[1];
-
-		//Serial.println(mMaxAdcPos[k]);
 	}
 
 	mServo[SERVO_ROT_NUM].setPulseWidthRange(500, 2500);

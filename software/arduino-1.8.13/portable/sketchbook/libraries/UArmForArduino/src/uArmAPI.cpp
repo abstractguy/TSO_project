@@ -24,9 +24,6 @@
 
 #define STEP_MAX_TIME				20	// ms
 
-#define EXTERNAL_EEPROM_SYS_ADDRESS 0xA2
-#define EXTERNAL_EEPROM_USER_ADDRESS  0xA0
-
 #define PUMP_GRABBING_CURRENT 	55    
 
 static int mCurStep;
@@ -42,10 +39,10 @@ static void _sort(unsigned int array[], unsigned int len);
 static void _controllerRun();
 
 void initHardware() {
-	pinMode(BTN_D4, INPUT_PULLUP);        // Special mode for calibration.
-	pinMode(BUZZER, OUTPUT);
-	pinMode(LIMIT_SW, INPUT_PULLUP);
-	pinMode(BTN_D7, INPUT_PULLUP);
+	//pinMode(BTN_D4, INPUT_PULLUP);        // Special mode for calibration.
+	//pinMode(BUZZER, OUTPUT);
+	//pinMode(LIMIT_SW, INPUT_PULLUP);
+	//pinMode(BTN_D7, INPUT_PULLUP);
 	pinMode(PUMP_EN, OUTPUT);
 	pinMode(GRIPPER, OUTPUT);
 	pinMode(VALVE_EN, OUTPUT); // uARM Metal only.
@@ -266,8 +263,9 @@ void pumpOff() {
    \return true if limit switch hit
  */
 bool getTip() {
-	if (digitalRead(LIMIT_SW)) return true;
-	else return false;
+	//if (digitalRead(LIMIT_SW)) return true;
+	//else return false;
+        return false; // No limit switch!
 }
 
 /*!
@@ -378,217 +376,6 @@ unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double&
  */
 unsigned char angleToXYZ(double angleRot, double angleLeft, double angleRight, double& x, double& y, double& z) {
 	return controller.getXYZFromAngle(x, y, z, angleRot, angleLeft, angleRight);
-}
-
-/*!
-   \brief get e2prom data
-   \param device:  EEPROM_ON_CHIP, EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM
-   \param addr: 0~2047(EEPROM_ON_CHIP), 0~65535(EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM)
-   \param type: DATA_TYPE_BYTE, DATA_TYPE_INTEGER, DATA_TYPE_FLOAT
- */
-double getE2PROMData(unsigned char device, unsigned int addr, unsigned char type) {
-	double result = 0;
-	uint8_t deviceAddr;
-
-	union {
-		float fdata;
-		uint8_t data[4];
-	} FData;
-
-	switch (device) {
-		case 0:
-			switch (type) {
-			        case DATA_TYPE_BYTE:
-				{
-					int val = EEPROM.read(addr);
-					result = val;
-					break;
-				}
-				case DATA_TYPE_INTEGER:
-				{
-					int i_val = 0;
-					EEPROM.get(addr, i_val);
-					result = i_val;
-					break;
-				}
-				case DATA_TYPE_FLOAT:
-				{
-					double f_val = 0.0f;
-					EEPROM.get(addr,f_val);
-					result = f_val;
-					break;
-				}
-			}
-
-			break;
-
-		case 1:
-			deviceAddr = EXTERNAL_EEPROM_USER_ADDRESS;
-			break;
-
-		case 2:
-			deviceAddr = EXTERNAL_EEPROM_SYS_ADDRESS;
-			break;
-
-		default:
-			return ADDRESS_ERROR;
-	}
-
-	if (device == 1 || device == 2) {
-		int num = 0;
-
-		switch (type) {
-			case DATA_TYPE_BYTE:
-			{
-				num = 1;
-				break;
-			}
-			case DATA_TYPE_INTEGER:
-			{
-				num = 2;
-				break;
-			}
-			case DATA_TYPE_FLOAT:
-			{
-				num = 4;
-				break;
-			}
-			default:
-				return PARAMETER_ERROR;
-		}
-
-		unsigned char i = 0;
-
-		i = (addr % 128);
-
-		// Since the eeprom's sector is 128 byte, if we want to write 5 bytes per cycle we need to care about when there's less than 5 bytes left
-		if (i >= (129 - num)) {
-			i = 128 - i;
-			iic_readbuf(FData.data, deviceAddr, addr, i);// write data
-			delay(5);
-			iic_readbuf(FData.data + i, deviceAddr, addr + i, num - i);// write data
-		}
-
-		// If the left bytes are greater than 5, just do it.
-		else iic_readbuf(FData.data, deviceAddr, addr, num); // Write data.
-
-		switch (type) {
-			case DATA_TYPE_BYTE:
-			{
-				result = FData.data[0];
-				break;
-			}
-			case DATA_TYPE_INTEGER:
-			{
-				result = (FData.data[0] << 8) + FData.data[1];
-				break;
-			}
-			case DATA_TYPE_FLOAT:
-			{
-				result = FData.fdata;
-				break;
-			}
-		}
-	}
-
-	return result;
-}
-
-/*!
-   \brief set e2prom data
-   \param device:  EEPROM_ON_CHIP, EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM
-   \param addr: 0~2047(EEPROM_ON_CHIP), 0~65535(EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM)
-   \param type: DATA_TYPE_BYTE, DATA_TYPE_INTEGER, DATA_TYPE_FLOAT
-   \param value: value to write
- */
-double setE2PROMData(unsigned char device, unsigned int addr, unsigned char type, double value) {
-	uint8_t deviceAddr;
-
-	union {
-		float fdata;
-		uint8_t data[4];
-	} FData;
-
-	switch (device) {
-		case 0:
-			switch (type) {
-				case DATA_TYPE_BYTE:
-				{
-					byte b_val;
-					b_val = byte(value);
-					EEPROM.write(addr, b_val);
-					break;
-				}
-				case DATA_TYPE_INTEGER:
-				{
-					int i_val = 0;
-					i_val = int(value);
-					EEPROM.put(addr, i_val);
-					break;
-				}
-				case DATA_TYPE_FLOAT:
-				{
-					float f_val = 0.0f;
-					f_val = float(value);
-					EEPROM.put(addr,f_val);
-					// Serial.println(f_val);
-					break;
-				}
-			}
-
-			break;
-		case 1:
-			deviceAddr = EXTERNAL_EEPROM_USER_ADDRESS;
-			break;
-		case 2:
-			deviceAddr = EXTERNAL_EEPROM_SYS_ADDRESS;
-			break;
-		default:
-			return ADDRESS_ERROR;
-	}       
-
-	if (device == 1 || device == 2) {
-		int num = 0;
-		switch (type) {
-			case DATA_TYPE_BYTE:
-			{
-				FData.data[0] = byte(value);
-				num = 1;
-				break;
-			}
-			case DATA_TYPE_INTEGER:
-			{
-				int i_val = 0;
-				i_val = int(value); 
-				FData.data[0] = (i_val & 0xff00) >> 8;
-				FData.data[1] = i_val & 0xff;
-				num = 2;
-				break;
-			}
-			case DATA_TYPE_FLOAT:
-			{
-				FData.fdata = float(value);
-				num = 4;
-				break;
-			}
-			default:
-				return PARAMETER_ERROR;
-		}
-
-		unsigned char i = 0;
-
-		i = (addr % 128);
-
-		// Since the eeprom's sector is 128 byte, if we want to write 5 bytes per cycle we need to care about when there's less than 5 bytes left.
-		if (i >= (129 - num)) {
-			i = 128 - i;
-			iic_writebuf(FData.data, deviceAddr, addr, i); // Write data.
-			delay(5);
-			iic_writebuf(FData.data + i, deviceAddr, addr + i, num - i); // Write data.
-		}
-		// If the left bytes are greater than 5, just do it.
-		else iic_writebuf(FData.data, deviceAddr, addr, num); // Write data.
-	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -392,68 +392,6 @@ static unsigned char cmdGetAnalogValue(int serialNum, int parameterCount, double
     return 0;
 }
 
-static unsigned char cmdGetE2PROMData(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 3)
-        return PARAMETER_ERROR;    
-
-    char result[RESULT_BUFFER_SIZE];
-
-    
-
-    int device = int(value[0]);
-    int type = value[2];
-    uint32_t addr = value[1];
-
-    double resultVal = getE2PROMData(device, addr, type);
-
-    switch(type)
-    {
-    case DATA_TYPE_BYTE:
-        {
-            int val = resultVal;
-            msprintf(result, "V%d", val);
-            break;
-        }
-    case DATA_TYPE_INTEGER:
-        {
-            int i_val = resultVal;
-            msprintf(result, "V%d", i_val);
-            break;
-        }
-    case DATA_TYPE_FLOAT:
-        {
-            double f_val = resultVal;
-            msprintf(result, "V%f", f_val);
-            break;
-        }
-    }
-
-    replyResult(serialNum, result);    
-
-    return 0;
-
-}
-
-static unsigned char cmdSetE2PROMData(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 4)
-        return PARAMETER_ERROR;    
-    
-
-    
-    int type = value[2];
-    int device = int(value[0]);
-    uint32_t addr = value[1];
-
-    setE2PROMData(device, addr, type, value[3]);
-
-    replyOK(serialNum);
-
-    return 0;
-
-}
-
 static unsigned char cmdGetGripperStatus(int serialNum, int parameterCount, double value[4])
 {
     if (parameterCount != 0)
@@ -597,12 +535,6 @@ static void HandleMoveCmd(int cmdCode, int serialNum, int parameterCount, double
         result = cmdSetServoAngleWithOffset(serialNum, parameterCount, value);
         break;
 
-#ifdef MKII
-    case 203:
-        result = cmdStopMove(serialNum, parameterCount, value);
-        break;
-#endif
-
     case 204:
         result = cmdRelativeMove(serialNum, parameterCount, value);
         break;
@@ -644,14 +576,6 @@ static void HandleSettingCmd(int cmdCode, int serialNum, int parameterCount, dou
 
     case 202:
         result = cmdSetDetachServo(serialNum, parameterCount, value);
-        break;
-
-    case 211:
-        result = cmdGetE2PROMData(serialNum, parameterCount, value);
-        break;
-
-    case 212:
-        result = cmdSetE2PROMData(serialNum, parameterCount, value);
         break;
 
     case 220:
@@ -775,7 +699,7 @@ static bool parseCommand(char *message)
     char *pch;
     char cmdType;
 
-    // skip white space
+    // Skip white space.
     while (len > 0)
     {
         if (isspace(message[len-1]))
