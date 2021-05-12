@@ -1,24 +1,21 @@
-/*
-file linreg.cpp
-*/
+/* file linreg.cpp */
+
 #include <math.h>
 #include <float.h>
 #include "linreg.h"
 
-
-LinearRegression::LinearRegression(double *x, double *y, long size)
-{
+LinearRegression::LinearRegression(double *x, double *y, long size) {
 	long i;
+
 	a = b = sumX = sumY = sumXsquared = sumYsquared = sumXY = 0.0;
 	n = 0L;
 
-	if (size > 0L) // if size greater than zero there are data arrays
+	if (size > 0L) // If size is greater than zero,  there are data arrays.
 		for (n = 0, i = 0L; i < size; i++)
 			addXY(x[i], y[i]);
 }
 
-void LinearRegression::addXY(const double& x, const double& y)
-{
+void LinearRegression::addXY(const double& x, const double& y) {
 	n++;
 	sumX += x;
 	sumY += y;
@@ -28,12 +25,9 @@ void LinearRegression::addXY(const double& x, const double& y)
 	Calculate();
 }
 
-void LinearRegression::Calculate()
-{
-	if (haveData())
-	{
-		if (fabs(double(n) * sumXsquared - sumX * sumX) > DBL_EPSILON)
-		{
+void LinearRegression::Calculate() {
+	if (haveData()) {
+		if (fabs(double(n) * sumXsquared - sumX * sumX) > DBL_EPSILON) {
 			b = (double(n) * sumXY - sumY * sumX) /
 				(double(n) * sumXsquared - sumX * sumX);
 			a = (sumY - b * sumX) / double(n);
@@ -45,9 +39,7 @@ void LinearRegression::Calculate()
 			coefD = sx / sy2;
 			coefC = sqrt(coefD);
 			stdError = sqrt(sy / double(n - 2));
-		}
-		else
-		{
+		} else {
 			a = b = coefD = coefC = stdError = 0.0;
 		}
 	}

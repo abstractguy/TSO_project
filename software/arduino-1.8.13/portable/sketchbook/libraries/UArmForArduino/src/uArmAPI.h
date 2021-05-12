@@ -2,6 +2,7 @@
    \file 	uArmAPI.h
    \brief 	uArm API for Arduino
    \author 	David Long
+   \modified	Samuel Duclos
    \license GNU
    \copyright(c) 2016 UFactory Team. All right reserved
  */
@@ -11,25 +12,12 @@
 
 #include <Arduino.h>
 #include <EEPROM.h>
-#include <Wire.h>
 #include "UFServo.h"
 #include "uArmConfig.h"
 #include "uArmPin.h"
 #include "uArmController.h"
-#include "uArmBuzzer.h"
-#include "uArmRecorder.h"
-#include "uArmButton.h"
-#include "uArmLed.h"
 #include "uArmService.h"
 #include "uArmTypes.h"
-
-
-extern uArmButton buttonMenu;	// D4 in Metal
-extern uArmButton buttonPlay;	// D7 in Metal
-
-#ifdef MKII
-    extern uArmLed ledRed;		// red led in MKII
-#endif
 
 extern void manage_inactivity(void);
 

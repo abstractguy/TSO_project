@@ -3,6 +3,7 @@
   * @file	gCommComm.cpp
   * @author	David.Long	
   * @email	xiaokun.long@ufactory.cc
+  * @modified	Samuel Duclos (nomfullcreatif@gmail.com)
   * @date	2016-10-08
   * @license GNU
   * copyright(c) 2016 UFactory Team. All right reserved
@@ -11,7 +12,6 @@
 
 #include "uArmComm.h" 
 #include "uArmRingBuffer.h"
-
 
 static CommState commState = IDLE;
 static unsigned char cmdReceived[COM_LEN_MAX];
@@ -24,215 +24,121 @@ static uArmRingBuffer ringBuffer;
 #define RING_BUFFER_SIZE    48
 uint8_t bufData[RING_BUFFER_SIZE];
 
-static void replyError(int serialNum, unsigned int errorCode)
-{
-    if (serialNum > 0)
-    {
-        Serial.print("$");
-        Serial.print(serialNum);
-        Serial.print(" ");
-    }
+static void replyError(int serialNum, unsigned int errorCode) {
+	if (serialNum > 0) {
+		Serial.print("$");
+		Serial.print(serialNum);
+		Serial.print(" ");
+	}
 
-    Serial.print("E");
-    Serial.println(errorCode);   
+	Serial.print("E");
+	Serial.println(errorCode);   
 }
 
-static void replyOK(int serialNum)
-{
-    if (serialNum > 0)
-    {
-        Serial.print("$");
-        Serial.print(serialNum);
-        Serial.print(" ");
-    }
-    Serial.println("OK");   
+static void replyOK(int serialNum) {
+	if (serialNum > 0) {
+		Serial.print("$");
+		Serial.print(serialNum);
+		Serial.print(" ");
+	}
+
+	Serial.println("OK");   
 }
 
-static void replyResult(int serialNum, String result)
-{
-    if (serialNum > 0)
-    {    
-        Serial.print("$");
-        Serial.print(serialNum);
-        Serial.print(" ");
-    }
-    Serial.print("OK ");
-    Serial.println(result);   
+static void replyResult(int serialNum, String result) {
+	if (serialNum > 0) {    
+		Serial.print("$");
+		Serial.print(serialNum);
+		Serial.print(" ");
+	}
+
+	Serial.print("OK ");
+	Serial.println(result);   
 }
 
-static void reportResult(int reportCode, String result)
-{
-
-    Serial.print("@");
-    Serial.print(reportCode);
-    Serial.print(" ");
-    Serial.println(result);   
+static void reportResult(int reportCode, String result) {
+	Serial.print("@");
+	Serial.print(reportCode);
+	Serial.print(" ");
+	Serial.println(result);   
 }
 
-static unsigned char cmdMove(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 4)
-        return PARAMETER_ERROR;
+static unsigned char cmdMove(int serialNum, int parameterCount, double value[4]) {
+	if (parameterCount != 4) return PARAMETER_ERROR;
 
 	if (moveTo(value[0], value[1], value[2], value[3]) != OUT_OF_RANGE_NO_SOLUTION)
-	{
-        replyOK(serialNum);
-	}
-	else
-	{
-		return OUT_OF_RANGE;
-	}
+		replyOK(serialNum);
+	else return OUT_OF_RANGE;
 
-    return 0;
+	return 0;
 }
 
-static unsigned char cmdMovePol(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 4)
-        return PARAMETER_ERROR;
+static unsigned char cmdMovePol(int serialNum, int parameterCount, double value[4]) {
+	if (parameterCount != 4)
+		return PARAMETER_ERROR;
 
-    if (moveToPol(value[0], value[1], value[2], value[3]) != OUT_OF_RANGE_NO_SOLUTION)
-    {
-        replyOK(serialNum);
-    }
-    else
-    {
-        return OUT_OF_RANGE;
-    }
+	if (moveToPol(value[0], value[1], value[2], value[3]) != OUT_OF_RANGE_NO_SOLUTION)
+		replyOK(serialNum);
+	else return OUT_OF_RANGE;
  
-    return 0;   
+	return 0;   
 }
 
-static unsigned char cmdSetAttachServo(int serialNum, int parameterCount, double value[4])
-{
+static unsigned char cmdSetAttachServo(int serialNum, int parameterCount, double value[4]) {
+	if (parameterCount != 1)
+		return PARAMETER_ERROR;
 
-    if (parameterCount != 1)
-        return PARAMETER_ERROR;
-
-	if (attachServo(value[0]))
-    {
-        replyOK(serialNum);
-        return 0;
-    }
-    else
-    {
-        return OUT_OF_RANGE;
-    }
-  
+	if (attachServo(value[0])) {
+		replyOK(serialNum);
+		return 0;
+	} else return OUT_OF_RANGE;
 }
 
-static unsigned char cmdSetDetachServo(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 1)
-        return PARAMETER_ERROR;
+static unsigned char cmdSetDetachServo(int serialNum, int parameterCount, double value[4]) {
+	if (parameterCount != 1)
+		return PARAMETER_ERROR;
 
-    if (detachServo(value[0]))
-    {
-        replyOK(serialNum);
-        return 0;
-    }
-    else
-    {
-        return OUT_OF_RANGE;
-    }
+	if (detachServo(value[0])) {
+		replyOK(serialNum);
+		return 0;
+	} else return OUT_OF_RANGE;
 
-    return 0;
+	return 0;
 }
 
-// static unsigned char cmdSetServoAngle(int serialNum, int parameterCount, double value[4])
-// {
-//     if (parameterCount != 2)
-//         return PARAMETER_ERROR;
+static unsigned char cmdSetServoAngleWithOffset(int serialNum, int parameterCount, double value[4]) {
+	if (parameterCount != 2)
+		return PARAMETER_ERROR;    
 
-// 	uArm.mController.writeServoAngle(byte(value[0]), value[1], false);
-//     replyOK(serialNum);
-
-//     return 0;
-// }
-
-static unsigned char cmdSetServoAngleWithOffset(int serialNum, int parameterCount, double value[4])
-{
-
-    if (parameterCount != 2)
-        return PARAMETER_ERROR;    
-
-	if (setServoAngle(byte(value[0]), value[1]) == OK)
-    {
-        replyOK(serialNum);
-        return 0;
-    }
-    else
-    {
-        return PARAMETER_ERROR; 
-    }
-
-    
-
+	if (setServoAngle(byte(value[0]), value[1]) == OK) {
+		replyOK(serialNum);
+		return 0;
+	} else return PARAMETER_ERROR;
 }
 
-static unsigned char cmdSetPump(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 1)
-        return PARAMETER_ERROR;
+static unsigned char cmdSetPump(int serialNum, int parameterCount, double value[4]) {
+	if (parameterCount != 1)
+		return PARAMETER_ERROR;
 
-    if (value[0] == 0)//off
-    {
-        pumpOff();
-    }
-    else//on
-    {
-        pumpOn();
-    }
+	if (value[0] == 0) pumpOff(); // Off.
+	else pumpOn(); // On.
 
-    replyOK(serialNum);
+	replyOK(serialNum);
 
-    return 0;
+	return 0;
 }
 
-static unsigned char cmdSetGripper(int serialNum, int parameterCount, double value[4])
-{
+static unsigned char cmdSetGripper(int serialNum, int parameterCount, double value[4]) {
+	if (parameterCount != 1)
+		return PARAMETER_ERROR;
 
-    if (parameterCount != 1)
-        return PARAMETER_ERROR;
+	if (value[0] == 0) gripperRelease(); // Release.
+	else gripperCatch(); // Catch.
 
-    if (value[0]==0)//release
-    {
-        gripperRelease();
-    }
-    else//catch
-    {
-        gripperCatch();
-    }
+	replyOK(serialNum);
 
-    replyOK(serialNum);
-
-    return 0;
+	return 0;
 }
-
-static unsigned char cmdSetBuzz(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 2)
-        return PARAMETER_ERROR;
-
-	buzzer.buzz(value[0], value[1]*1000);    // convert to ms
-
-    replyOK(serialNum);
-
-    return 0;
-}
-
-#ifdef MKII
-static unsigned char cmdStopMove(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 0)
-        return PARAMETER_ERROR;
-
-	stopMove();
-    replyOK(serialNum);
-
-    return 0;
-}
-#endif
 
 static unsigned char cmdGetHWVersion(int serialNum, int parameterCount, double value[4])
 {
@@ -531,7 +437,6 @@ static unsigned char cmdGetE2PROMData(int serialNum, int parameterCount, double 
 
 static unsigned char cmdSetE2PROMData(int serialNum, int parameterCount, double value[4])
 {
-
     if (parameterCount != 4)
         return PARAMETER_ERROR;    
     
@@ -549,24 +454,6 @@ static unsigned char cmdSetE2PROMData(int serialNum, int parameterCount, double 
 
 }
 
-static unsigned char cmdSetButtonService(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 1)
-        return PARAMETER_ERROR;
-
-    if (value[0])
-    {
-        service.setButtonService(true); 
-    }
-    else
-    {
-        service.setButtonService(false); 
-    }
-
-    replyOK(serialNum);
-    return 0;
-}
-
 static unsigned char cmdGetGripperStatus(int serialNum, int parameterCount, double value[4])
 {
     if (parameterCount != 0)
@@ -580,13 +467,8 @@ static unsigned char cmdGetGripperStatus(int serialNum, int parameterCount, doub
     return 0;
 }
 
-
-
-
-
 static unsigned char cmdGetPumpStatus(int serialNum, int parameterCount, double value[4])
 {
-
     if (parameterCount != 0)
         return PARAMETER_ERROR;
 
@@ -594,11 +476,7 @@ static unsigned char cmdGetPumpStatus(int serialNum, int parameterCount, double 
 
     unsigned char status = getPumpStatus();
 
-#ifdef MKII     
-    
-    msprintf(result, "V%d", status);
-
-#elif defined(METAL)
+#if defined(METAL)
 
     if (status)
         strcpy(result, "V1");
@@ -611,44 +489,6 @@ static unsigned char cmdGetPumpStatus(int serialNum, int parameterCount, double 
 
     return 0;
 }
-
-
-#ifdef MKII 
-static unsigned char cmdGetPowerStatus(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 0)
-        return PARAMETER_ERROR;
-
-    char result[RESULT_BUFFER_SIZE];
-
-    if (isPowerPlugIn())
-        strcpy(result, "V1");
-    else
-        strcpy(result, "V0");   
-
-    replyResult(serialNum, result);
-
-    return 0;
-}
-#endif 
-
-// static unsigned char cmdGetServoAnalogData(int serialNum, int parameterCount, double value[4])
-// {
-//     if (parameterCount != 1)
-//         return PARAMETER_ERROR;
-
-//     unsigned int data = uArm.mController.getServoAnalogData(value[0]);
-//     //Serial.println(data);
-//     char result[RESULT_BUFFER_SIZE];
-
-
-//     msprintf(result, "V%d", result);   
-
-//     replyResult(serialNum, result);
-
-//     return 0;
-// }
-
 
 static unsigned char cmdRelativeMove(int serialNum, int parameterCount, double value[4])
 {
@@ -667,17 +507,14 @@ static unsigned char cmdRelativeMove(int serialNum, int parameterCount, double v
     return 0;
 }
 
-
 static unsigned char cmdSetReportInterval(int serialNum, int parameterCount, double value[4])
 {
     if (parameterCount != 1)
         return PARAMETER_ERROR;
 
-
     service.setReportInterval(value[0]*1000);
 
     replyOK(serialNum);
-
 
     return 0;
 }
@@ -726,14 +563,6 @@ static unsigned char cmdGetDeviceUUID(int serialNum, int parameterCount, double 
 
     return 0;
 }
-
-void reportButtonEvent(unsigned char buttonId, unsigned char event)
-{
-    char result[RESULT_BUFFER_SIZE];
-    msprintf(result, "B%d V%d", buttonId, event); 
-    reportResult(REPORT_BUTTON, result);  
-}
-
 
 void reportPos()
 {
@@ -817,10 +646,6 @@ static void HandleSettingCmd(int cmdCode, int serialNum, int parameterCount, dou
         result = cmdSetDetachServo(serialNum, parameterCount, value);
         break;
 
-    case 210:
-        result = cmdSetBuzz(serialNum, parameterCount, value);
-        break;        
-
     case 211:
         result = cmdGetE2PROMData(serialNum, parameterCount, value);
         break;
@@ -828,10 +653,6 @@ static void HandleSettingCmd(int cmdCode, int serialNum, int parameterCount, dou
     case 212:
         result = cmdSetE2PROMData(serialNum, parameterCount, value);
         break;
-
-    case 213:
-        result = cmdSetButtonService(serialNum, parameterCount, value);
-        break;        
 
     case 220:
         result = cmdCoordinateToAngle(serialNum, parameterCount, value);
@@ -856,8 +677,6 @@ static void HandleSettingCmd(int cmdCode, int serialNum, int parameterCount, dou
     case 240:
         result = cmdSetDigitValue(serialNum, parameterCount, value);
         break;
-
-
 
     default:
         replyError(serialNum, NO_SUCH_CMD);
@@ -974,10 +793,6 @@ static bool parseCommand(char *message)
     if (len <= 0)
         return false;
 
-
-
-    
-
     if (message[0] == '#')
     {
         hasSerialNum = true;
@@ -1060,126 +875,78 @@ static bool parseCommand(char *message)
 
 }
 
-static void handleSerialData(char data)
-{
-    static unsigned char cmdCount = 0;
+static void handleSerialData(char data) {
+	static unsigned char cmdCount = 0;
 
+	switch (commState) {
+		case IDLE:
+			if (data == '#' || data == 'G' || data == 'M' || data == 'P') {
+				commState = START;
+				cmdIndex = 0;
+				if (data != '#') cmdCount = 1; // Get cmd code.
+				else cmdCount = 0;
+				cmdReceived[cmdIndex++] = data;
+			}
 
-    switch (commState)
-    {
-    case IDLE:
-        if (data == '#' || data == 'G' || data == 'M' || data == 'P')
-        {
-            commState = START;
-            cmdIndex = 0;
-            if (data != '#')
-            {
-                cmdCount = 1;   // get cmd code
-            }
-            else
-            {
-                cmdCount = 0;
-            }
+			break;
 
-            cmdReceived[cmdIndex++] = data;
-        }
-        break;
-        
-    case START:
-        
-        if (cmdIndex >= COM_LEN_MAX)
-        {
+		case START:
+			if (cmdIndex >= COM_LEN_MAX) commState = IDLE;
+			else if (data == '#') { // Restart.
+				cmdIndex = 0;
+				cmdCount = 0;
+				cmdReceived[cmdIndex++] = data;
+			} else if (data == 'G' || data == 'M' || data == 'P') {
+				if (cmdCount >= 1) { // Restart.
+					cmdIndex = 0;
+					cmdReceived[cmdIndex++] = data;
+				} else {
+					cmdCount++;
+					cmdReceived[cmdIndex++] = data;
+				}
+			} else if (data == '\n') {
+				cmdReceived[cmdIndex] = '\0';
+				parseCommand((char*)cmdReceived);
+				commState = IDLE;
+			} else cmdReceived[cmdIndex++] = data;
+			break;
 
-            commState = IDLE;
-        }
-        else if (data == '#')   // restart 
-        {
-            cmdIndex = 0;
-            cmdCount = 0;
-            cmdReceived[cmdIndex++] = data;
-        } 
-        else if (data == 'G' || data == 'M' || data == 'P')    
-        {
-            if (cmdCount >= 1)  // restart
-            {
-                cmdIndex = 0;
-                cmdReceived[cmdIndex++] = data;
-            }
-            else
-            {
-                cmdCount++;
-                cmdReceived[cmdIndex++] = data;
-            }
-        }
-        else if (data == '\n')
-        {
-
-            cmdReceived[cmdIndex] = '\0';
-
-            parseCommand((char*)cmdReceived);
-            commState = IDLE;
-        }
-        else
-        {
-
-            cmdReceived[cmdIndex++] = data;
-        }
-        break;
-        
-    default:
-        commState = IDLE;
-        break;
-              
-    }
+		default:
+			commState = IDLE;
+			break;
+	}
 }
 
-void serialCmdRun()
-{
+void serialCmdRun() {
+	char data = -1;
 
-    char data = -1;
+	while (Serial.available()) {
+		data = Serial.read();
 
-    while (Serial.available())
-    {
-        data = Serial.read();
-
-        if (data == -1)
-        {
-            return ;
-        }
-        else
-        {
-            handleSerialData(data);
-        }
-    }
+		if (data == -1) return;
+		else handleSerialData(data);
+	}
 }
 
-void getSerialCmd()
-{
-    int data = -1;
+void getSerialCmd() {
+	int data = -1;
 
-    while (Serial.available())
-    {
-        data = Serial.read();
+	while (Serial.available()) {
+		data = Serial.read();
 
-        if (data != -1)
-        {
-            ringBuffer.put((uint8_t)data);
-        }
-    }    
+		if (data != -1) ringBuffer.put((uint8_t)data);
+	}
 }
 
-void handleSerialCmd()
-{
-    uint8_t data = 0;
+void handleSerialCmd() {
+	uint8_t data = 0;
 
-    while (ringBuffer.get(&data))
-    {
-        handleSerialData(data);
-    }
+	while (ringBuffer.get(&data)) {
+		handleSerialData(data);
+	}
 }
 
-void serialCmdInit()
-{
-    ringBuffer.init(bufData, RING_BUFFER_SIZE);
+void serialCmdInit() {
+	ringBuffer.init(bufData, RING_BUFFER_SIZE);
 }
 

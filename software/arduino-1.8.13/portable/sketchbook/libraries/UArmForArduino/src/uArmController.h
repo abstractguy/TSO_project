@@ -4,7 +4,8 @@
   * @author	David.Long	
   * @email	xiaokun.long@ufactory.cc
   * @date	2016-09-28
-  * @license GNU
+  * @license	GNU
+  * @modified	Samuel Duclos (nomfullcreatif@gmail.com)
   * copyright(c) 2016 UFactory Team. All right reserved
   ******************************************************************************
   */
@@ -14,33 +15,15 @@
 
 #include <Arduino.h>
 #include <EEPROM.h>
-#include <Wire.h>
 #include "UFServo.h"
 #include "uArmConfig.h"
 #include "uArmPin.h"
 #include "uArmTypes.h"
-
-
-
+#include "uArmIIC.h"
 
 #define DEFAULT_ANGLE			60
 
-
-
-#ifdef MKII
-
-#define MATH_PI 			3.141592653589793238463
-#define MATH_TRANS  		57.2958    
-#define MATH_L1 			88.9	//90.00	
-#define MATH_L2 			10		//21.17	
-#define MATH_LOWER_ARM 		142.07	//148.25	
-#define MATH_UPPER_ARM 		158.8	//160.2 	
-#define MATH_FRONT_HEADER 	29.4	//25.00// the distance between wrist to the front point we use
-#define MATH_UPPER_LOWER 	MATH_UPPER_ARM/MATH_LOWER_ARM
-#define MAX_Z				260		// MAX height
-#define MIN_Z				(-120)
-#elif defined(METAL)
-
+#if defined(METAL)
 #define MATH_PI 			3.141592653589793238463
 #define MATH_TRANS  		57.2958    
 #define MATH_L1 			107.45	
@@ -52,9 +35,6 @@
 #define MAX_Z				260		// max height
 #define MIN_Z				(-120)
 #endif
-
-
-
 
 #define LOWER_ARM_MAX_ANGLE      120
 #define LOWER_ARM_MIN_ANGLE      5
@@ -79,8 +59,7 @@
 #define RIGHT_SERVO_ADDRESS  0x02D0
 #define ROT_SERVO_ADDRESS    0x05A0
 
-class uArmController
-{
+class uArmController {
 public:
 	uArmController();
 
@@ -106,7 +85,6 @@ public:
 	#endif
 
 	unsigned char getCurrentXYZ(double& x, double& y, double& z);
-	//unsigned char getXYZFromPolar(double& x, double& y, double& z, double s, double r, double h);
 	unsigned char getXYZFromAngle(double& x, double& y, double& z, double rot, double left, double right);
 
 	unsigned char setServoSpeed(unsigned char speed);
@@ -136,10 +114,9 @@ protected:
 	
 	const byte SERVO_CONTROL_PIN[SERVO_COUNT] = {SERVO_ROT_PIN, SERVO_LEFT_PIN, SERVO_RIGHT_PIN, SERVO_HAND_ROT_PIN};
 	const byte SERVO_ANALOG_PIN[SERVO_COUNT] = {SERVO_ROT_ANALOG_PIN, SERVO_LEFT_ANALOG_PIN, SERVO_RIGHT_ANALOG_PIN, SERVO_HAND_ROT_ANALOG_PIN};
-
 };
-
 
 extern uArmController controller;
 
 #endif // _UARMCONTROLLER_H_
+
