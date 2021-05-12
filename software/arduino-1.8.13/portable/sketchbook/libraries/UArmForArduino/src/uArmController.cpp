@@ -9,7 +9,6 @@
   ******************************************************************************
   */
 
-#include <EEPROM.h>
 #include "uArmController.h"
 #include "uArmAPI.h"
 

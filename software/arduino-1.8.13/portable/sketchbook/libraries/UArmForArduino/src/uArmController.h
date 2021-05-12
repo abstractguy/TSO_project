@@ -14,6 +14,7 @@
 #define _UARMCONTROLLER_H_
 
 #include <Arduino.h>
+#include <EEPROM.h>
 #include "UFServo.h"
 #include "uArmConfig.h"
 #include "uArmPin.h"

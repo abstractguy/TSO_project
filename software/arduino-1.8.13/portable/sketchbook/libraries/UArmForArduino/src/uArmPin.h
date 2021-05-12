@@ -22,7 +22,7 @@
 	#define VALVE_EN                5    // HIGH = Pump ON
 	#define GRIPPER                 9    // LOW = Catch
 	#define GRIPPER_FEEDBACK        A6
-
+/*
 	#define SERVO_ROT_PIN           11
 	#define SERVO_LEFT_PIN          13
 	#define SERVO_RIGHT_PIN         12
@@ -32,5 +32,5 @@
 	#define SERVO_LEFT_ANALOG_PIN 		0
 	#define SERVO_RIGHT_ANALOG_PIN 		1
 	#define SERVO_HAND_ROT_ANALOG_PIN 	3
-
+*/
 #endif // _UARMPIN_H_
