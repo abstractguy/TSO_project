@@ -8,7 +8,6 @@
 #include "uArmTypes.h"
 #include "uArmPin.h"
 #include "uArmController.h"
-#include "uArmService.h"
 #include "uArmDebug.h"
 #include "uArmComm.h"
 #include "uArmAPI.h"

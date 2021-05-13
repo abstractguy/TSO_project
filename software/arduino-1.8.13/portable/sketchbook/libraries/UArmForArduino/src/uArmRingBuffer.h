@@ -4,6 +4,7 @@
   * @author	David.Long	
   * @email	xiaokun.long@ufactory.cc
   * @date	2016-12-08
+  * @modified	Samuel Duclos (nomfullcreatif@gmail.com)
   ******************************************************************************
   */
 
@@ -12,8 +13,7 @@
 
 #include <Arduino.h>
 
-class uArmRingBuffer
-{
+class uArmRingBuffer {
 
 public:
 	uArmRingBuffer();
@@ -28,9 +28,7 @@ private:
 	uint32_t tail;
 	uint8_t *data;
 	uint32_t buffer_size;
-
-
 };
 
-
 #endif // _UARMRINGBUFFER_H_
+

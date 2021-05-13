@@ -26,7 +26,6 @@
 
 enum CommState {IDLE, START, CMD, END, STATE_COUNT};
 
-void reportPos();
 void serialCmdInit();
 void getSerialCmd();
 void handleSerialCmd();

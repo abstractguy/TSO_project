@@ -74,7 +74,7 @@ void uArmInit() {
 unsigned char moveTo(double x, double y, double z, double speed) {
 	unsigned char result = IN_RANGE;
 
-	debugPrint("moveTo: x=%f, y=%f, z=%f, speed=%f", x, y, z, speed);
+	//debugPrint("moveTo: x=%f, y=%f, z=%f, speed=%f", x, y, z, speed);
 
 	// When speed is less than 100 mm/min: move directly to the destination.
 	if (speed < 0) return OUT_OF_RANGE_NO_SOLUTION;
@@ -424,7 +424,7 @@ static unsigned char _moveTo(double x, double y, double z, double speed) {
 	unsigned char status = 0;
 
 	status = controller.xyzToAngle(x, y, z, targetRot, targetLeft, targetRight);
-	debugPrint("target B=%f, L=%f, R=%f\r\n", curRot, curLeft, curRight);
+	//debugPrint("target B=%f, L=%f, R=%f\r\n", curRot, curLeft, curRight);
 
 	if (status == OUT_OF_RANGE_NO_SOLUTION) return OUT_OF_RANGE_NO_SOLUTION;
 
@@ -439,7 +439,7 @@ static unsigned char _moveTo(double x, double y, double z, double speed) {
 	// Get current XYZ.
 	controller.getCurrentXYZ(curX, curY, curZ);
 
-	debugPrint("B=%f, L=%f, R=%f\r\n", curRot, curLeft, curRight);
+	//debugPrint("B=%f, L=%f, R=%f\r\n", curRot, curLeft, curRight);
 
 	// Calculate max steps.
 	totalSteps = max(abs(targetRot - curRot), abs(targetLeft - curLeft));
@@ -470,7 +470,7 @@ static unsigned char _moveTo(double x, double y, double z, double speed) {
 
 	totalSteps = totalSteps < STEP_MAX ? totalSteps : STEP_MAX;
 
-	debugPrint("totalSteps= %d\n", totalSteps);
+	//debugPrint("totalSteps= %d\n", totalSteps);
 
 	// Trajectory planning.
 	_interpolate(curX, x, mPathX, totalSteps, INTERP_EASE_INOUT_CUBIC);
@@ -489,7 +489,7 @@ static unsigned char _moveTo(double x, double y, double z, double speed) {
 	}
 
 	if (i < totalSteps) {
-		debugPrint("i < totalSteps\r\n");
+		//debugPrint("i < totalSteps\r\n");
 		_interpolate(curRot, targetRot, mPathX, totalSteps, INTERP_EASE_INOUT_CUBIC);
 		_interpolate(curLeft, targetLeft, mPathY, totalSteps, INTERP_EASE_INOUT_CUBIC);
 		_interpolate(curRight, targetRight, mPathZ, totalSteps, INTERP_EASE_INOUT_CUBIC);
@@ -514,7 +514,7 @@ static void _controllerRun() {
 			// Ignore the point if cannot reach.
 			if (controller.limitRange(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]) != OUT_OF_RANGE_NO_SOLUTION)
 			{
-				debugPrint("curStep:%d, %f, %f, %f", mCurStep, mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]);
+				//debugPrint("curStep:%d, %f, %f, %f", mCurStep, mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]);
 				if (mCurStep == (mTotalSteps - 1)) {
 					double angles[3];
 					angles[0] = controller.getReverseServoAngle(0, mPathX[mCurStep]);
@@ -529,9 +529,7 @@ static void _controllerRun() {
 			mCurStep++;
 
 			if (mCurStep >= mTotalSteps) mCurStep = -1;
-		}	
-
-		manage_inactivity();
+		}
 	}
 }
 

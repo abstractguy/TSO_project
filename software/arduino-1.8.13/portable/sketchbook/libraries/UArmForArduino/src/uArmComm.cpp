@@ -3,10 +3,10 @@
   * @file	gCommComm.cpp
   * @author	David.Long	
   * @email	xiaokun.long@ufactory.cc
-  * @modified	Samuel Duclos (nomfullcreatif@gmail.com)
   * @date	2016-10-08
   * @license GNU
   * copyright(c) 2016 UFactory Team. All right reserved
+  * @modified	Samuel Duclos (nomfullcreatif@gmail.com)
   ******************************************************************************
   */
 
@@ -14,14 +14,15 @@
 #include "uArmRingBuffer.h"
 
 static CommState commState = IDLE;
+
 static unsigned char cmdReceived[COM_LEN_MAX];
 static unsigned char cmdIndex = 0;
 
 static uArmRingBuffer ringBuffer;
 
 #define RESULT_BUFFER_SIZE  50
-
 #define RING_BUFFER_SIZE    48
+
 uint8_t bufData[RING_BUFFER_SIZE];
 
 static void replyError(int serialNum, unsigned int errorCode) {
@@ -307,35 +308,12 @@ static unsigned char cmdAngleToXYZ(int serialNum, int parameterCount, double val
     return 0;
 }
 
-#ifdef MKII
-static unsigned char cmdIsMoving(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 0)
-        return PARAMETER_ERROR;
-
-    char result[RESULT_BUFFER_SIZE];
-	if(isMoving())
-	{
-        strcpy(result, "V1");
-	}
-	else
-	{
-        strcpy(result, "V0");
-	}
-
-    replyResult(serialNum, result);
-
-    return 0;
-}
-#endif
-
 static unsigned char cmdGetTip(int serialNum, int parameterCount, double value[4])
 {
     if (parameterCount != 0)
         return PARAMETER_ERROR;
 
     char result[RESULT_BUFFER_SIZE];
-
 
     if(getTip())
     {
@@ -445,18 +423,6 @@ static unsigned char cmdRelativeMove(int serialNum, int parameterCount, double v
     return 0;
 }
 
-static unsigned char cmdSetReportInterval(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 1)
-        return PARAMETER_ERROR;
-
-    service.setReportInterval(value[0]*1000);
-
-    replyOK(serialNum);
-
-    return 0;
-}
-
 static unsigned char cmdGetDeviceName(int serialNum, int parameterCount, double value[4])
 {
     if (parameterCount != 0)
@@ -502,21 +468,6 @@ static unsigned char cmdGetDeviceUUID(int serialNum, int parameterCount, double 
     return 0;
 }
 
-void reportPos()
-{
-    double x, y, z, frontEndAngle;
-
-    getCurrentXYZ(x, y, z);
-    frontEndAngle = getServoAngle(SERVO_HAND_ROT_NUM);
-
-    debugPrint("angle = %f", frontEndAngle);
-    char result[RESULT_BUFFER_SIZE];
-    msprintf(result, "X%f Y%f Z%f R%f", x, y, z, frontEndAngle);   
-
-    reportResult(REPORT_POS, result);    
-
-}
-
 static void HandleMoveCmd(int cmdCode, int serialNum, int parameterCount, double value[4])
 {
     unsigned char result = false;
@@ -560,16 +511,6 @@ static void HandleSettingCmd(int cmdCode, int serialNum, int parameterCount, dou
 
     switch (cmdCode)
     {
-    case 120:
-        result = cmdSetReportInterval(serialNum, parameterCount, value);
-        break;
-
-#ifdef MKII
-    case 200:
-        result = cmdIsMoving(serialNum, parameterCount, value);
-        break;
-#endif
-
     case 201:
         result = cmdSetAttachServo(serialNum, parameterCount, value);
         break;
@@ -693,7 +634,6 @@ static bool parseCommand(char *message)
     bool hasSerialNum = false;
     debugPrint("message=%s", message);
 
-
     int len = strlen(message);
 
     char *pch;
@@ -751,14 +691,11 @@ static bool parseCommand(char *message)
             break;
         }
 
-
         //debugPrint("value=%f", value[index]);
 
         pch = strtok(NULL, " ");
 
-
         index++;
-
     }
 
     int serialNum = 0;

@@ -15,10 +15,7 @@
 #include "uArmConfig.h"
 #include "uArmPin.h"
 #include "uArmController.h"
-#include "uArmService.h"
 #include "uArmTypes.h"
-
-extern void manage_inactivity(void);
 
 /*!
    \brief init components
