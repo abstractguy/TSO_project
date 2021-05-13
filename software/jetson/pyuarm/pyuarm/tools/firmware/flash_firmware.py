@@ -3,9 +3,7 @@ from __future__ import division
 
 __version__ = '1.0.5'
 __author__  = 'Alex Tan'
-'''
-This Tool is for uArm firmware flashing. Also support download firmware online
-'''
+'''This Tool is for uArm firmware flashing. Also support download firmware online'''
 
 import sys
 from serial.tools import list_ports
@@ -41,9 +39,6 @@ if getattr(sys, 'frozen', False):
 elif __file__:
     FROZEN_APP = False
 
-
-
-
 def resourcePath(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     if hasattr(sys, '_MEIPASS'):
@@ -53,13 +48,11 @@ def resourcePath(relative_path):
     else:
         return os.path.join(os.path.dirname(__file__), relative_path)
 
-
 def exit_fun():
     try:
         input("\nPress Enter to Exit...")
     except Exception:
         pass
-
 
 def uarm_ports(hardware_id=default_config["hardware_id"]):
     uarm_ports = []
@@ -67,7 +60,6 @@ def uarm_ports(hardware_id=default_config["hardware_id"]):
         if i.hwid[0:len(hardware_id)] == hardware_id:
             uarm_ports.append(i[0])
     return uarm_ports
-
 
 def get_uarm_port_cli():
     ports = uarm_ports()
@@ -84,7 +76,6 @@ def get_uarm_port_cli():
     elif len(ports) == 0:
         print("No uArm ports is found.")
         return None
-
 
 def download(url, filepath):
     try:
@@ -113,15 +104,13 @@ def download(url, filepath):
                 print ("\nCompleted!")
                 break
 
-        data=b''.join(data_blocks) #had to add b because I was joining bytes not strings
+        data=b''.join(data_blocks) # Had to add b because I was joining bytes, not strings.
         u.close()
-
 
         with open(filepath, "wb") as f:
                 f.write(data)
     except Exception as e:
         print ("Error: " + str(e))
-
 
 def gen_flash_cmd(port, firmware_path, avrdude_path=None):
     global avrdude_bin, avrdude_conf, error_description, cmd
@@ -148,7 +137,6 @@ def gen_flash_cmd(port, firmware_path, avrdude_path=None):
                '-Uflash:w:{0}:i'.format(firmware_path)]
     return cmd
 
-
 def flash(port, firmware_path, avrdude_path=None):
         cmd = gen_flash_cmd(port,firmware_path,avrdude_path)
         print((' '.join(cmd)))
@@ -156,7 +144,6 @@ def flash(port, firmware_path, avrdude_path=None):
             subprocess.call(cmd)
         except OSError as e:
             print(("Error occurred: error code {0}, error msg: {1}".format(str(e.errno), e.strerror)))
-
 
 class FlashFirmware:
 
@@ -194,7 +181,6 @@ class FlashFirmware:
         print ("Downloading firmware.hex...")
         download(self.firmware_url, self.firmware_path)
 
-
 def main(args):
     if args.port:
         port_name = args.port
@@ -231,5 +217,4 @@ if __name__ == '__main__':
         main(args)
     except SystemExit:
         exit_fun()
-
 

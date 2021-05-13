@@ -74,17 +74,6 @@ static unsigned char cmdMove(int serialNum, int parameterCount, double value[4])
 	return 0;
 }
 
-static unsigned char cmdMovePol(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 4)
-		return PARAMETER_ERROR;
-
-	if (moveToPol(value[0], value[1], value[2], value[3]) != OUT_OF_RANGE_NO_SOLUTION)
-		replyOK(serialNum);
-	else return OUT_OF_RANGE;
- 
-	return 0;   
-}
-
 static unsigned char cmdSetAttachServo(int serialNum, int parameterCount, double value[4]) {
 	if (parameterCount != 1)
 		return PARAMETER_ERROR;
@@ -171,45 +160,6 @@ static unsigned char cmdGetSWVersion(int serialNum, int parameterCount, double v
     return 0;
 }
 
-static unsigned char cmdSimulatePos(int serialNum, int parameterCount, double value[4])
-{
-
-
-    if (parameterCount != 4)
-        return PARAMETER_ERROR;
-
-    if (value[3] == 1) //Polar
-    {
-        double s = value[0];
-        double r = value[1];
-        double h = value[2];
-
-        polToXYZ(s, r, h, value[0], value[1], value[2]);
-    }
-
-	unsigned char status = validatePos(value[0], value[1], value[2]);
-
-
-    char result[RESULT_BUFFER_SIZE];
-    switch(status)
-    {
-    case IN_RANGE: 
-    	strcpy(result, "V1");
-        break;
-
-    case OUT_OF_RANGE: 
-    case OUT_OF_RANGE_NO_SOLUTION: 
-    	strcpy(result, "V0");
-       	break;
-    default:                
-    	break;
-    }
-
-    replyResult(serialNum, result);
-
-    return 0;
-}
-
 static unsigned char cmdGetCurrentXYZ(int serialNum, int parameterCount, double value[4])
 {
 
@@ -223,21 +173,6 @@ static unsigned char cmdGetCurrentXYZ(int serialNum, int parameterCount, double 
 
     replyResult(serialNum, result);
     return 0;	
-}
-
-static unsigned char cmdGetCurrentPosPol(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 0)
-        return PARAMETER_ERROR;
-
-    getCurrentPosPol(value[0], value[1], value[2]);
-
-    char result[RESULT_BUFFER_SIZE];
-    msprintf(result, "S%f R%f H%f", value[0], value[1], value[2]);
-
-    replyResult(serialNum, result);
-
-    return 0;
 }
 
 static unsigned char cmdGetCurrentAngle(int serialNum, int parameterCount, double value[4])
@@ -308,27 +243,6 @@ static unsigned char cmdAngleToXYZ(int serialNum, int parameterCount, double val
     return 0;
 }
 
-static unsigned char cmdGetTip(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 0)
-        return PARAMETER_ERROR;
-
-    char result[RESULT_BUFFER_SIZE];
-
-    if(getTip())
-    {
-        strcpy(result, "V1");
-    }
-    else
-    {
-        strcpy(result, "V0");
-    }
-
-     replyResult(serialNum, result);
-
-    return 0;
-}
-
 static unsigned char cmdGetDigitValue(int serialNum, int parameterCount, double value[4])
 {
     if (parameterCount != 1)
@@ -345,7 +259,6 @@ static unsigned char cmdGetDigitValue(int serialNum, int parameterCount, double 
 
 static unsigned char cmdSetDigitValue(int serialNum, int parameterCount, double value[4])
 {
-
     if (parameterCount != 2)
         return PARAMETER_ERROR;
 
@@ -357,7 +270,6 @@ static unsigned char cmdSetDigitValue(int serialNum, int parameterCount, double 
 
 static unsigned char cmdGetAnalogValue(int serialNum, int parameterCount, double value[4])
 {
-
     if (parameterCount != 1)
         return PARAMETER_ERROR;
 
@@ -402,23 +314,6 @@ static unsigned char cmdGetPumpStatus(int serialNum, int parameterCount, double 
 #endif
 
     replyResult(serialNum, result);
-
-    return 0;
-}
-
-static unsigned char cmdRelativeMove(int serialNum, int parameterCount, double value[4])
-{
-    if (parameterCount != 4)
-        return PARAMETER_ERROR;
-
-    if (relativeMove(value[0], value[1], value[2], value[3]) != OUT_OF_RANGE_NO_SOLUTION)
-    {
-        replyOK(serialNum);
-    }
-    else
-    {
-        return OUT_OF_RANGE;
-    }
 
     return 0;
 }
@@ -478,18 +373,10 @@ static void HandleMoveCmd(int cmdCode, int serialNum, int parameterCount, double
         result = cmdMove(serialNum, parameterCount, value);
         break;
 
-    case 201:
-        result = cmdMovePol(serialNum, parameterCount, value);
-        break;
-
     case 202:
         result = cmdSetServoAngleWithOffset(serialNum, parameterCount, value);
         break;
 
-    case 204:
-        result = cmdRelativeMove(serialNum, parameterCount, value);
-        break;
-        
     default:
         replyError(serialNum, NO_SUCH_CMD);
         return;
@@ -525,10 +412,6 @@ static void HandleSettingCmd(int cmdCode, int serialNum, int parameterCount, dou
 
     case 221:
         result = cmdAngleToXYZ(serialNum, parameterCount, value);
-        break;
-
-    case 222:
-        result = cmdSimulatePos(serialNum, parameterCount, value);
         break;
 
     case 231:
@@ -592,24 +475,12 @@ static void HandleQueryCmd(int cmdCode, int serialNum, int parameterCount, doubl
         result = cmdGetCurrentXYZ(serialNum, parameterCount, value);
         break;
 
-    case 221:
-        result = cmdGetCurrentPosPol(serialNum, parameterCount, value);
-        break;
-
     case 231:
         result = cmdGetPumpStatus(serialNum, parameterCount, value);
         break;
 
     case 232:
         result = cmdGetGripperStatus(serialNum, parameterCount, value);
-        break;
-
-    case 233:
-        result = cmdGetTip(serialNum, parameterCount, value);
-        break;    
-
-    case 240:
-        result = cmdGetDigitValue(serialNum, parameterCount, value);
         break;
 
     case 241:

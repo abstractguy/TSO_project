@@ -4,7 +4,6 @@ from . import miniterm, list_uarms
 from .firmware import flash_firmware
 from .calibration import calibrate
 
-
 def main():
     parser = argparse.ArgumentParser()
 
@@ -14,11 +13,6 @@ def main():
     pm = subparsers.add_parser("miniterm")
     pm.add_argument("-p", "--port", help="specify port number")
     pm.add_argument("-d", "--debug", help="Open Debug log", action="store_true")
-
-    pc = subparsers.add_parser("calibrate")
-    pc.add_argument("-p", "--port", help="specify port number")
-    pc.add_argument("-d", "--debug", help="Open Debug log", action="store_true")
-    pc.add_argument("-c", "--check", help="Check the calibrate offset values", action="store_true")
 
     pl = subparsers.add_parser("list")
 
@@ -33,8 +27,6 @@ def main():
     if args.cmd:
         if args.cmd == 'miniterm':
             miniterm.main(args)
-        elif args.cmd == 'calibrate':
-            calibrate.main(args)
         elif args.cmd == 'list':
             list_uarms.main()
         elif args.cmd == 'firmware':
@@ -42,3 +34,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

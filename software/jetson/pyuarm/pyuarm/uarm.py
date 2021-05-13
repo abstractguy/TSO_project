@@ -15,31 +15,6 @@ def add_uarm_args(parser):
     parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=3.0, help='Delay after uARM detaches servos.')
     return parser
 
-def get_uarm(logger=None):
-    """
-    ===============================
-    Get First uArm Port instance
-    ===============================
-    It will return the first uArm Port detected by **pyuarm.tools.list_uarms**,
-    If no available uArm ports, will print *There is no uArm port available*
-
-    .. raw:python
-    >>> import pyuarm
-    >>> uarm = pyuarm.get_uarm()
-    There is no uArm port available
-
-
-    :returns: uArm() Instance
-    """
-    ports = uarm_ports()
-
-    if len(ports) > 0:
-        return UArm(port_name=ports[0], logger=logger)
-
-    else:
-        printf("There is no uArm port available", ERROR)
-        return None
-
 class UArm(object):
     firmware_version = None
     hardware_version = None
@@ -60,10 +35,10 @@ class UArm(object):
                  debug=False, 
                  uarm_speed=100, 
                  uart_delay=2, 
-                 servo_attach_delay=5, 
-                 set_position_delay=5, 
-                 servo_detach_delay=5, 
-                 pump_delay=5):
+                 servo_attach_delay=3, 
+                 set_position_delay=3, 
+                 servo_detach_delay=3, 
+                 pump_delay=3):
 
         """
         :param port_name: UArm Serial Port name, if no port provide, will try first port we detect
@@ -104,8 +79,6 @@ class UArm(object):
         self.__serial = serial.Serial(baudrate=115200, timeout=.1)
 
         self.connect()
-
-        #self.uarm = get_uarm()
 
         time.sleep(self.uart_delay)
 
@@ -216,7 +189,7 @@ class UArm(object):
             printf("Communication| Tried to send a command while robot was not connected!")
             return ""
 
-        # Prepare and send the command to the robot
+        # Prepare and send the command to the robot.
         self.__gen_serial_id()
         cmnd = "#{} {}".format(self.serial_id,cmnd)
         # printf(cmnd, type=ERROR)
@@ -262,13 +235,6 @@ class UArm(object):
             printf("UArm.__parse_cmd(): Since an error occurred in communication, returning 0's for all arguments!")
             return response_dict
 
-        # if command not in message:
-        #     printf("UArm.__parse_cmd(): ERROR: The message did not come with the appropriate command!")
-        #     return response_dict
-        #
-        # # Get rid of the "command" part of the message, so it's just arguments and their numbers
-        # message = message.replace(command, "")
-
         # Get the arguments and place them into the array
         for i, arg in enumerate(arguments):
             if i < len(arguments) - 1:
@@ -312,25 +278,6 @@ class UArm(object):
         else:
             return False
 
-    def get_simulation(self, x, y, z):
-        """
-        validate the coordinate (x,y,z) if it can be reached or not.
-        :param x:
-        :param y:
-        :param z:
-        :return:
-        """
-        x = str(round(x, 2))
-        y = str(round(y, 2))
-        z = str(round(z, 2))
-        cmd = protocol.SIMULATION.format(x, y, z)
-        response = self.__send_and_receive(cmd)
-        value = self.__gen_response_value(response)
-        if value:
-            return value
-        else:
-            return False
-
     def set_position(self, x, y, z, speed=300, relative=False):
         """
         Move uArm to the position (x,y,z) unit is mm, speed unit is mm/sec
@@ -347,11 +294,7 @@ class UArm(object):
 
         self.set_servo_attach() # Check if needed here.
 
-        if relative:
-            command = protocol.SET_POSITION_RELATIVE.format(x, y, z, s)
-
-        else:
-            command = protocol.SET_POSITION.format(x, y, z, s)
+        command = protocol.SET_POSITION.format(x, y, z, s)
 
         response = self.__send_and_receive(command)
 
@@ -380,20 +323,6 @@ class UArm(object):
         else:
             logging.info(f'angle not in range {angle}')
             return False
-
-    # def set_servo_raw_angle(self, servo_number, angle):
-    #     """
-    #     Set uArm Servo Raw Angle, 0 - 180 degrees, this Function will exclude the manual servo offset.
-    #     :param servo_number: lease reference protocol.py SERVO_BOTTOM, SERVO_LEFT, SERVO_RIGHT, SERVO_HAND
-    #     :param angle: 0 - 180 degrees
-    #     :return: succeed True or Failed False
-    #     """
-    #     cmd = protocol.SET_RAW_ANGLE.format(str(servo_number), str(angle))
-    #     response = self.__send_and_receive(cmd)
-    #     if response.startswith("s"):
-    #         return True
-    #     else:
-    #         return False
 
     def set_relative_position_from_center_in_grad(self, 
                                                   x=0, 
@@ -507,20 +436,6 @@ class UArm(object):
             else:
                 return False
 
-    def set_buzzer(self, frequency, duration):
-        """
-        Turn on the uArm Buzzer
-        :param frequency: The frequency, in Hz
-        :param duration: The duration of the buzz, in seconds
-        :return:
-        """
-        cmd = protocol.SET_BUZZER.format(frequency, duration)
-        response = self.__send_and_receive(cmd)
-        if response.startswith(protocol.OK.lower()):
-            return True
-        else:
-            return False
-
     def get_position(self):
         """
         Get Current uArm position (x,y,z) mm
@@ -563,31 +478,6 @@ class UArm(object):
         else:
             return False
 
-    # def set_polar_coordinate(self, rotation, stretch, height, speed=100):
-    #     """
-    #     Polar Coordinate, rotation, stretch, height.
-    #     :param rotation:
-    #     :param stretch:
-    #     :param height:
-    #     :param speed:
-    #     :return:
-    #     """
-    #     cmd = protocol.SET_POLAR.format(stretch, rotation, height, speed)
-    #     if self.__send_and_receive(cmd).startswith("s"):
-    #         return True
-    #     else:
-    #         return False
-    #
-    # def get_polar_coordinate(self):
-    #     cmd = protocol.GET_POLAR
-    #     response = self.__send_and_receive(cmd)
-    #     if response.startswith("s"):
-    #         parse_cmd = self.__parse_cmd(response[1:], ["s", "r", "h"])
-    #         polar_crd = [parse_cmd["s"], parse_cmd["r"], parse_cmd["h"]]
-    #         return polar_crd
-    #     else:
-    #         return False
-
     def get_servo_angle(self, servo_number=None):
         """
         Get Current uArm Servo Angles include offset
@@ -618,105 +508,12 @@ class UArm(object):
         else:
             return False
 
-    # def get_servo_raw_angle(self, servo_number=None):
-    #     """
-    #     Get Current uArm Servo Angles exclude offset
-    #     :param servo_number:  if None, Return 4 servos Current Angles
-    #     :return: Returns an angle in degrees, of the servo
-    #     """
-    #     cmd = protocol.GET_RAW_ANGLE
-    #
-    #     response = self.__send_and_receive(cmd)
-    #     if response.startswith("s"):
-    #         parse_cmd = self.__parse_cmd(response[1:],  ["b", "l", "r", "h"])
-    #         angles = [parse_cmd["b"], parse_cmd["l"], parse_cmd["r"], parse_cmd["h"]]
-    #         if servo_number is not None:
-    #             if 0 <= servo_number <= 3:
-    #                 return angles[servo_number]
-    #             else:
-    #                 return False
-    #         else:
-    #             return angles
-    #     else:
-    #         return False
-
-    def get_tip_sensor(self):
-        """
-        Get Status from Tip Sensor
-        :return: True On/ False Off
-        """
-        response = self.__send_and_receive(protocol.GET_TIP_SENSOR)
-        value = self.__gen_response_value(response)
-
-        if value:
-            if "".join(value)[1:] == "0":
-                return True
-            else:
-                return False
-        else:
-            return False
-
-    def get_rom_data(self, address, data_type=protocol.EEPROM_DATA_TYPE_BYTE):
-        """
-        Get DATA From EEPROM
-        :param address: 0 - 2048
-        :param data_type: EEPROM_DATA_TYPE_FLOAT, EEPROM_DATA_TYPE_INTEGER, EEPROM_DATA_TYPE_BYTE
-        :return:
-        """
-        cmd = protocol.GET_EEPROM.format(address, data_type)
-        response = self.__send_and_receive(cmd)
-        value = self.__gen_response_value(response)
-        if value:
-            # print("val: {}".format(type)))
-            val = "".join(value)[1:]
-
-            if data_type == protocol.EEPROM_DATA_TYPE_FLOAT:
-                return float(val)
-            elif data_type == protocol.EEPROM_DATA_TYPE_INTEGER:
-                return int(val)
-            elif data_type == protocol.EEPROM_DATA_TYPE_BYTE:
-                return int(val)
-        else:
-            return False
-
-    def set_rom_data(self, address, data, data_type=protocol.EEPROM_DATA_TYPE_BYTE):
-        """
-        Set DATA to EEPROM
-        :param address: 0 - 2048
-        :param data: Value
-        :param data_type: EEPROM_DATA_TYPE_FLOAT, EEPROM_DATA_TYPE_INTEGER, EEPROM_DATA_TYPE_BYTE
-        :return:
-        """
-        cmd = protocol.SET_EEPROM.format(address, data_type, data)
-        response = self.__send_and_receive(cmd)
-        if response.startswith(protocol.OK.lower()):
-            return True
-        else:
-            return False
-
-    def get_sn_number(self):
-        """
-        Get Serial Number
-        :return:
-        """
-        serial_number = ""
-        for i in range(15):
-            serial_number += chr(int(self.get_rom_data(protocol.SERIAL_NUMBER_ADDRESS + i)))
-        return serial_number
-
-    def get_analog(self,pin):
+    def get_analog(self, pin):
         cmd = protocol.GET_ANALOG.format(pin)
         response = self.__send_and_receive(cmd)
         if response.startswith("s"):
             val = response[1:]
             return int(float(val))
-
-    def get_digital(self,pin):
-        cmd = protocol.GET_DIGITAL.format(pin)
-        response = self.__send_and_receive(cmd)
-        if response.startswith("s"):
-            val = response[1:]
-            return val
 
     def get_initial_absolute_position(self):
         """Get initial absolute position."""
@@ -743,7 +540,4 @@ class UArm(object):
             self.disconnect()
 
         print('uARM closed...')
-
-    def __del__(self):
-        self.reset()
 
