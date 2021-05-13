@@ -4,24 +4,27 @@
 
 # TSO_project
 ## An "Intelligent" robotic arm using a camera for pick and place.
-The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range, then picks up a single selected class of common objects labeled from the COCO dataset (80 classes) using feedback from a camera. It then places and drops the object to a predefined location.
+The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range, then picks up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using feedback from a camera. It then places and drops the object to a predefined location.
 Still a work in progress. Mid development phase.
 
 ## Documentation
-The documentation provides instructions to compile and deploy parts of previously commented code as a website on readthedocs.
+The documentation provides instructions to compile and deploy parts of previously commented code as a website on readthedocs or locally.
 Still a work in progress. Early development phase.
 
 ## Mechanics
-The *.STL files can be 3D-printed or converted to *.URDF for simulation (see software/jetson/jetson-containers/).
+The *.STL files can be 3D-printed.
+
+## Simulation
+The *.STL files can be converted to *.URDF for simulation using a physics engine (see software/jetson/jetson-containers/).
 
 ## Electronics
 The minimalistic Printed Circuit Board features an ESP32 as the motor-driving microcontroller.
 
 ## Software
-There is PC-compatible (Windows, MAXOS and Linux) software to program and deploy the environment, firmware for the PCB in software/arduino-1.8.13, theres is software, drivers, etc. for commanding everything from the Jetson (or computer).
+There is PC-compatible (Windows, MACOSX and Linux) software to program and deploy the environment, firmware for the PCB in software/arduino-1.8.13/, theres is software, drivers, etc. for commanding everything from the Jetson (or computer).
 
 ## Accelerated inference using TensorRT, deployable on Nvidia Jetson platforms
-A platform featuring YOLOv4-MISH-640, with instructions for training and evaluation and deployable inference on an Nvidia Jetson AGX Xavier using TensorRT.
+A platform featuring YOLOv4-mish-640, with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT.
 
 ## Installation Instructions for Linux
 
@@ -51,7 +54,7 @@ $ cd ~/workspace
 
 ##### Download repository code
 ```
-$ git clone http://github.com/abstractguy/TSO_project.git
+$ git clone https://github.com/abstractguy/TSO_project.git
 ```
 
 ##### Go to TSO_project's path
@@ -66,7 +69,7 @@ $ cd TSO_project/software/jetson
 $ sudo -H bash install/install_unetbootin.sh
 ```
 
-### Update and reboot (redo first steps if starting on a newly installed system)
+### Update and reboot (redo skipped first steps if you're starting on a newly installed system)
 
 ## Start with a fresh install of Ubuntu 18.04.5 LTS with automatic updates and proprietary drivers activated
 
@@ -75,7 +78,7 @@ $ sudo -H bash install/install_unetbootin.sh
 $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_prerequisites.sh
 ```
 
-### After the prescribed reboot, review install/INSTALL_DOCKER.md and go through the entire procedure (skip the first section on installing Nvidia drivers)
+### After the prescribed reboot, review software/jetson/jetson-containers/INSTALL_DOCKER.md and go through the entire procedure (skip the first section on installing Nvidia drivers)
 
 ## Old install method (deprecated)
 
@@ -103,13 +106,13 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_x86_environ
 $ cd ~/workspace/TSO_project/software/jetson && bash install/install_x86_environment_part_2.sh
 ```
 
+### If you're using Jetson Nano devkit, you will want to install a jumper on J48 to power with the jack barrel
+
 ## Install Nvidia JetPack 4.4.1 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
 
 ### Sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager
 
-### When it can't SSH into the Jetson, plug a screen, keyboard and mouse to the Nvidia Jetson Nano (or AGX Xavier) devkit to configure the rest; the install will resume after
-
-### When using Jetson Nano devkit, you want to install a jumper on J48 to power from the jack barrel
+### Follow the instructions and when it can't SSH into the Jetson, plug a screen, keyboard and mouse to the Nvidia Jetson Nano (or AGX Xavier) devkit to configure the rest; the install will resume after
 
 ##### Prepare directories on the Jetson (tested using an Nvidia Jetson AGX Xavier) (from x86_64)
 ```
@@ -119,7 +122,27 @@ $ scp -r ~/workspace/TSO_project/software/jetson sam@192.168.55.1:/home/sam/work
 
 ##### Install Jetson prerequisites
 ```
-$ ssh -t sam@192.168.55.1 'bash ~/workspace/jetson/install/install_on_Xavier.sh <JETSON_PASSWORD>'
+$ ssh -t sam@192.168.55.1 'bash ~/workspace/jetson/utils/install_jetson.sh'
+```
+
+##### If you have the Jetson Nano devkit and the dual OV9281 sensor cameras with the ArduCAM Camarray HAT style, install the camera drivers
+```
+$ ssh -t sam@192.168.55.1 'bash ~/workspace/jetson/ArduCAM/install.sh'
+```
+
+##### Change directory and make the TensorRT YOLO plugins
+```
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson/fastmot/utils/plugins && make'
+```
+
+##### Install the custom uARM serial port GCODE spammer
+```
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && pip3 install -e pyuarm'
+```
+
+##### On your TV, open a terminal and run everything
+```
+$ cd ~/workspace/jetson && sudo python3 main.py --inference-type fastmot --input_uri /dev/video0 --mot --gui
 ```
 
 ## Inference
@@ -182,12 +205,13 @@ Results for COCO val 2017 (5k images), on RTX 2080Ti, with conf threshold=0.001
 | mv2SSD (512x512)              | 0.226         | 0.381     | \-            | \-          | 0.223         | 0.378     |
 
 
-##### Do this from sender side:
-```
-$ ffmpeg -stream_loop -1 -re -i doc/15062016_16360868.6474.m2t -c copy -vcodec libx264 -f mpegts udp://192.168.55.1:1337
-```
+FPS on RTX 2070 (R) and Tesla V100 (V):
 
-##### Login on TV screen, convert yolov4-mish-sam-640 from PyTorch *.pt to TensorRT *.trt and run inference
+* [yolov4x-mish.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4x-mish.cfg) - 640x640 - **67.9% mAP@0.5 (49.4% AP@0.5:0.95) - 23(R) FPS / 50(V) FPS** - 221 BFlops (110 FMA) - 381 MB: [yolov4x-mish.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4x-mish.weights) 
+   * pre-trained weights for training: https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4x-mish.conv.166
+
+
+##### Login on TV screen, convert yolov4-mish-640 from PyTorch *.pt to TensorRT *.trt and run inference
 ```
 $ source ~/workspace/jetson/load_programs.sh
 $ source ~/workspace/jetson/test.sh
@@ -196,20 +220,9 @@ $ source ~/workspace/jetson/test.sh
 <p align="center"><img src="software/jetson/doc/valid_test.jpg" width="480"\></p>
 <p align="center"><img src="software/jetson/doc/valid_tested.png" width="512"\></p>
 
-## Train
+## Training and fine-tuning of this neural network is beyond the scope of this project, but please refer to [AlexeyAB's Darknet](https://github.com/AlexeyAB/darknet)
 
-#### Example (Training from scratch for yolov4-mish-sam-640)
-To fine-tune Yolov3-MISH-SAM-640 training on the COCO dataset using a CSPDarkNet backbone pretrained on COCO, run:
-```
-$ bash train.sh # TODO
-```
-
-#### Example (Fine-tuning using another dataset for yolov4-mish-sam-640)
-To fine-tune Yolov3-MISH-SAM-640 training on the COCO dataset using a CSPDarkNet backbone pretrained on COCO, run:
-```
-$ bash train_fine_tune.sh # TODO
-```
-
+#### The tr
 <p align="center"><img src="software/jetson/doc/results.png" width="512"\></p>
 
 #### Visualize with tensorboard.
@@ -235,5 +248,4 @@ $ tensorboard --logdir=runs
 [[Yolov4 paper]](https://arxiv.org/abs/2004.10934)
 [[SPP paper]](https://arxiv.org/abs/1406.4729)
 [[CSPNet paper]](https://arxiv.org/abs/1911.11929)
-
 
