@@ -23,5 +23,5 @@ cd && \
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
 python3 get-pip.py && \
 pip3 install --user pipenv && \
-echo "export PATH=$(python3 -m site --user-base)/bin:${PATH}" >> ~/.profile
+echo 'PATH="$(python3 -m site --user-base)/bin:/usr/local/cuda-10.2/bin${HOME}/bin:$(python3 -m site --user-base)/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin${PATH}"' >> ~/.profile
 

@@ -16,6 +16,9 @@ TORCH_VERSION='==1.8.1+cu111'
 TORCHVISION_VERSION='==0.9.1+cu111'
 TORCHAUDIO_VERSION='==0.8.1'
 
+export PIPENV_IGNORE_VIRTUALENVS=1
+#export PIPENV_VERBOSITY=1
+
 # Install as many packages as possible at once so that the package resolver solves as many dependencies as possible for us.
 cd ${BASE_PATH} && \
 pipenv install "numpy${NUMPY_VERSION}" pandas opencv-python matplotlib pycocotools tqdm onnx cupy lxml pybind11 imagesize jupyterlab ipywidgets widgetsnbextension pycuda "numba${NUMBA_VERSION}" "scipy${SCIPY_VERSION}" scikit-learn imgaug albumentations "tensorflow-gpu${TENSORFLOW_VERSION}" tensorflow-estimator tensorflow-datasets tensorflow-addons keras keras-applications keras-preprocessing tensorboard cvlib onnxruntime scikit-multilearn "wrapt${WRAPT_VERSION}" cython-bbox "pyserial${PYSERIAL_VERSION}"

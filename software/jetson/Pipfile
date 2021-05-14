@@ -12,6 +12,13 @@ matplotlib = "*"
 pycocotools = "*"
 tqdm = "*"
 onnx = "*"
+cupy = "*"
+lxml = "*"
+pybind11 = "*"
+imagesize = "*"
+jupyterlab = "*"
+ipywidgets = "*"
+widgetsnbextension = "*"
 
 [dev-packages]
 
