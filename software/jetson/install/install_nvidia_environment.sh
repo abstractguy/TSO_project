@@ -26,6 +26,15 @@ sudo apt-get install --no-install-recommends cuda-11-0 \
                                              libcudnn8=8.0.4.30-1+cuda11.0  \
                                              libcudnn8-dev=8.0.4.30-1+cuda11.0
 
+sudo apt-get install -y build-essential binutils gdb && \
+sudo apt-get install -y freeglut3 freeglut3-dev libxi-dev libxmu-dev && \
+sudo apt install -y nvidia-cuda-toolkit && \
+nvcc --version && \
+echo 'export PATH="/usr/local/cuda/bin:${PATH}"' >> ~/.bashrc && \
+echo 'export LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"' >> ~/.bashrc
+#sudo apt-get install python-dev python-setuptools -y
+sudo apt-get install libboost-python-dev libboost-thread-dev -y
+
 # Reboot. Check that GPUs are visible using the command: nvidia-smi
 echo 'Please reboot, then run "bash install/install_pipenv.sh"'
 

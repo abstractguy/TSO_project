@@ -8,6 +8,6 @@
 # Notes: NOT TESTED YET (this script and all subscripts)!
 
 bash install/install_pipenv.sh && \
-#bash install/install_tensorrt.sh && \
+bash install/install_tensorrt.sh && \
 bash install/install_pipenv_environment.sh
 
