@@ -7,6 +7,7 @@
 
 sudo apt-get remove --auto-remove -y nvidia-cuda-toolkit
 sudo apt-get --purge remove -y "*cublas*" "cuda*" "nsight*" && \
+sudo apt-get --purge remove -y "*libcudnn*" && \
 sudo apt-get --purge remove -y "*nvidia*" && \
 sudo rm -rf /usr/local/cuda* && \
 sudo sed -i.bak 's/^[^#].*nvidia.*$/#&/g' /etc/apt/sources.list && \

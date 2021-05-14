@@ -17,14 +17,14 @@ wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1
 sudo apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb
 sudo apt-get update
 
-wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.1.3-1+cuda11.0_amd64.deb
+wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.6.5.32-1+cuda10.2_amd64.deb
 sudo apt install ./libnvinfer7_7.1.3-1+cuda11.0_amd64.deb
 sudo apt-get update
 
 # Install development and runtime libraries (~4GB)
-sudo apt-get install --no-install-recommends cuda-11-0 \
-                                             libcudnn8=8.0.4.30-1+cuda11.0  \
-                                             libcudnn8-dev=8.0.4.30-1+cuda11.0
+sudo apt-get install --no-install-recommends cuda-10-2 \
+                                             libcudnn8=8.0.0.180-1+cuda10.2  \
+                                             libcudnn8-dev=8.0.0.180-1+cuda10.2
 
 sudo apt-get install -y build-essential binutils gdb && \
 sudo apt-get install -y freeglut3 freeglut3-dev libxi-dev libxmu-dev && \
