@@ -32,7 +32,6 @@ sudo apt-mark showhold libcudnn7
 
 sudo apt-get install -y build-essential binutils gdb && \
 sudo apt-get install -y freeglut3 freeglut3-dev libxi-dev libxmu-dev && \
-sudo apt install -y nvidia-cuda-toolkit && \
 nvcc --version && \
 echo 'export PATH="/usr/local/cuda/bin:${PATH}"' >> ~/.bashrc && \
 echo 'export LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"' >> ~/.bashrc
