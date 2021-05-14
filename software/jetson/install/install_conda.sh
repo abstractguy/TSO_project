@@ -4,7 +4,7 @@
 # By:            Samuel Duclos
 # For            Myself
 # Description:   Install conda.
-# Example usage: bash ~/school/Projets/Final/TSO_Project/Logiciels/jetson-containers/install/install_conda.sh
+# Example usage: bash ~/school/Projets/Final/TSO_Project/jetson/install/install_conda.sh
 
 sudo apt update && \
 sudo apt install -y avrdude bzip2 ca-certificates git libglib2.0-0 libxext6 libsm6 libxrender1 mercurial subversion wget && \

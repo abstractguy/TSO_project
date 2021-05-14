@@ -80,7 +80,7 @@ $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_p
 
 ### After the prescribed reboot, review software/jetson/jetson-containers/INSTALL_DOCKER.md and go through the entire procedure (skip the first section on installing Nvidia drivers)
 
-## Old install method (deprecated)
+## Old install method (recommended)
 
 ##### Install miniconda3
 ```
@@ -92,16 +92,16 @@ $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda.sh
 $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda_environment.sh
 ```
 
-## New install method (experimental)
+## New install method (not recommended, experimental)
 
 ##### Do everything in this script manually or if feeling adventurous, automagically (not tested)
 ```
 $ cd ~/workspace/TSO_project/software/jetson && bash install/install_x86_environment_part_1.sh
 ```
 
-##### Reboot
+##### New install method: Reboot
 
-##### Do everything in this script manually or if feeling adventurous, automagically (not tested)
+##### New install method (not recommended): Do everything in this script manually or if feeling adventurous, automagically (not tested)
 ```
 $ cd ~/workspace/TSO_project/software/jetson && bash install/install_x86_environment_part_2.sh
 ```
