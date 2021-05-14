@@ -117,32 +117,32 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_x86_environ
 ##### Prepare directories on the Jetson (tested using an Nvidia Jetson AGX Xavier) (from x86_64)
 ```
 $ ssh sam@192.168.55.1 'mkdir -p ~/workspace'
-$ scp -r ~/workspace/TSO_project/software/jetson sam@192.168.55.1:/home/sam/workspace
+$ scp -r ~/workspace/TSO_project/software sam@192.168.55.1:/home/sam/workspace
 ```
 
 ##### Install Jetson prerequisites
 ```
-$ ssh -t sam@192.168.55.1 'bash ~/workspace/jetson/utils/install_jetson.sh'
+$ ssh -t sam@192.168.55.1 'bash ~/workspace/software/jetson/utils/install_jetson.sh'
 ```
 
-##### If you have the Jetson Nano devkit and the dual OV9281 sensor cameras with the ArduCAM Camarray HAT style, install the camera drivers
+##### If you have the Jetson Nano devkit and the dual ArduCAM camera array HAT style with OV9281 sensors (1MP Global Shutter Camera), install the camera drivers
 ```
-$ ssh -t sam@192.168.55.1 'bash ~/workspace/jetson/ArduCAM/install.sh'
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/software/jetson && sudo chmod +x ArduCAM/install.sh && ./ArduCAM/install.sh'
 ```
 
 ##### Make the TensorRT YOLO plugins
 ```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson/fastmot/utils/plugins && make'
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/software/jetson/fastmot/utils/plugins && make'
 ```
 
 ##### Install the custom uARM serial port GCODE spammer
 ```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && pip3 install -e pyuarm'
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/software/jetson && pip3 install -e pyuarm'
 ```
 
 ##### On your TV, open a terminal and run everything
 ```
-$ cd ~/workspace/jetson && sudo python3 main.py --inference-type fastmot --input_uri /dev/video0 --mot --gui
+$ cd ~/workspace/software/jetson && sudo python3 main.py --inference-type fastmot --input_uri /dev/video0 --mot --gui
 ```
 
 ## Inference
@@ -213,8 +213,8 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 
 ##### Login on TV screen, convert yolov4-mish-640 from PyTorch *.pt to TensorRT *.trt and run inference
 ```
-$ source ~/workspace/jetson/load_programs.sh
-$ source ~/workspace/jetson/test.sh
+$ source ~/workspace/software/jetson/load_programs.sh
+$ source ~/workspace/software/jetson/test.sh
 ```
 
 <p align="center"><img src="software/jetson/doc/valid_test.jpg" width="480"\></p>
@@ -236,115 +236,14 @@ $ tensorboard --logdir=runs
 - software/arduino-1.8.13/README.md
 - software/jetson/fastmot/README.md
 - software/jetson/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/SD/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/WiFiClientSecure/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/AzureIoT/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/BLE/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/EEPROM/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/BluetoothSerial/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/WiFi/examples/WiFiClientEnterprise/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/WiFi/examples/WPS/README.md
-- arduino-1.8.13/portable/packages/esp32/hardware/esp32/1.0.6/libraries/WiFiProv/examples/WiFiProv/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_LED_Backpack_Library/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/TinyWireM/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_Zero_PDM_Library/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_Zero_DMA_Library/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_Circuit_Playground/examples/Hello_CircuitPlayground/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_Circuit_Playground/utility/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_Circuit_Playground/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_ILI9341/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_TouchScreen/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_BusIO/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/RainMaker/examples/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/RainMaker/examples/RMakerDevice/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/RainMaker/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/SD/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/WiFiClientSecure/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/LITTLEFS/examples/LITTLEFS_PlatformIO/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/BLE/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/EEPROM/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/BluetoothSerial/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/WiFi/examples/WiFiClientEnterprise/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/WiFi/examples/WPS/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/libraries/WiFiProv/examples/WiFiProv/README.md
 - arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_Zero_FFT_Library/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_SleepyDog_Library/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_GPS_Library/README.md
 - arduino-1.8.13/portable/sketchbook/libraries/ESP32-Arduino-Servo-Library/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_GFX_Library/README.md
 - arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/WaveHC/README.md
 - arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino_original/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/Adafruit_STMPE610/README.md
-- arduino-1.8.13/portable/sketchbook/libraries/RTClib/README.md
-- arduino-1.8.13/hardware/arduino/avr/bootloaders/gemma/README.md
-- arduino-1.8.13/hardware/arduino/avr/bootloaders/caterina-Arduino_Robot/README.md
-- arduino-1.8.13/hardware/arduino/avr/libraries/EEPROM/README.md
-- arduino-1.8.13/libraries/TFT/extras/README.md
-- arduino-1.8.13/libraries/Adafruit_Circuit_Playground/examples/Hello_CircuitPlayground/README.md
-- arduino-1.8.13/libraries/Adafruit_Circuit_Playground/utility/README.md
-- arduino-1.8.13/libraries/Adafruit_Circuit_Playground/README.md
 - arduino-1.8.13/README.md
-- jetson/fastmot/plugins/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/Jetvariety/driver/Nano/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/Jetvariety/driver/XavierNx/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/Jetvariety/driver/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/Jetvariety/stereo_depth_demo/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/Jetvariety/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/Jetvariety/example/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/Jetvariety/example/gstreamer-tools/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/IMX219/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/JetsonNano_PTZ/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/Multi-Camera Adapter/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/IMX477/driver/Nano/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/IMX477/driver/XavierNx/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/IMX477/driver/README.md
-- jetson/ArduCAM/MIPI_Camera/Jetson/IMX477/AF_LENS/README.md
-- jetson/ArduCAM/MIPI_Camera/RPI/stereo_depth_demo/README.md
-- jetson/ArduCAM/MIPI_Camera/RPI/README.md
-- jetson/ArduCAM/MIPI_Camera/RPI/python/README.md
-- jetson/ArduCAM/MIPI_Camera/RPI/python/imx230_postProcess/README.md
-- jetson/ArduCAM/MIPI_Camera/README.md
-- jetson/ArduCAM/Arducam_OBISP_MIPI_Camera_Module/ptz_lens_ctrl/README.md
-- jetson/ArduCAM/Arducam_OBISP_MIPI_Camera_Module/ptz_focus_example/README.md
-- jetson/ArduCAM/Arducam_OBISP_MIPI_Camera_Module/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Drivers/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/RaspberryPi/Cpp/External_trigger_demo/Arducam_SDK/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/RaspberryPi/Cpp/External_trigger_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/RaspberryPi/Cpp/Streaming_demo/Arducam_SDK/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/RaspberryPi/Cpp/Streaming_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/RaspberryPi/Python/External_trigger_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/RaspberryPi/Python/Streaming_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Nvidia_Jetson/Cpp/External_trigger_demo/Arducam_SDK/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Nvidia_Jetson/Cpp/External_trigger_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Nvidia_Jetson/Cpp/Streaming_demo/Arducam_SDK/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Nvidia_Jetson/Cpp/Streaming_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Nvidia_Jetson/Python/External_trigger_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Nvidia_Jetson/Python/Streaming_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Linux_x86/Cpp/External_trigger_demo/Arducam_SDK/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Linux_x86/Cpp/External_trigger_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Linux_x86/Cpp/Streaming_demo/Arducam_SDK/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Linux_x86/Cpp/Streaming_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Linux_x86/Python/External_trigger_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Linux_x86/Python/Streaming_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Windows/Cpp/External_trigger_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Windows/Cpp/Streaming_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Windows/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Windows/Python/External_trigger_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Windows/Python/Streaming_demo/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/Windows/GUI/USBTest/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/ROS/arducam_usb2_ros/README.md
-- jetson/jetson-containers/ArduCAM_USB_Camera_Shield/README.md
 - jetson/jetson-containers/UArmForROS/README.md
 - jetson/jetson-containers/README.md
 - jetson/README.md
-- jetson/utils/camera/README.md
-- jetson/utils/camera/gstreamer-tools/README.md
-- jetson/utils/README.md
 - and others... (in development)
 
 ## Credit
@@ -360,6 +259,9 @@ $ tensorboard --logdir=runs
 
 ### ceccocats/tkDNN
 [[Performance graphics]](https://github.com/ceccocats/tkDNN)
+
+### Camera Demonstration
+[[Camera Demonstration]](https://www.arducam.com/docs/camera-for-jetson-nano/mipi-camera-modules-for-jetson-nano/camera-demonstration/#0--1hardware-connection-)
 
 ## Reference papers
 

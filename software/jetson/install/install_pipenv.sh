@@ -7,8 +7,7 @@
 # Notes:     Ensure CUDATOOLKIT is installed!
 
 BASE_PATH="${HOME}/school/Projets/Final/TSO_project/software/jetson"
-PYTHON_VERSION='3.6'
-
+PYTHON_VERSION='3.7'
 
 # Install Python.
 sudo apt-get update && \
@@ -21,6 +20,8 @@ python3 --version
 
 # Install pipenv.
 cd && \
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+python3 get-pip.py && \
 pip3 install --user pipenv && \
-echo "$(python3 -m site --user-base)/bin:${PATH}" >> ~/.profile
+echo "export PATH=$(python3 -m site --user-base)/bin:${PATH}" >> ~/.profile
 

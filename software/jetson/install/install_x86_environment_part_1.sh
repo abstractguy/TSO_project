@@ -8,5 +8,5 @@
 # Notes: NOT TESTED YET (this script and all subscripts)!
 
 bash install/uninstall_conda.sh && \
-bash install/install_nvidia_environment.sh
+#bash install/install_nvidia_environment.sh
 

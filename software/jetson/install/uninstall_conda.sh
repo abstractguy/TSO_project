@@ -13,5 +13,5 @@ fi
 conda clean --yes --all --force-pkgs-dirs && \
 conda install --yes anaconda-clean && \
 anaconda-clean --yes && \
-echo "Don't forget to manually remove anaconda3 PATH in ~/.bash_profile!"
+echo "Don't forget to manually remove anaconda3 PATH in ~/.bash_profile and ~/.bashrc!"
 

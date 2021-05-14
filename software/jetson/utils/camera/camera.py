@@ -322,7 +322,7 @@ def threadBoth(args, source=0, object_x=None, object_y=None, center_x=None, cent
         # Release resources.
         print('Stream process done.')
 
-def thread(args, object_x=None, object_y=None, center_x=None, center_y=None):
+def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Threading type selector for multi-threading strategy."""
     try:
         if args.input_type == 'arducam' or args.thread == 'both':

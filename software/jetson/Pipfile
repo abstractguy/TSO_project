@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+numpy = "<1.19"
+pandas = "*"
+pyuarm = {editable = true, path = "./pyuarm"}
+opencv-python = "*"
+matplotlib = "*"
+pycocotools = "*"
+tqdm = "*"
+onnx = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
