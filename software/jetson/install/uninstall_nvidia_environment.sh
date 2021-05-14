@@ -5,6 +5,9 @@
 # For:       Myself
 # Usage:     cd ~/school/Projets/Final/TSO_project/software/jetson && bash install/uninstall_nvidia_environment.sh
 
+sudo apt-mark unhold libcudnn7 libcudnn7-dev && \
+sudo apt-mark showhold libcudnn7
+
 sudo apt-get remove --auto-remove -y nvidia-cuda-toolkit
 sudo apt-get --purge remove -y "*cublas*" "cuda*" "nsight*" && \
 sudo apt-get --purge remove -y "*libcudnn*" && \

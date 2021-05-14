@@ -7,12 +7,12 @@
 
 BASE_PATH="${HOME}/school/Projets/Final/TSO_project/software/jetson"
 
-# Install TensorRT. Requires that libcudnn8 is installed above.
+# Install TensorRT. Requires that libcudnn7 is installed above.
 cd && \
 sudo apt-get update && \
-sudo apt-get install -y --no-install-recommends libnvinfer7=7.1.3-1+cuda11.0 \
-                                                libnvinfer-dev=7.1.3-1+cuda11.0 \
-                                                libnvinfer-plugin7=7.1.3-1+cuda11.0
+sudo apt-get install -y --no-install-recommends libnvinfer7=7.6.5.32-1+cuda10.2 \
+                                                libnvinfer-dev=7.6.5.32-1+cuda10.2 \
+                                                libnvinfer-plugin7=7.6.5.32-1+cuda10.2
 
 # Install TensorRT through PIPY.
 cd ${BASE_PATH} && \

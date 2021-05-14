@@ -108,8 +108,6 @@ target/
 .DS_Store
 .idea
 upx391w/
-#firmware.hex
-#*.sh
 
 !*.exe
 !*.dll
@@ -117,6 +115,7 @@ upx391w/
 *.pyc
 images0/
 
+*.deb
 !gerber.zip
 !ArducamSDK.cpython-36m-aarch64-linux-gnu.so
 !ArducamSDK.so
