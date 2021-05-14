@@ -5,13 +5,17 @@
 # For:       Myself
 # Usage:     cd ~/school/Projets/Final/TSO_project/software/jetson && bash install/uninstall_conda.sh
 
-if [[ "$(echo $PS1 | cut -d' ' -f1 | tr -d '()')" != "base" ]]
+if [[ "$(which conda)" != "" ]]
 then
-    conda deactivate
-fi
+    if [[ "$(echo $PS1 | cut -d' ' -f1 | tr -d '()')" != "base" ]]
+    then
+        conda deactivate
+    fi
 
-conda clean --yes --all --force-pkgs-dirs && \
-conda install --yes anaconda-clean && \
-anaconda-clean --yes && \
-echo "Don't forget to manually remove anaconda3 PATH in ~/.bash_profile and ~/.bashrc!"
+    conda clean --yes --all --force-pkgs-dirs && \
+    conda install --yes anaconda-clean && \
+    anaconda-clean --yes && \
+    sudo rm -rf /opt/conda && \
+    echo "Don't forget to manually remove anaconda3 PATH in ~/.bash_profile and ~/.bashrc!"
+fi
 
