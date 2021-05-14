@@ -26,8 +26,8 @@ sudo apt-mark showhold libcudnn7
 sudo apt-get install -y build-essential binutils gdb && \
 sudo apt-get install -y freeglut3 freeglut3-dev libxi-dev libxmu-dev && \
 nvcc --version && \
-echo 'export PATH="/usr/local/cuda-10.0/bin:${PATH}"' >> ~/.bashrc && \
-echo 'export LD_LIBRARY_PATH="/usr/local/cuda-10.0/lib64:${LD_LIBRARY_PATH}"' >> ~/.bashrc
+echo 'export PATH="/usr/local/cuda-10.1/bin:${PATH}"' >> ~/.bashrc && \
+echo 'export LD_LIBRARY_PATH="/usr/local/cuda-10.1/lib64:${LD_LIBRARY_PATH}"' >> ~/.bashrc
 #sudo apt-get install python-dev python-setuptools -y
 sudo apt-get install libboost-python-dev libboost-thread-dev -y
 
