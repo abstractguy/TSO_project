@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# File:        utils/download_data.sh
+# File:        software/jetson/install/download_data.sh
 # By:          Samuel Duclos
 # For:         Myself
-# Usage:       bash utils/download_data.sh
-# Example:     bash utils/download_data.sh
-# Description: Download neural network weights from Google Drive.
+# Usage:       cd software/jetson && bash install/download_data.sh
+# Example:     cd software/jetson && bash install/download_data.sh
+# Description: Download dataset to calibrate INT8 inference.
 
 DIR=$HOME
 

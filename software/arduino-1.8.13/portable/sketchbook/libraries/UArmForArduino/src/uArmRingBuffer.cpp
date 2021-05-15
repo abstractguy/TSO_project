@@ -4,7 +4,6 @@
   * @author	David.Long	
   * @email	xiaokun.long@ufactory.cc
   * @date	2016-12-08
-  * @modified	Samuel Duclos (nomfullcreatif@gmail.com)
   ******************************************************************************
   */
 

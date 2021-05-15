@@ -1,20 +1,18 @@
 # FastMOT
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fabstractguy%2FTSO_project%2Fsoftware%2Fjetson&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com) [![License: BSD 2-clause](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![DOI](https://zenodo.org/badge/237143671.svg)](https://zenodo.org/badge/latestdoi/237143671)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fabstractguy%2FTSO_project%2Fsoftware%2Fjetson&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
-<img src="assets/dense_demo.gif" width="400"/> <img src="assets/aerial_demo.gif" width="400"/>
-
-## News
-  - (2021.2.13) Support Scaled-YOLOv4 models
-  - (2021.1.3) Add DIoU-NMS for YOLO (+1% MOTA)
-  - (2020.11.28) Docker container provided on Ubuntu 18.04
+<img src="https://github.com/AlexisGeek/FastMOT/assets/dense_demo.gif" width="400"/> <img src="https://github.com/AlexisGeek/FastMOT/assets/aerial_demo.gif" width="400"/>
 
 ## Description
-FastMOT is a custom multiple object tracker that implements:
+The use of FastMOT as a custom multiple object tracker (here post-processed for single objects) implements:
   - YOLO detector
   - SSD detector
   - Deep SORT + OSNet ReID
   - KLT optical flow tracking
   - Camera motion compensation
+  - Support Scaled-YOLOv4 models
+  - DIoU-NMS for YOLO (+1% MOTA)
+  - Docker container provided on Ubuntu 18.04
 
 Deep learning models are usually the bottleneck in Deep SORT, making Deep SORT unusable for real-time applications. FastMOT significantly speeds up the entire system to run in **real-time** even on Jetson. It also provides enough flexibility to tune the speed-accuracy tradeoff without a lightweight model.
 
@@ -41,15 +39,15 @@ Performance is evaluated with YOLOv4 using [py-motmetrics](https://github.com/ch
 FastMOT has MOTA scores close to **state-of-the-art** trackers from the MOT Challenge. Tracking speed can reach up to **38 FPS** depending on the number of objects. On a desktop CPU/GPU, FPS is expected to be much higher. More lightweight models can be used to achieve better tradeoff.
 
 ## Requirements
-- CUDA >= 10
-- cuDNN >= 7
-- TensorRT >= 7
-- OpenCV >= 3.3
+- CUDA>=10
+- cuDNN>=7
+- TensorRT>=7
+- OpenCV>=3.3
 - PyCuda
-- Numpy >= 1.15
-- Scipy >= 1.5
-- TensorFlow < 2.0 (for SSD support)
-- Numba == 0.48
+- Numpy>=1.15
+- Scipy>=1.5
+- TensorFlow<2.0 (for SSD support)
+- Numba==0.48
 - cython-bbox
 
 ### Install for Ubuntu 18.04
@@ -62,12 +60,12 @@ Make sure to have [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-nativ
 ### Install for Jetson Nano/TX2/Xavier NX/Xavier
 Make sure to have [JetPack 4.4+](https://developer.nvidia.com/embedded/jetpack) installed and run the script:
   ```
-  $ utils/install_jetson.sh
+  $ install/install_jetson.sh
   ```
 ### Download models
 This includes both pretrained OSNet, SSD, and my custom YOLOv4 ONNX model
   ```
-  $ utils/download_models.sh
+  $ install/download_models.sh
   ```
 ### Build YOLOv4 TensorRT plugin
 Modify `compute` [here](https://github.com/GeekAlexis/FastMOT/blob/2296fe414ca6a9515accb02ff88e8aa563ed2a05/fastmot/plugins/Makefile#L21) to match your [GPU compute capability](https://developer.nvidia.com/cuda-gpus#compute) for x86 PC
@@ -78,7 +76,7 @@ Modify `compute` [here](https://github.com/GeekAlexis/FastMOT/blob/2296fe414ca6a
 ### Download VOC dataset for INT8 calibration
 Only required if you want to use SSD
   ```
-  $ utils/download_data.sh
+  $ install/download_data.sh
   ```
 
 ## Usage

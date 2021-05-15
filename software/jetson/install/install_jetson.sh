@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# File:        utils/install_jetson.sh
+# File:        software/jetson/install/install_jetson.sh
 # By:          Samuel Duclos
 # For:         Myself
-# Usage:       bash utils/install_jetson.sh
+# Usage:       cd software/jetson && bash install/install_jetson.sh
 # Description: Install FastMOT Jetson packages.
 # Reference:   https://github.com/GeekAlexis/FastMOT.git
 

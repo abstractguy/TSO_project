@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# File:        utils/download_models.sh
+# File:        software/jetson/install/download_models.sh
 # By:          Samuel Duclos
 # For:         Myself
-# Usage:       bash download_models.sh
-# Example:     bash download_models.sh
+# Usage:       cd software/jetson && bash install/download_models.sh
+# Example:     cd software/jetson && bash install/download_models.sh
 # Description: Download neural network weights from Google Drive.
 
 BASEDIR=$(dirname "$0")
