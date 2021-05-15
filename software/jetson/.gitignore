@@ -165,3 +165,10 @@ VOCdevkit/
 # vscode stuff
 .vscode/
 
+
+!tensorboard_example.png
+!valid_test.jpg
+!valid_tested.png
+!valid_test.mp4
+!results.png
+

@@ -92,11 +92,7 @@ $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_p
 
 ### After the prescribed reboot, review software/jetson/jetson-containers/INSTALL_DOCKER.md and go through the entire procedure (skip the first section on installing Nvidia drivers)
 
-<<<<<<< HEAD
 ## Install Python3 development prerequisites
-=======
-## Old install method (recommended)
->>>>>>> 66c7b21955e76cb303155f73d79194cb08fcd38e
 
 ##### Install miniconda3
 ```
@@ -108,23 +104,6 @@ $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda.sh
 $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda_environment.sh
 ```
 
-<<<<<<< HEAD
-=======
-## New install method (not recommended, experimental)
-
-##### Do everything in this script manually or if feeling adventurous, automagically (not tested)
-```
-$ cd ~/workspace/TSO_project/software/jetson && bash install/install_x86_environment_part_1.sh
-```
-
-##### New install method: Reboot
-
-##### New install method (not recommended): Do everything in this script manually or if feeling adventurous, automagically (not tested)
-```
-$ cd ~/workspace/TSO_project/software/jetson && bash install/install_x86_environment_part_2.sh
-```
-
->>>>>>> 66c7b21955e76cb303155f73d79194cb08fcd38e
 ### If you're using Jetson Nano devkit, you will want to install a jumper on J48 to power with the jack barrel
 
 ## Install Nvidia JetPack 4.4.1 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
@@ -177,7 +156,7 @@ $ cd ~/workspace/software/arduino-1.8.13 && bash install/flash_uarm.sh
 
 ## Inference
 
-<img src="https://github.com/AlexisGeek/FastMOT/assets/dense_demo.gif" width="400"/> <img src="https://github.com/AlexisGeek/FastMOT/assets/aerial_demo.gif" width="400"/>
+<img src="software/jetson/fastmot/assets/dense_demo.gif" width="400"/> <img src="software/jetson/fastmot/assets/aerial_demo.gif" width="400"/>
 
 ## Description
 The use of FastMOT as a custom multiple object tracker (here post-processed for single objects) implements:
@@ -346,7 +325,7 @@ $ cd ~/workspace/software/jetson && sudo python3 main.py --inference-type fastmo
 
 ## Training and fine-tuning of this neural network is beyond the scope of this project, but please refer to [AlexeyAB's Darknet](https://github.com/AlexeyAB/darknet)
 
-#### The tr
+#### The training results look like this
 <p align="center"><img src="software/jetson/doc/results.png" width="512"\></p>
 
 #### Visualize with tensorboard.
