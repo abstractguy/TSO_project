@@ -112,8 +112,9 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
                     frame = arducam_utils.convert(frame)
 
-                # Show raw inference results.
-                cv2.imshow(args.video_name, frame)
+                if frame is not None:
+                    # Show raw inference results.
+                    cv2.imshow(args.video_name, frame)
 
             else:
                 print('FPS:', fps)
