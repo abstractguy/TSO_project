@@ -17,5 +17,6 @@ sudo chown -R $WHOAMI /opt/conda && \
 /opt/conda/bin/conda init && \
 /opt/conda/bin/conda clean -tipsy && \
 /opt/conda/bin/conda clean -afy && \
-source ~/.bashrc
+source ~/.bashrc && \
+echo "conda install done. Please exit the terminal and open another one..."
 

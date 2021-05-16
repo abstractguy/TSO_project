@@ -7,23 +7,38 @@ The uARM (the name of the robotic arm used in this project) initializes to a pos
 Still a work in progress. Mid development phase.
 
 ## Documentation
-The documentation provides instructions to compile and deploy parts of previously commented code as a website on readthedocs or locally.
 Still a work in progress. Early development phase.
+
+## Compile code and documentation to website
+To compile and deploy parts of previously commented code as a website on readthedocs or locally, click the link below.
+Note: Since the impact of this on my notes was minimal, not all documentation will be displayed to the website.
+
+[Install documentation as website](https://docs.readthedocs.io/en/stable/development/install.html "Permalink to ")
+
+## Convert webpages to markdown for viewing on Github
+
+[HTML-to-Markdown](http://heckyesmarkdown.com/ "Permalink to ")
 
 ## Mechanics
 The *.STL files can be 3D-printed.
+This has not been attempted as I would lack the time to assemble the parts.
+It is available though.
 
 ## Simulation
-The *.STL files can be converted to *.URDF for simulation using a physics engine (see software/jetson/jetson-containers/).
+The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic (see software/jetson/jetson-containers/).
+If you add the Moveit plugins, simulation can run with the uARM in tandem.
+I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
 
 ## Electronics
 The minimalistic Printed Circuit Board features an ESP32 as the motor-driving microcontroller.
+Altium design files are provided in the electronics/ folder.
 
 ## Software
-There is PC-compatible (Windows, MACOSX and Linux) software to program and deploy the environment, firmware for the PCB in software/arduino-1.8.13/, theres is software, drivers, etc. for commanding everything from the Jetson (or computer).
+There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software to program and deploy the environment, firmware for the PCB is in software/arduino-1.8.13/, theres is software, drivers, etc. for commanding everything from the Jetson (or computer).
+The main code was tested on PC and Jetson for easier modular tests while integrating.
 
-## Accelerated inference using TensorRT, deployable on Nvidia Jetson platforms
-A platform featuring YOLOv4-mish-640, with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT.
+## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
+A platform featuring YOLOv4-mish-640, Deep SORT + OSNet ReID, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
 
 ## Installation Instructions for Linux
 
@@ -68,29 +83,32 @@ $ cd TSO_project/software/jetson
 $ sudo -H bash install/install_unetbootin.sh
 ```
 
+##### Otherwise if running Windows, download and install the live *.iso of Ubuntu 18.04.5 LTS for x86_64 from here: https://unetbootin.github.io
+
 ### Update and reboot (redo skipped first steps if you're starting on a newly installed system)
 
-##### Enable Hyper-V in the UEFI boot menu for virtual machine support
 
-## Start with a fresh install of Ubuntu 18.04.5 LTS with automatic updates and proprietary drivers activated (do not activate secure boot through the USB install method)
+## Start with a fresh install of Ubuntu 18.04.5 LTS with automatic updates and proprietary drivers activated (do not activate secure boot through the USB install method as this can be done later)
+
+##### Enable Hyper-V in the UEFI boot menu for virtual machine support when rebooting
+
+##### Download Windows 10 Enterprise Edition for VirtualBox (https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/)
 
 ##### Install VirtualBox 6.1.22 for running Windows 10 programs
 ```
 $ cd ~/workspace/TSO_project/software/jetson && bash install/install_virtualbox.sh
 ```
 
-##### Install the extension pack from https://download.virtualbox.org/virtualbox/6.1.22/Oracle_VM_VirtualBox_Extension_Pack-6.1.22.vbox-extpack
-
-##### Download Windows 10 Enterprise Edition for VirtualBox (https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/)
+##### Install the automatically downloaded extension pack by clicking on it
 
 ##### You can now use the Windows 10 Enterprise Edition to run Windows 10 applications from a Linux host, like Altium for PCB developement
 
-##### Install Nvidia components for JetPack 4.4.1
+##### Install Nvidia components for JetPack 4.4
 ```
 $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_prerequisites.sh
 ```
 
-### After the prescribed reboot, review software/jetson/jetson-containers/INSTALL_DOCKER.md and go through the entire procedure (skip the first section on installing Nvidia drivers)
+### After the prescribed reboot, review software/jetson/install/INSTALL_DOCKER.md and go through the entire procedure
 
 ## Install Python3 development prerequisites
 
@@ -104,9 +122,9 @@ $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda.sh
 $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda_environment.sh
 ```
 
-### If you're using Jetson Nano devkit, you will want to install a jumper on J48 to power with the jack barrel
+### Note: if using the Jetson Nano devkit, you will want to install a jumper on J48 to power with the jack barrel
 
-## Install Nvidia JetPack 4.4.1 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
+## Install Nvidia JetPack 4.4 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
 
 ### Sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager
 

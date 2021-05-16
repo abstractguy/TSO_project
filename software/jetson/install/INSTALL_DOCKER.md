@@ -1,5 +1,4 @@
-# Overview of UArmForROS
-This repository is currently worked towards bootstrapping UArmForROS. This install is currently being emulated on a x86_64 computer in Docker. The Docker container simulates an ARM64v8 architecture running Ubuntu 16.04 LTS. I still have to test it in simulation and with the real uARM. It should port on a Jetson Nano seemlessly. Then, I will be defining the OpenAI Gym environment. This project is in an early development stage.
+# INSTALL_DOCKER.md
 
 ## Prerequisites
 - Ubuntu 16.04 LTS, 18.04 LTS or 20.04 LTS
@@ -9,9 +8,6 @@ This repository is currently worked towards bootstrapping UArmForROS. This insta
 ### 1. Install Nvidia GPU drivers (here v384.130 but yours can change) and reboot.
     $ sudo ubuntu-drivers autoinstall
     $ sudo shutdown -r now
-
-### 2. Install Cuda toolkit for Nvidia GPU.
-    $ sudo apt-get install -y nvidia-cuda-toolkit
 
 ## Purge previous Docker installations.
 
