@@ -119,7 +119,7 @@ $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda.sh
 
 ##### Install conda environment
 ```
-$ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda_environment.sh
+$ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_environment.sh
 ```
 
 ### Note: if using the Jetson Nano devkit, you will want to install a jumper on J48 to power with the jack barrel
