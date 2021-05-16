@@ -11,8 +11,6 @@ class UArm(object):
     hardware_version = None
     __isConnected = False
 
-    SERVO_MIN = -90
-    SERVO_MAX = 90
     X_MIN_RELATIVE = -316
     X_MAX_RELATIVE = 316
     Y_MIN_RELATIVE = -212
@@ -25,7 +23,6 @@ class UArm(object):
                  logger=None, 
                  debug=False, 
                  uarm_speed=100, 
-                 uart_delay=2, 
                  servo_attach_delay=3, 
                  set_position_delay=3, 
                  servo_detach_delay=3, 
@@ -44,7 +41,6 @@ class UArm(object):
 
         self.serial_id = 0
         self.uarm_speed = uarm_speed
-        self.uart_delay = uart_delay
         self.servo_attach_delay = servo_attach_delay
         self.set_position_delay = set_position_delay
         self.servo_detach_delay = servo_detach_delay
@@ -70,8 +66,6 @@ class UArm(object):
         self.__serial = serial.Serial(baudrate=115200, timeout=.1)
 
         self.connect()
-
-        time.sleep(self.uart_delay)
 
         self.set_servo_attach()
 
@@ -100,7 +94,7 @@ class UArm(object):
             printf("Connecting from port - {0}...".format(self.port.device))
             self.__serial.open()
             timeout_start = time.time()
-            timeout = 5
+            timeout = 7
             while time.time() < timeout_start + timeout:
                 if self.is_ready():
                     break
@@ -295,26 +289,6 @@ class UArm(object):
 
         return response.startswith(protocol.OK.lower())
 
-    def in_range(self, val, start, end):
-        """Checks if the input value is in the supplied range."""
-        return (val >= start and val <= end)
-
-    def set_servo_angle(self, servo_number, angle):
-        """
-        Set uArm Servo Angle, 0 - 180 degrees, this Function will include the manual servo offset.
-        :param servo_number: lease reference protocol.py SERVO_BOTTOM, SERVO_LEFT, SERVO_RIGHT, SERVO_HAND
-        :param angle: 0 - 180 degrees
-        :return: succeed True or Failed False
-        """
-        if self.in_range(angle, self.SERVO_MIN, self.SERVO_MAX):
-            cmd = protocol.SET_ANGLE.format(str(servo_number), str(angle))
-            response = self.__send_and_receive(cmd)
-            time.sleep(self.set_position_delay)
-            return response.startswith(protocol.OK.lower())
-        else:
-            logging.info(f'angle not in range {angle}')
-            return False
-
     def set_relative_position_from_center_in_grad(self, 
                                                   x=0, 
                                                   y=0, 
@@ -362,14 +336,6 @@ class UArm(object):
         self.grab(grab_position=grab_position, condition=sensor)
         self.drop(drop_position=drop_position)
         self.reset(detach=detach)
-
-    def set_wrist(self, angle):
-        """
-        Set uArm Hand Wrist Angle. Include servo offset.
-        :param angle:
-        :return:
-        """
-        return self.set_servo_angle(protocol.SERVO_HAND, angle)
 
     def set_pump(self, ON):
         """
@@ -440,71 +406,6 @@ class UArm(object):
             return coordinate
         else:
             return False
-
-    def is_moving(self):
-        """
-        Detect is uArm moving
-        :return: Returns a 0 or a 1, depending on whether or not the robot is moving.
-        """
-        response = self.__send_and_receive(protocol.GET_IS_MOVE)
-        value = self.__gen_response_value(response)
-        if value:
-            if value[1:] == "1":
-                return True
-            else:
-                return False
-        else:
-            return False
-
-    def set_gripper(self, catch):
-        """
-        Turn On/Off Gripper
-        :param catch: True On/ False Off
-        :return:
-        """
-        cmd = protocol.SET_GRIPPER.format(1 if catch else 0)
-        response = self.__send_and_receive(cmd)
-        if response.startswith(protocol.OK.lower()):
-            return True
-        else:
-            return False
-
-    def get_servo_angle(self, servo_number=None):
-        """
-        Get Current uArm Servo Angles include offset
-        :param servo_number: if None, Return 4 servos Current Angles
-        :return: Returns an angle in degrees, of the servo
-        """
-
-        cmd = protocol.GET_ANGLE
-
-        response = self.__send_and_receive(cmd)
-
-        value = self.__gen_response_value(response)
-
-        if value:
-            parse_cmd = self.__parse_cmd(response, ["b", "l", "r", "h"])
-            angles = [parse_cmd["b"], parse_cmd["l"], parse_cmd["r"], parse_cmd["h"]]
-
-            if servo_number is not None:
-                if 0 <= servo_number <= 3:
-                    return angles[servo_number]
-
-                else:
-                    return False
-
-            else:
-                return angles
-
-        else:
-            return False
-
-    def get_analog(self, pin):
-        cmd = protocol.GET_ANALOG.format(pin)
-        response = self.__send_and_receive(cmd)
-        if response.startswith("s"):
-            val = response[1:]
-            return int(float(val))
 
     def get_initial_absolute_position(self):
         """Get initial absolute position."""

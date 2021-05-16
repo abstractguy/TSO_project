@@ -77,7 +77,6 @@ def process_manager(args):
 
     try:
         uarm = UArm(uarm_speed=args.uarm_speed, 
-                    uart_delay=args.uart_delay, 
                     servo_attach_delay=args.servo_attach_delay, 
                     set_position_delay=args.set_position_delay, 
                     servo_detach_delay=args.servo_detach_delay, 
