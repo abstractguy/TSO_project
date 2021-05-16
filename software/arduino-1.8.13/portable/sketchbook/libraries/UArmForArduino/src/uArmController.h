@@ -88,7 +88,6 @@ public:
 	double getServeAngle(byte servoNum);
 
 	unsigned char getCurrentXYZ(double& x, double& y, double& z);
-	unsigned char getXYZFromAngle(double& x, double& y, double& z, double rot, double left, double right);
 
 	unsigned char setServoSpeed(unsigned char speed);
 	unsigned char setServoSpeed(byte servoNum, unsigned char speed);

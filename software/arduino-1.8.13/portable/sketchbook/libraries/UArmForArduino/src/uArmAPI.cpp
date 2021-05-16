@@ -39,13 +39,9 @@ static void _sort(unsigned int array[], unsigned int len);
 static void _controllerRun();
 
 void initHardware() {
-	//pinMode(BTN_D4, INPUT_PULLUP);        // Special mode for calibration.
-	//pinMode(BUZZER, OUTPUT);
-	//pinMode(LIMIT_SW, INPUT_PULLUP);
-	//pinMode(BTN_D7, INPUT_PULLUP);
 	pinMode(PUMP_EN, OUTPUT);
 	pinMode(GRIPPER, OUTPUT);
-	pinMode(VALVE_EN, OUTPUT); // uARM Metal only.
+	pinMode(VALVE_EN, OUTPUT);
 }
 
 /*!
@@ -102,46 +98,6 @@ unsigned char moveTo(double x, double y, double z, double speed) {
 
 		return result;
 	}
-}
-
-/*!
-   \brief move to pos(x, y, z) according to current pos
-   \param x, y, z (mm)
-   \param speed (mm/min)
-   \return IN_RANGE if everything is OK
-   \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
-   \return OUT_OF_RANGE will move to the closest pos
-   \return NO_NEED_TO_MOVE if it is already there
- */
-unsigned char relativeMove(double x, double y, double z, double speed) {
-    double x1, y1, z1;
-
-    // Get current XYZ position.
-    controller.getCurrentXYZ(x1, y1, z1);
-
-    x1 += x;
-    y1 += y;
-    z1 += z;
-
-    return moveTo(x1, y1, z1, speed);	
-}
-
-/*!
-   \brief move to pos of polor coordinates(s, r, h)
-   \param s: stretch(mm)
-   \param r: angle (0~180)
-   \param h: height(mm)
-   \param speed (mm/min)
-   \return IN_RANGE if everything is OK
-   \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
-   \return OUT_OF_RANGE will move to the closest pos
-   \return NO_NEED_TO_MOVE if it is already there
- */
-unsigned char moveToPol(double s, double r, double h, double speed) {
-	double x, y, z;
-
-	polToXYZ(s, r, h, x, y, z);
-	return moveTo(x, y, z, speed);		
 }
 
 /*!
@@ -206,43 +162,6 @@ double getServoAngle(unsigned char servoNumber) {
 }
 
 /*!
-   \brief gripper work
- */
-void gripperCatch() {
-	digitalWrite(GRIPPER, LOW); 
-}
-
-/*!
-   \brief gripper stop
- */
-void gripperRelease() {
- 	digitalWrite(GRIPPER, HIGH); 
-}
-
-/*!
-   \brief get gripper status
-   \return STOP if gripper is not working
-   \return WORKING if gripper is working but not catched sth
-   \return GRABBING if gripper got sth   
- */
-unsigned char getGripperStatus() { // uARM Metal only.
-	if (digitalRead(GRIPPER) == HIGH) return STOP;
-	else if (getAnalogPinValue(GRIPPER_FEEDBACK) > 600) return WORKING;
-	else return GRABBING;
-}
-
-/*!
-   \brief get pump status
-   \return STOP if pump is not working
-   \return WORKING if pump is working but not catched sth
-   \return GRABBING if pump got sth   
- */
-unsigned char getPumpStatus() {
-	if (digitalRead(PUMP_EN) == HIGH) return 1;
-	else return 0;
-}
-
-/*!
    \brief pump working
  */
 void pumpOn() {
@@ -256,35 +175,6 @@ void pumpOn() {
 void pumpOff() {
     digitalWrite(PUMP_EN, LOW); 
     digitalWrite(VALVE_EN, HIGH);
-}
-
-/*!
-   \brief get tip status
-   \return true if limit switch hit
- */
-bool getTip() {
-	//if (digitalRead(LIMIT_SW)) return true;
-	//else return false;
-        return false; // No limit switch!
-}
-
-/*!
-   \brief get pin value
-   \param pin of arduino
-   \return HIGH or LOW
- */
-int getDigitalPinValue(unsigned int pin) {
-	return digitalRead(pin);
-}
-
-/*!
-   \brief set pin value
-   \param pin of arduino
-   \param value: HIGH or LOW
- */
-void setDigitalPinValue(unsigned int pin, unsigned char value) {
-	if (value) digitalWrite(pin, HIGH);
-	else digitalWrite(pin, LOW);
 }
 
 /*!
@@ -305,53 +195,12 @@ int getAnalogPinValue(unsigned int pin) {
 }
 
 /*!
-   \brief convert polor coordinates to Cartesian coordinate
-   \param s(mm), r(0~180), h(mm)
-   \output x, y, z(mm)
- */
-void polToXYZ(double s, double r, double h, double& x, double& y, double& z) {
-	z = h;
-	x = s * cos(r / MATH_TRANS);
-	y = s * sin(r / MATH_TRANS);
-}
-
-/*!
-   \brief check pos reachable
-   \return IN_RANGE if everything is OK
-   \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
-   \return OUT_OF_RANGE can move to the closest pos
- */
-unsigned char validatePos(double x, double y, double z) {
-	double angleRot, angleLeft, angleRight;
-	return controller.xyzToAngle(x, y, z, angleRot, angleLeft, angleRight, false);
-}
-
-/*!
    \brief get current pos
    \output x, y, z(mm)
  */
 void getCurrentXYZ(double& x, double& y, double& z) {
     controller.updateAllServoAngle();
     controller.getCurrentXYZ(x, y, z);	
-}
-
-/*!
-   \brief get current pos of polor coordinates
-   \output s(mm), r(0~180), h(mm)
- */
-void getCurrentPosPol(double& s, double& r, double& h) {
-	double angleRot, angleLeft, angleRight;
-	double x, y, z;
-	double stretch;
-
-	controller.updateAllServoAngle();
-	controller.getCurrentXYZ(x, y, z);
-	controller.getServoAngles(angleRot, angleLeft, angleRight);
-	stretch = sqrt(x * x + y * y);
-
-	s = stretch;
-	r = angleRot;
-	h = z;
 }
 
 /*!
@@ -364,18 +213,6 @@ void getCurrentPosPol(double& s, double& r, double& h) {
  */
 unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double& angleLeft, double& angleRight) {
 	return controller.xyzToAngle(x, y, z, angleRot, angleLeft, angleRight);
-}
-
-/*!
-   \brief get  pos(x, y, z) from servo angles  
-   \param angles of servo(0~180)
-   \output x, y, z(mm)
-   \return IN_RANGE if everything is OK
-   \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
-   \return OUT_OF_RANGE can move to the closest pos   
- */
-unsigned char angleToXYZ(double angleRot, double angleLeft, double angleRight, double& x, double& y, double& z) {
-	return controller.getXYZFromAngle(x, y, z, angleRot, angleLeft, angleRight);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -510,10 +347,8 @@ static unsigned char _moveTo(double x, double y, double z, double speed) {
 static void _controllerRun() {
 	while (mCurStep >= 0 && mCurStep < mTotalSteps) {
 		if((millis() - mStartTime) >= (mCurStep * mTimePerStep)) {
-
 			// Ignore the point if cannot reach.
-			if (controller.limitRange(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]) != OUT_OF_RANGE_NO_SOLUTION)
-			{
+			if (controller.limitRange(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]) != OUT_OF_RANGE_NO_SOLUTION) {
 				//debugPrint("curStep:%d, %f, %f, %f", mCurStep, mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]);
 				if (mCurStep == (mTotalSteps - 1)) {
 					double angles[3];

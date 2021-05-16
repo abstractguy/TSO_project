@@ -146,17 +146,6 @@ unsigned char uArmController::getCurrentXYZ(double& x, double& y, double& z) {
 	return IN_RANGE;
 }
 
-unsigned char uArmController::getXYZFromAngle(double& x, double& y, double& z, double rot, double left, double right) {
-	double stretch = MATH_LOWER_ARM * cos(left / MATH_TRANS) + MATH_UPPER_ARM * cos(right / MATH_TRANS) + MATH_L2 + MATH_FRONT_HEADER;
-
-	double height = MATH_LOWER_ARM * sin(left / MATH_TRANS) - MATH_UPPER_ARM * sin(right / MATH_TRANS) + MATH_L1;
-	x = stretch * cos(rot / MATH_TRANS);
-	y = stretch * sin(rot / MATH_TRANS);
-	z = height;
-
-	return IN_RANGE;    
-}
-
 unsigned char uArmController::xyzToAngle(double x, double y, double z, double& angleRot, double& angleLeft, double& angleRight, boolean allowApproximate) {
 	double xIn = 0.0;
 	double zIn = 0.0;
