@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# File:        software/utils/parsers.py
+# File:        software/jetson/utils/parsers.py
 # By:          Samuel Duclos
 # For:         Myself
 # Description: This file implements the different parsers for the program.
 
-from pyuarm import add_uarm_args
 from pathlib import Path
 import argparse
 
@@ -23,6 +22,15 @@ def parse_args():
     args.image_shape *= 2 if len(args.image_shape) == 1 else 1
     print(vars(args))
     return args
+
+def add_uarm_args(parser):
+    parser.add_argument('--uarm-speed', metavar='<uarm-speed>', type=int, required=False, default=100, help='Speed of uARM displacements.')
+    parser.add_argument('--uart-delay', metavar='<uart-delay>', type=float, required=False, default=2.0, help='Delay after configuring uARM\'s UART port.')
+    parser.add_argument('--pump-delay', metavar='<pump-delay>', type=float, required=False, default=3.0, help='Delay after uARM (de-)pumps object.')
+    parser.add_argument('--servo-attach-delay', metavar='<servo-attach-delay>', type=float, required=False, default=3.0, help='Delay after uARM attaches servos.')
+    parser.add_argument('--set-position-delay', metavar='<set-position-delay>', type=float, required=False, default=3.0, help='Delay after uARM set to position.')
+    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=3.0, help='Delay after uARM detaches servos.')
+    return parser
 
 def add_input_args(parser):
     """Add parser arguments for input options."""
@@ -48,7 +56,7 @@ def add_inference_args(parser):
     return parser
 
 def add_sot_args(parser):
-    parser.add_argument('-i', '--input_uri', metavar='<URI>', required=True, 
+    parser.add_argument('-i', '--input_uri', metavar='<URI>', required=False, default='/dev/video0', 
                         help='URI to input stream\n'
                              '1) image sequence (e.g. img_%%06d.jpg)\n'
                              '2) video file (e.g. video.mp4)\n'

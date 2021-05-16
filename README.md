@@ -335,7 +335,7 @@ $ cd ~/workspace/software/jetson && bash ~/workspace/software/jetson/fastmot/uti
 
 ##### On your TV, open a terminal and run everything to convert yolov4-mish-640 from ONNX *.onnx to TensorRT *.trt and run inference
 ```
-$ cd ~/workspace/software/jetson && sudo python3 main.py --inference-type fastmot --input_uri /dev/video0 --mot --gui
+$ cd ~/workspace/software/jetson && sudo /opt/conda/envs/school/bin/python3 main.py --inference-type fastmot --input_uri /dev/video0 --mot --gui
 ```
 
 <p align="center"><img src="software/jetson/doc/valid_test.jpg" width="480"\></p>

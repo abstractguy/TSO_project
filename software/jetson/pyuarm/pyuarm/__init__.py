@@ -13,6 +13,6 @@ if sys.version > '3':
 else:
     PY3 = False
 
-from .uarm import add_uarm_args, UArm, get_default_logger
+from .uarm import UArm, get_default_logger
 from .version import __version__
 

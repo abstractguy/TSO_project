@@ -6,15 +6,6 @@ from .tools.list_uarms import uarm_ports, get_port_property, check_port_plug_in
 from . import PY3
 import logging, time
 
-def add_uarm_args(parser):
-    parser.add_argument('--uarm-speed', metavar='<uarm-speed>', type=int, required=False, default=100, help='Speed of uARM displacements.')
-    parser.add_argument('--uart-delay', metavar='<uart-delay>', type=float, required=False, default=2.0, help='Delay after configuring uARM\'s UART port.')
-    parser.add_argument('--pump-delay', metavar='<pump-delay>', type=float, required=False, default=3.0, help='Delay after uARM (de-)pumps object.')
-    parser.add_argument('--servo-attach-delay', metavar='<servo-attach-delay>', type=float, required=False, default=3.0, help='Delay after uARM attaches servos.')
-    parser.add_argument('--set-position-delay', metavar='<set-position-delay>', type=float, required=False, default=3.0, help='Delay after uARM set to position.')
-    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=3.0, help='Delay after uARM detaches servos.')
-    return parser
-
 class UArm(object):
     firmware_version = None
     hardware_version = None

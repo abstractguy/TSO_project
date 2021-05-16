@@ -2,6 +2,7 @@
    \file 	uArmAPI.h
    \brief 	uArm API for Arduino
    \author 	David Long
+   \modified	Samuel Duclos
    \license GNU
    \copyright(c) 2016 UFactory Team. All right reserved
  */
@@ -10,28 +11,11 @@
 #define _UARMAPI_H_
 
 #include <Arduino.h>
-#include <EEPROM.h>
-#include <Wire.h>
 #include "UFServo.h"
 #include "uArmConfig.h"
 #include "uArmPin.h"
 #include "uArmController.h"
-#include "uArmBuzzer.h"
-#include "uArmRecorder.h"
-#include "uArmButton.h"
-#include "uArmLed.h"
-#include "uArmService.h"
 #include "uArmTypes.h"
-
-
-extern uArmButton buttonMenu;	// D4 in Metal
-extern uArmButton buttonPlay;	// D7 in Metal
-
-#ifdef MKII
-    extern uArmLed ledRed;		// red led in MKII
-#endif
-
-extern void manage_inactivity(void);
 
 /*!
    \brief init components
@@ -150,7 +134,6 @@ unsigned char getPumpStatus();
  */
 bool getTip();
 
-
 /*!
    \brief check pos reachable
    \return IN_RANGE if everything is OK
@@ -219,40 +202,5 @@ void setDigitalPinValue(unsigned int pin, unsigned char value);
  */
 int getAnalogPinValue(unsigned int pin);
 
-
-/*!
-   \brief get e2prom data
-   \param device:  EEPROM_ON_CHIP, EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM
-   \param addr: 0~2047(EEPROM_ON_CHIP), 0~65535(EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM)
-   \param type: DATA_TYPE_BYTE, DATA_TYPE_INTEGER, DATA_TYPE_FLOAT
- */
-double getE2PROMData(unsigned char device, unsigned int addr, unsigned char type);
-
-/*!
-   \brief set e2prom data
-   \param device:  EEPROM_ON_CHIP, EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM
-   \param addr: 0~2047(EEPROM_ON_CHIP), 0~65535(EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM)
-   \param type: DATA_TYPE_BYTE, DATA_TYPE_INTEGER, DATA_TYPE_FLOAT
-   \param value: value to write
- */
-double setE2PROMData(unsigned char device, unsigned int addr, unsigned char type, double value);
-
-#ifdef MKII	
-/*!
-   \brief stop move immediately
- */
-void stopMove();
-
-/*!
-   \brief is moving now
- */
-bool isMoving();
-
-
-/*!
-   \brief check if power plug in
- */
-	bool isPowerPlugIn();
-#endif
-
 #endif // _UARMAPI_H_
+
