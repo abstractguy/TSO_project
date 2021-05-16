@@ -96,34 +96,12 @@ static unsigned char cmdSetDetachServo(int serialNum, int parameterCount, double
 	return 0;
 }
 
-static unsigned char cmdSetServoAngleWithOffset(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 2)
-		return PARAMETER_ERROR;    
-
-	if (setServoAngle(byte(value[0]), value[1]) == OK) {
-		replyOK(serialNum);
-		return 0;
-	} else return PARAMETER_ERROR;
-}
-
 static unsigned char cmdSetPump(int serialNum, int parameterCount, double value[4]) {
 	if (parameterCount != 1)
 		return PARAMETER_ERROR;
 
 	if (value[0] == 0) pumpOff(); // Off.
 	else pumpOn(); // On.
-
-	replyOK(serialNum);
-
-	return 0;
-}
-
-static unsigned char cmdSetGripper(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 1)
-		return PARAMETER_ERROR;
-
-	if (value[0] == 0) gripperRelease(); // Release.
-	else gripperCatch(); // Catch.
 
 	replyOK(serialNum);
 
@@ -169,177 +147,12 @@ static unsigned char cmdGetCurrentXYZ(int serialNum, int parameterCount, double 
 	return 0;	
 }
 
-static unsigned char cmdGetCurrentAngle(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 0)
-		return PARAMETER_ERROR;
-
-	value[0] = getServoAngle(SERVO_ROT_NUM);
-	value[1] = getServoAngle(SERVO_LEFT_NUM);
-	value[2] = getServoAngle(SERVO_RIGHT_NUM);
-	value[3] = getServoAngle(SERVO_HAND_ROT_NUM);
-
-	char result[RESULT_BUFFER_SIZE];
-	msprintf(result, "B%f L%f R%f H%f", value[0], value[1], value[2], value[3]);
-
-	replyResult(serialNum, result);
-
-	return 0;
-}
-
-static unsigned char cmdCoordinateToAngle(int serialNum, int parameterCount, double value[4]) {
-	double rot, left, right;
-
-	if (parameterCount != 3)
-		return PARAMETER_ERROR;
-
-	xyzToAngle(value[0], value[1], value[2], rot, left, right);
-
-	value[0] = rot;
-	value[1] = left;
-	value[2] = right;
-
-	char result[RESULT_BUFFER_SIZE];
-	msprintf(result, "B%f L%f R%f", value[0], value[1], value[2]);
-
-	replyResult(serialNum, result);
-
-	return 0;
-}
-
-static unsigned char cmdAngleToXYZ(int serialNum, int parameterCount, double value[4]) {
-	double x, y, z;
-	bool success;
-
-	if (parameterCount != 3)
-		return PARAMETER_ERROR;
-
-	if (angleToXYZ(value[0], value[1], value[2], x, y, z) == OUT_OF_RANGE) success = false;
-	else success = true;
-
-	value[0] = x;
-	value[1] = y;
-	value[2] = z;
-
-	char result[RESULT_BUFFER_SIZE];
-	msprintf(result, "X%f Y%f Z%f", value[0], value[1], value[2]);
-
-	replyResult(serialNum, result);
-	return 0;
-}
-
-static unsigned char cmdGetDigitValue(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 1)
-		return PARAMETER_ERROR;
-
-	int val = getDigitalPinValue(value[0]);
-
-	char result[RESULT_BUFFER_SIZE];
-	msprintf(result, "V%d", val);
-
-	replyResult(serialNum, result);
-	return 0;
-}
-
-static unsigned char cmdSetDigitValue(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 2)
-		return PARAMETER_ERROR;
-
-	setDigitalPinValue(value[0], value[1]);
-
-	replyOK(serialNum);
-	return 0;
-}
-
-static unsigned char cmdGetAnalogValue(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 1)
-		return PARAMETER_ERROR;
-
-	int val = getAnalogPinValue(value[0]);
-
-  	  char result[RESULT_BUFFER_SIZE];
-	msprintf(result, "V%d", val);
-
-	replyResult(serialNum, result);
-	return 0;
-}
-
-static unsigned char cmdGetGripperStatus(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 0)
-		return PARAMETER_ERROR;
-
-	unsigned char status = getGripperStatus();
-
-	char result[RESULT_BUFFER_SIZE];
-	msprintf(result, "V%d", status);
-	replyResult(serialNum, result);
-	return 0;
-}
-
-static unsigned char cmdGetPumpStatus(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 0)
-		return PARAMETER_ERROR;
-
-	char result[RESULT_BUFFER_SIZE];
-
-	unsigned char status = getPumpStatus();
-
-	if (status) strcpy(result, "V1");
-	else strcpy(result, "V0");
-
-	replyResult(serialNum, result);
-
-	return 0;
-}
-
-static unsigned char cmdGetDeviceName(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 0)
-		return PARAMETER_ERROR;
-
-	char result[RESULT_BUFFER_SIZE];
-
-	msprintf(result, "V%s", DEVICE_NAME);
- 
-	replyResult(serialNum, result);
-
-	return 0;
-}
-
-static unsigned char cmdGetAPIVersion(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 0)
-		return PARAMETER_ERROR;
-
-	char result[RESULT_BUFFER_SIZE];
-
-	msprintf(result, "V%s", SW_VER);
-
-	replyResult(serialNum, result);
-
-	return 0;
-}
-
-static unsigned char cmdGetDeviceUUID(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 0)
-		return PARAMETER_ERROR;
-
-	char result[RESULT_BUFFER_SIZE];
-
-	strcpy(result, "V1234567890");   
-
-	replyResult(serialNum, result);
-
-	return 0;
-}
-
 static void HandleMoveCmd(int cmdCode, int serialNum, int parameterCount, double value[4]) {
 	unsigned char result = false;
 
 	switch (cmdCode) {
 		case 0:
 			result = cmdMove(serialNum, parameterCount, value);
-			break;
-
-		case 202:
-			result = cmdSetServoAngleWithOffset(serialNum, parameterCount, value);
 			break;
 
 		default:
@@ -368,24 +181,8 @@ static void HandleSettingCmd(int cmdCode, int serialNum, int parameterCount, dou
 			result = cmdSetDetachServo(serialNum, parameterCount, value);
 			break;
 
-		case 220:
-			result = cmdCoordinateToAngle(serialNum, parameterCount, value);
-			break;
-
-		case 221:
-			result = cmdAngleToXYZ(serialNum, parameterCount, value);
-			break;
-
 		case 231:
 			result = cmdSetPump(serialNum, parameterCount, value);
-			break;
-
-		case 232:
-			result = cmdSetGripper(serialNum, parameterCount, value);
-			break;
-
-		case 240:
-			result = cmdSetDigitValue(serialNum, parameterCount, value);
 			break;
 
 		default:
@@ -406,14 +203,6 @@ static void HandleQueryCmd(int cmdCode, int serialNum, int parameterCount, doubl
 	unsigned char result = false;
 
 	switch (cmdCode) {
-		case 200:
-			result = cmdGetCurrentAngle(serialNum, parameterCount, value);
-			break;
-
-		case 201:
-			result = cmdGetDeviceName(serialNum, parameterCount, value);
-			break;
-
 		case 202:
 			result = cmdGetHWVersion(serialNum, parameterCount, value);
 			break;
@@ -422,28 +211,8 @@ static void HandleQueryCmd(int cmdCode, int serialNum, int parameterCount, doubl
 			result = cmdGetSWVersion(serialNum, parameterCount, value);
 			break;        
 
-		case 204:
-			result = cmdGetAPIVersion(serialNum, parameterCount, value);
-			break;
-
-		case 205:
-			result = cmdGetDeviceUUID(serialNum, parameterCount, value);
-			break;        
-
 		case 220:
 			result = cmdGetCurrentXYZ(serialNum, parameterCount, value);
-			break;
-
-		case 231:
-			result = cmdGetPumpStatus(serialNum, parameterCount, value);
-			break;
-
-		case 232:
-			result = cmdGetGripperStatus(serialNum, parameterCount, value);
-			break;
-
-		case 241:
-			result = cmdGetAnalogValue(serialNum, parameterCount, value);
 			break;
 
 		default:
