@@ -11,7 +11,6 @@
 #define _UARMAPI_H_
 
 #include <Arduino.h>
-//#include "UFServo.h"
 #include "uArmConfig.h"
 #include "uArmPin.h"
 #include "uArmController.h"
@@ -25,16 +24,12 @@ void uArmInit();
 /*!
    \brief move to pos(x, y, z)
    \param x, y, z in mm
-   \param speed: 
-   			[0]: move to destination directly
-   			[1~99]: change the dutycycle of servo (1~99%)
-   			[100~1000]: mm/min, will do interpolation to control the speed and block process util move done
    \return IN_RANGE if everything is OK
    \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
    \return OUT_OF_RANGE will move to the closest pos
    \return NO_NEED_TO_MOVE if it is already there
  */
-unsigned char moveTo(double x, double y, double z, double speed = 100);
+unsigned char moveTo(double x, double y, double z);
 
 /*!
    \brief attach servo(0~3)

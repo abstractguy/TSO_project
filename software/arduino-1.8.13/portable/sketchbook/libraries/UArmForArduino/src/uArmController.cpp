@@ -10,35 +10,15 @@
   */
 
 #include "uArmController.h"
-//#include "uArmAPI.h"
 
 static void _sort(unsigned int array[], unsigned int len);
 
 uArmController controller;
 
-uArmController::uArmController() {
-	mServoSpeed = 255;
-}
+uArmController::uArmController() {}
 
 void uArmController::init() {
-	for (int i = SERVO_ROT_NUM; i < SERVO_COUNT; i++) {
-		double servoOffset = 0;
-		servoOffset = readServoAngleOffset(i);
-
-		if (isnan(servoOffset)) {
-			servoOffset = 0;
-			EEPROM.put(MANUAL_OFFSET_ADDRESS + i * sizeof(servoOffset), servoOffset);
-		}
-
-		mServoAngleOffset[i] = servoOffset;
-	}
-
-	for (int k = 0; k < 3; k++) {
-		unsigned int offset = (4 + k) * 1024 + 500;
-		unsigned char data[2];
-
-		delay(10);
-	}
+	delay(50);
 
 	mServo[SERVO_ROT_NUM].setPulseWidthRange(500, 2500);
 	mServo[SERVO_LEFT_NUM].setPulseWidthRange(500, 2500);
@@ -47,14 +27,14 @@ void uArmController::init() {
 
 	attachAllServo();  
 
-	// writeServoAngle(SERVO_ROT_NUM, 90);
-	// writeServoAngle(SERVO_LEFT_NUM, 90);
-	// writeServoAngle(SERVO_RIGHT_NUM, 0);
-	// writeServoAngle(SERVO_HAND_ROT_NUM, 90);
-	mCurAngle[0] = readServoAngle(SERVO_ROT_NUM, true);
-	mCurAngle[1] = readServoAngle(SERVO_LEFT_NUM, true);
-	mCurAngle[2] = readServoAngle(SERVO_RIGHT_NUM, true);
-	mCurAngle[3] = readServoAngle(SERVO_HAND_ROT_NUM, true);
+	//writeServoAngle(SERVO_ROT_NUM, 90);
+	//writeServoAngle(SERVO_LEFT_NUM, 90);
+	//writeServoAngle(SERVO_RIGHT_NUM, 0);
+	//writeServoAngle(SERVO_HAND_ROT_NUM, 90);
+	mCurAngle[0] = readServoAngle(SERVO_ROT_NUM);
+	mCurAngle[1] = readServoAngle(SERVO_LEFT_NUM);
+	mCurAngle[2] = readServoAngle(SERVO_RIGHT_NUM);
+	mCurAngle[3] = readServoAngle(SERVO_HAND_ROT_NUM);
 }
 
 void uArmController::attachAllServo() {
@@ -83,37 +63,23 @@ void uArmController::writeServoAngle(double servoRotAngle, double servoLeftAngle
 	writeServoAngle(SERVO_RIGHT_NUM, servoRightAngle);
 }
 
-double uArmController::getReverseServoAngle(byte servoNum, double servoAngle) {
-	return servoAngle;
-}
+double uArmController::getReverseServoAngle(byte servoNum, double servoAngle) {return servoAngle;}
 
-void uArmController::writeServoAngle(byte servoNum, double servoAngle, boolean writeWithOffset) {
+void uArmController::writeServoAngle(byte servoNum, double servoAngle) {
 	servoAngle = constrain(servoAngle, 0.00, 180.00);
-
-	mCurAngle[servoNum] = servoAngle;
-	servoAngle = writeWithOffset ? (servoAngle + mServoAngleOffset[servoNum]) : servoAngle;
-
-	mServo[servoNum].write(servoAngle, mServoSpeed);
+	mServo[servoNum].write(servoAngle);
 }
 
-double uArmController::readServoAngle(byte servoNum, boolean withOffset) {
-	double angle;
-
-	if (servoNum == SERVO_HAND_ROT_NUM)
-		angle = map(getServoAnalogData(SERVO_HAND_ROT_ANALOG_PIN), SERVO_9G_MIN, SERVO_9G_MAX, 0, 180);
-	else angle = analogToAngle(servoNum, getServoAnalogData(servoNum));
-
-	if (withOffset) angle -= mServoAngleOffset[servoNum];
-
+double uArmController::readServoAngle(byte servoNum) {
+	double angle = (servoNum == SERVO_HAND_ROT_NUM) ? map(getServoAnalogData(SERVO_HAND_ROT_ANALOG_PIN), SERVO_9G_MIN, SERVO_9G_MAX, 0, 180) : getServoAnalogData(servoNum);
 	angle = constrain(angle, 0.00, 180.00);
-
 	return angle;
 }
 
-double uArmController::readServoAngles(double& servoRotAngle, double& servoLeftAngle, double& servoRightAngle, boolean withOffset) {
-	servoRotAngle = readServoAngle(SERVO_ROT_NUM, withOffset);
-	servoLeftAngle = readServoAngle(SERVO_LEFT_NUM, withOffset);
-	servoRightAngle = readServoAngle(SERVO_RIGHT_NUM, withOffset);
+double uArmController::readServoAngles(double& servoRotAngle, double& servoLeftAngle, double& servoRightAngle) {
+	servoRotAngle = readServoAngle(SERVO_ROT_NUM);
+	servoLeftAngle = readServoAngle(SERVO_LEFT_NUM);
+	servoRightAngle = readServoAngle(SERVO_RIGHT_NUM);
 }
 
 double uArmController::getServoAngles(double& servoRotAngle, double& servoLeftAngle, double& servoRightAngle) {
@@ -122,20 +88,16 @@ double uArmController::getServoAngles(double& servoRotAngle, double& servoLeftAn
 	servoRightAngle = mCurAngle[SERVO_RIGHT_NUM];
 }
 
-double uArmController::getServeAngle(byte servoNum) {
-	return mCurAngle[servoNum];
-}
-
-void uArmController::updateAllServoAngle(boolean withOffset) {
+void uArmController::updateAllServoAngle() {
 	for (unsigned char servoNum = SERVO_ROT_NUM; servoNum < SERVO_COUNT; servoNum++) {
-		mCurAngle[servoNum] = readServoAngle(servoNum, withOffset); 	
+		mCurAngle[servoNum] = readServoAngle(servoNum); 	
 	}
 }
 
 unsigned char uArmController::getCurrentXYZ(double& x, double& y, double& z) {
 	double stretch = MATH_LOWER_ARM * cos(mCurAngle[SERVO_LEFT_NUM] / MATH_TRANS) + MATH_UPPER_ARM * cos(mCurAngle[SERVO_RIGHT_NUM] / MATH_TRANS) + MATH_L2 + MATH_FRONT_HEADER;
-
 	double height = MATH_LOWER_ARM * sin(mCurAngle[SERVO_LEFT_NUM] / MATH_TRANS) - MATH_UPPER_ARM * sin(mCurAngle[SERVO_RIGHT_NUM] / MATH_TRANS) + MATH_L1;
+
 	x = stretch * cos(mCurAngle[SERVO_ROT_NUM] / MATH_TRANS);
 	y = stretch * sin(mCurAngle[SERVO_ROT_NUM] / MATH_TRANS);
 	z = height;
@@ -153,6 +115,7 @@ unsigned char uArmController::xyzToAngle(double x, double y, double z, double& a
 	x = constrain(x, -3276, 3276);
 	y = constrain(y, -3276, 3276);
 	z = constrain(z, -3276, 3276);
+
 	x = (double)((int)(x * 10) / 10.0);
 	y = (double)((int)(y * 10) / 10.0);
 	z = (double)((int)(z * 10) / 10.0);
@@ -168,8 +131,8 @@ unsigned char uArmController::xyzToAngle(double x, double y, double z, double& a
 	// Calculate value of theta 1: the rotation angle.
 	if (x == 0) angleRot = 90;
 	else {
-		if (x > 0) angleRot = atan(y / x) * MATH_TRANS; // Angle tranfer 0-180 CCW.
-		if (x < 0) angleRot = 180 + atan(y / x) * MATH_TRANS; // Angle tranfer 0-180 CCW.
+		if (x > 0) angleRot = atan(y / x) * MATH_TRANS; // Angle transfer 0-180 CCW.
+		if (x < 0) angleRot = 180 + atan(y / x) * MATH_TRANS; // Angle transfer 0-180 CCW.
 	}
 
 	// Calculate value of theta 3
@@ -180,11 +143,11 @@ unsigned char uArmController::xyzToAngle(double x, double y, double z, double& a
 
 	sqrtZX = sqrt(zIn * zIn + xIn * xIn);
 
-	rightAll = (sqrtZX * sqrtZX + MATH_UPPER_LOWER * MATH_UPPER_LOWER  - 1) / (2 * MATH_UPPER_LOWER * sqrtZX); // Cosine law.
+	rightAll = (sqrtZX * sqrtZX + MATH_UPPER_LOWER * MATH_UPPER_LOWER - 1) / (2 * MATH_UPPER_LOWER * sqrtZX); // Cosine law.
 	angleRight = acos(rightAll) * MATH_TRANS; // Cosine law.
 
 	// Calculate value of theta 2.
-	rightAll = (sqrtZX*sqrtZX + 1 - MATH_UPPER_LOWER * MATH_UPPER_LOWER ) / (2 * sqrtZX);//cosin law
+	rightAll = (sqrtZX * sqrtZX + 1 - MATH_UPPER_LOWER * MATH_UPPER_LOWER ) / (2 * sqrtZX); // Cosine law.
 	angleLeft = acos(rightAll) * MATH_TRANS; // Cosine law.
 
 	angleLeft = angleLeft + phi;
@@ -198,58 +161,27 @@ unsigned char uArmController::limitRange(double& angleRot, double& angleLeft, do
 	unsigned char result = IN_RANGE;
 
 	// Determine if the angle can be reached.
-	if (isnan(angleRot)||isnan(angleLeft)||isnan(angleRight)) result = OUT_OF_RANGE_NO_SOLUTION;
-	else if (((angleLeft + mServoAngleOffset[SERVO_LEFT_NUM]) < LOWER_ARM_MIN_ANGLE) || ((angleLeft + mServoAngleOffset[SERVO_LEFT_NUM]) > LOWER_ARM_MAX_ANGLE)) // Check the right in range.
+	if (isnan(angleRot) || isnan(angleLeft) || isnan(angleRight)) result = OUT_OF_RANGE_NO_SOLUTION;
+	else if ((angleLeft < LOWER_ARM_MIN_ANGLE) || (angleLeft > LOWER_ARM_MAX_ANGLE)) // Check the right in range.
 		result = OUT_OF_RANGE;
-	else if (((angleRight + mServoAngleOffset[SERVO_RIGHT_NUM]) < UPPER_ARM_MIN_ANGLE) || ((angleRight + mServoAngleOffset[SERVO_RIGHT_NUM]) > UPPER_ARM_MAX_ANGLE)) // Check the left in range.
+	else if ((angleRight < UPPER_ARM_MIN_ANGLE) || (angleRight > UPPER_ARM_MAX_ANGLE)) // Check the left in range.
 		result = OUT_OF_RANGE;
-	else if (((180 - angleLeft - angleRight) > LOWER_UPPER_MAX_ANGLE) || ((180 - angleLeft - angleRight) < LOWER_UPPER_MIN_ANGLE)) // Check the angle of upper arm and lowe arm in range.
+	else if (((180 - angleLeft - angleRight) > LOWER_UPPER_MAX_ANGLE) || ((180 - angleLeft - angleRight) < LOWER_UPPER_MIN_ANGLE)) // Check the angle of upper arm and lower arm in range.
 		result = OUT_OF_RANGE;
 
 	angleRot = constrain(angleRot, 0.00, 180.00);
 	angleLeft = constrain(angleLeft, 0.00, 180.00);
 	angleRight = constrain(angleRight, 0.00, 180.00);
 
+	angleRot -= 90;
+	angleLeft -= 90;
+	angleRight -= 90;
+
 	return result;
-}
-
-void uArmController::readLinearOffset(byte servoNum, double& interceptVal, double& slopeVal) {
-	EEPROM.get(LINEAR_INTERCEPT_START_ADDRESS + servoNum * sizeof(interceptVal), interceptVal);
-	EEPROM.get(LINEAR_SLOPE_START_ADDRESS + servoNum * sizeof(slopeVal), slopeVal);
-}
-
-double uArmController::analogToAngle(byte servoNum, int inputAnalog) {
-	double intercept = 0.0f;
-	double slope = 0.0f;
-
-	readLinearOffset(servoNum, intercept, slope);
-
-	double angle = intercept + slope * inputAnalog;  
-
-	return angle;
 }
 
 unsigned int uArmController::getServoAnalogData(byte servoNum) {
 	return getAnalogPinValue(SERVO_ANALOG_PIN[servoNum]);
-}
-
-double uArmController::readServoAngleOffset(byte servoNum) {
-	double manualServoOffset = 0.0f;
-
-	EEPROM.get(MANUAL_OFFSET_ADDRESS + servoNum * sizeof(manualServoOffset), manualServoOffset);
-
-	return manualServoOffset;	
-}
-
-unsigned char uArmController::setServoSpeed(byte servoNum, unsigned char speed) {
-	mServoSpeed = speed;
-}
-
-unsigned char uArmController::setServoSpeed(unsigned char speed) {
-	setServoSpeed(SERVO_ROT_NUM, speed);
-	setServoSpeed(SERVO_LEFT_NUM, speed);
-	setServoSpeed(SERVO_RIGHT_NUM, speed);
-	//setServoSpeed(SERVO_HAND_ROT_NUM, true);
 }
 
 static void _sort(unsigned int array[], unsigned int len) {
@@ -257,11 +189,11 @@ static void _sort(unsigned int array[], unsigned int len) {
 	unsigned char i = 0, j = 0;
 
 	for (i = 0; i < len; i++) {
-		for (j = 0; i+j < (len-1); j++) {
-			if (array[j] > array[j+1]) {
+		for (j = 0; i + j < (len - 1); j++) {
+			if (array[j] > array[j + 1]) {
 				temp = array[j];
-				array[j] = array[j+1];
-				array[j+1] = temp;
+				array[j] = array[j + 1];
+				array[j + 1] = temp;
 			}
 		}
 	}	

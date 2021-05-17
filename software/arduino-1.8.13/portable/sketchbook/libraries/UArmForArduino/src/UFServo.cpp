@@ -24,19 +24,17 @@
 
 #include "UFServo.h"
 
-#define usToTicks(_us)    (( clockCyclesPerMicrosecond()* _us) / 8)     // converts microseconds to tick (assumes prescale of 8)  // 12 Aug 2009
-#define ticksToUs(_ticks) (( (unsigned)_ticks * 8)/ clockCyclesPerMicrosecond() ) // converts from ticks back to microseconds
+#define usToTicks(_us)    ((clockCyclesPerMicrosecond()* _us) / 8) // Converts microseconds to tick (assumes prescale of 8).
+#define ticksToUs(_ticks) (((unsigned)_ticks * 8) / clockCyclesPerMicrosecond()) // Converts from ticks back to microseconds.
 
-
-#define TRIM_DURATION       2                               // compensation ticks to trim adjust for digitalWrite delays // 12 August 2009
+#define TRIM_DURATION       2                               // Compensation ticks to trim adjust for digitalWrite delays.
 
 //#define NBR_TIMERS        (MAX_SERVOS / SERVOS_PER_TIMER)
 
-static servo_t servos[MAX_SERVOS];                          // static array of servo structures
-static volatile int8_t Channel[_Nbr_16timers ];             // counter for the servo being pulsed for each timer (or -1 if refresh interval)
+static servo_t servos[MAX_SERVOS];                          // Static array of servo structures.
+static volatile int8_t Channel[_Nbr_16timers];              // Counter for the servo being pulsed for each timer (or -1 if refresh interval).
 
-uint8_t ServoCount = 0;                                     // the total number of attached servos
-
+uint8_t ServoCount = 0;                                     // The total number of attached servos.
 
 // convenience macros
 #define SERVO_INDEX_TO_TIMER(_servo_nbr) ((timer16_Sequence_t)(_servo_nbr / SERVOS_PER_TIMER)) // returns the timer controlling this servo
@@ -49,28 +47,25 @@ uint8_t ServoCount = 0;                                     // the total number 
 
 /************ static functions common to all instances ***********************/
 
-static inline void handle_interrupts(timer16_Sequence_t timer, volatile uint16_t *TCNTn, volatile uint16_t* OCRnA)
-{
-  if( Channel[timer] < 0 )
+static inline void handle_interrupts(timer16_Sequence_t timer, volatile uint16_t *TCNTn, volatile uint16_t* OCRnA) {
+  if (Channel[timer] < 0)
     *TCNTn = 0; // channel set to -1 indicated that refresh interval completed so reset the timer
-  else{
-    if( SERVO_INDEX(timer,Channel[timer]) < ServoCount && SERVO(timer,Channel[timer]).Pin.isActive == true )
+  else {
+    if (SERVO_INDEX(timer,Channel[timer]) < ServoCount && SERVO(timer,Channel[timer]).Pin.isActive == true)
       digitalWrite( SERVO(timer,Channel[timer]).Pin.nbr,LOW); // pulse this channel low if activated
   }
 
   Channel[timer]++;    // increment to the next channel
-  if( SERVO_INDEX(timer,Channel[timer]) < ServoCount && Channel[timer] < SERVOS_PER_TIMER) {
-
-
+  if (SERVO_INDEX(timer, Channel[timer]) < ServoCount && Channel[timer] < SERVOS_PER_TIMER) {
       // Extension for slowmove 
-   if (SERVO(timer,Channel[timer]).speed) { 
+   if (SERVO(timer, Channel[timer]).speed) { 
      // Increment ticks by speed until we reach the target. 
      // When the target is reached, speed is set to 0 to disable that code. 
-     if (SERVO(timer,Channel[timer]).target > SERVO(timer,Channel[timer]).ticks) { 
-       SERVO(timer,Channel[timer]).ticks += SERVO(timer,Channel[timer]).speed; 
-       if (SERVO(timer,Channel[timer]).target <= SERVO(timer,Channel[timer]).ticks) { 
-         SERVO(timer,Channel[timer]).ticks = SERVO(timer,Channel[timer]).target; 
-         SERVO(timer,Channel[timer]).speed = 0; 
+     if (SERVO(timer, Channel[timer]).target > SERVO(timer, Channel[timer]).ticks) { 
+       SERVO(timer, Channel[timer]).ticks += SERVO(timer, Channel[timer]).speed; 
+       if (SERVO(timer, Channel[timer]).target <= SERVO(timer, Channel[timer]).ticks) { 
+         SERVO(timer, Channel[timer]).ticks = SERVO(timer, Channel[timer]).target; 
+         SERVO(timer, Channel[timer]).speed = 0; 
        } 
      } 
      else { 
@@ -99,57 +94,34 @@ static inline void handle_interrupts(timer16_Sequence_t timer, volatile uint16_t
   }
 }
 
-#ifndef WIRING // Wiring pre-defines signal handlers so don't define any if compiling for the Wiring platform
 // Interrupt handlers for Arduino
 #if defined(_useTimer1)
-SIGNAL (TIMER1_COMPA_vect)
-{
+SIGNAL (TIMER1_COMPA_vect) {
   handle_interrupts(_timer1, &TCNT1, &OCR1A);
 }
 #endif
 
 #if defined(_useTimer3)
-SIGNAL (TIMER3_COMPA_vect)
-{
+SIGNAL (TIMER3_COMPA_vect) {
   handle_interrupts(_timer3, &TCNT3, &OCR3A);
 }
 #endif
 
 #if defined(_useTimer4)
-SIGNAL (TIMER4_COMPA_vect)
-{
+SIGNAL (TIMER4_COMPA_vect) {
   handle_interrupts(_timer4, &TCNT4, &OCR4A);
 }
 #endif
 
 #if defined(_useTimer5)
-SIGNAL (TIMER5_COMPA_vect)
-{
+SIGNAL (TIMER5_COMPA_vect) {
   handle_interrupts(_timer5, &TCNT5, &OCR5A);
 }
 #endif
 
-#elif defined WIRING
-// Interrupt handlers for Wiring
-#if defined(_useTimer1)
-void Timer1Service()
-{
-  handle_interrupts(_timer1, &TCNT1, &OCR1A);
-}
-#endif
-#if defined(_useTimer3)
-void Timer3Service()
-{
-  handle_interrupts(_timer3, &TCNT3, &OCR3A);
-}
-#endif
-#endif
-
-
-static void initISR(timer16_Sequence_t timer)
-{
+static void initISR(timer16_Sequence_t timer) {
 #if defined (_useTimer1)
-  if(timer == _timer1) {
+  if (timer == _timer1) {
     TCCR1A = 0;             // normal counting mode
     TCCR1B = _BV(CS11);     // set prescaler of 8
     TCNT1 = 0;              // clear the timer count
@@ -160,9 +132,6 @@ static void initISR(timer16_Sequence_t timer)
     // here if not ATmega8 or ATmega128
     TIFR1 |= _BV(OCF1A);     // clear any pending interrupts;
     TIMSK1 |=  _BV(OCIE1A) ; // enable the output compare interrupt
-#endif
-#if defined(WIRING)
-    timerAttach(TIMER1OUTCOMPAREA_INT, Timer1Service);
 #endif
   }
 #endif
@@ -179,9 +148,6 @@ static void initISR(timer16_Sequence_t timer)
     TIFR3 = _BV(OCF3A);     // clear any pending interrupts;
     TIMSK3 =  _BV(OCIE3A) ; // enable the output compare interrupt
 #endif
-#if defined(WIRING)
-    timerAttach(TIMER3OUTCOMPAREA_INT, Timer3Service);  // for Wiring platform only
-#endif
   }
 #endif
 
@@ -196,7 +162,7 @@ static void initISR(timer16_Sequence_t timer)
 #endif
 
 #if defined (_useTimer5)
-  if(timer == _timer5) {
+  if (timer == _timer5) {
     TCCR5A = 0;             // normal counting mode
     TCCR5B = _BV(CS51);     // set prescaler of 8
     TCNT5 = 0;              // clear the timer count
@@ -206,36 +172,14 @@ static void initISR(timer16_Sequence_t timer)
 #endif
 }
 
-static void finISR(timer16_Sequence_t timer)
-{
-    //disable use of the given timer
-#if defined WIRING   // Wiring
-  if(timer == _timer1) {
-    #if defined(__AVR_ATmega1281__)||defined(__AVR_ATmega2561__)
-    TIMSK1 &=  ~_BV(OCIE1A) ;  // disable timer 1 output compare interrupt
-    #else
-    TIMSK &=  ~_BV(OCIE1A) ;  // disable timer 1 output compare interrupt
-    #endif
-    timerDetach(TIMER1OUTCOMPAREA_INT);
-  }
-  else if(timer == _timer3) {
-    #if defined(__AVR_ATmega1281__)||defined(__AVR_ATmega2561__)
-    TIMSK3 &= ~_BV(OCIE3A);    // disable the timer3 output compare A interrupt
-    #else
-    ETIMSK &= ~_BV(OCIE3A);    // disable the timer3 output compare A interrupt
-    #endif
-    timerDetach(TIMER3OUTCOMPAREA_INT);
-  }
-#else
-    //For arduino - in future: call here to a currently undefined function to reset the timer
-#endif
+static void finISR(timer16_Sequence_t timer) {
+    // Disable use of the given timer.
 }
 
-static boolean isTimerActive(timer16_Sequence_t timer)
-{
-  // returns true if any servo is active on this timer
-  for(uint8_t channel=0; channel < SERVOS_PER_TIMER; channel++) {
-    if(SERVO(timer,channel).Pin.isActive == true)
+static boolean isTimerActive(timer16_Sequence_t timer) {
+  // Returns true if any servo is active on this timer.
+  for (uint8_t channel=0; channel < SERVOS_PER_TIMER; channel++) {
+    if (SERVO(timer, channel).Pin.isActive == true)
       return true;
   }
   return false;
@@ -244,29 +188,24 @@ static boolean isTimerActive(timer16_Sequence_t timer)
 
 /****************** end of static functions ******************************/
 
-Servo::Servo()
-{
-  if( ServoCount < MAX_SERVOS) {
-    this->servoIndex = ServoCount++;                    // assign a servo index to this instance
-	servos[this->servoIndex].ticks = usToTicks(DEFAULT_PULSE_WIDTH);   // store default values  - 12 Aug 2009
+Servo::Servo() {
+  if (ServoCount < MAX_SERVOS) {
+    this->servoIndex = ServoCount++; // assign a servo index to this instance
+	servos[this->servoIndex].ticks = usToTicks(DEFAULT_PULSE_WIDTH); // store default values
   }
-  else
-    this->servoIndex = INVALID_SERVO ;  // too many servos
+  else this->servoIndex = INVALID_SERVO;  // too many servos
 }
 
-uint8_t Servo::attach(int pin)
-{
+uint8_t Servo::attach(int pin) {
   return this->attach(pin, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
 }
 
-void Servo::setPulseWidthRange(int min, int max)
-{
+void Servo::setPulseWidthRange(int min, int max) {
     this->min = (MIN_PULSE_WIDTH - min) / 4; // resolution of min/max is 4 uS
     this->max = (MAX_PULSE_WIDTH - max) / 4;
 }
 
-uint8_t Servo::attach(int pin, int min, int max)
-{
+uint8_t Servo::attach(int pin, int min, int max) {
   if (this->servoIndex < MAX_SERVOS ) {
     pinMode(pin, OUTPUT);              // set servo pin to output
     servos[this->servoIndex].Pin.nbr = pin;
@@ -280,8 +219,7 @@ uint8_t Servo::attach(int pin, int min, int max)
   return this->servoIndex ;
 }
 
-void Servo::detach()
-{
+void Servo::detach() {
   servos[this->servoIndex].Pin.isActive = false;
   timer16_Sequence_t timer = SERVO_INDEX_TO_TIMER(servoIndex);
   if (isTimerActive(timer) == false) {
@@ -290,12 +228,12 @@ void Servo::detach()
 }
 
 void Servo::write(float value) {
-  if (value < MIN_PULSE_WIDTH) {  // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
+  if (value < MIN_PULSE_WIDTH) { // Treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds).
     if (value < 0) value = 0;
     if (value > 180) value = 180;
-    value*=10;
-    value = map(value, 0, 1800, SERVO_MIN(),  SERVO_MAX());
-    //Serial.println(value-500, HEX);
+    value *= 10;
+    value = map(value, 0, 1800, SERVO_MIN(), SERVO_MAX());
+    //Serial.println(value - 500, HEX);
   }
   this->writeMicroseconds(value);
 }
@@ -309,45 +247,16 @@ void Servo::write(float value) {
            speed=0 - Full speed, identical to write 
            speed=1 - Minimum speed 
            speed=255 - Maximum speed 
- */ 
- void Servo::write(float value, uint8_t speed) { 
-   // This fuction is a copy of write and writeMicroseconds but value will be saved 
-   // in target instead of in ticks in the servo structure and speed will be save 
-   // there too. 
- 
-
-   //double degrees = value; 
- 
-   if (speed) { 
-     if (value < MIN_PULSE_WIDTH) { 
-       // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds) 
-           // updated to use constrain instead of if, pva 
-          value = value * 10; //make the value tem times bigger, must after the if() detection or if() will fail
-          value = constrain(value, 0, 1800); 
-          value = map(value, 0, 1800, SERVO_MIN(), SERVO_MAX());     
-     } 
-
-     // calculate and store the values for the given channel 
-     byte channel = this->servoIndex; 
-     if( (channel >= 0) && (channel < MAX_SERVOS) ) {   // ensure channel is valid 
-           // updated to use constrain instead of if, pva 
-           //value = constrain(value, SERVO_MIN(), SERVO_MAX()); 
-      //Serial.println(value,DEC);
- 
-       //value = value - TRIM_DURATION; 
-       value = usToTicks(value);  // convert to ticks after compensating for interrupt overhead - 12 Aug 2009 
- 
-       // Set speed and direction 
-       uint8_t oldSREG = SREG; 
-       cli(); 
-       servos[channel].target = value;   
-       servos[channel].speed = speed;   
-       SREG = oldSREG;    
-     } 
-   }  
-   else { 
-     write(value);
-   } 
+ */
+void Servo::write(float value, uint8_t speed) {
+  if (value < MIN_PULSE_WIDTH) { // Treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds).
+    if (value < 0) value = 0;
+    if (value > 180) value = 180;
+    value *= 10;
+    value = map(value, 0, 1800, SERVO_MIN(), SERVO_MAX());
+    //Serial.println(value - 500, HEX);
+  }
+  this->writeMicroseconds(value);
 }
 
 void Servo::writeMicroseconds(int value) {

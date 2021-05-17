@@ -31,7 +31,7 @@
 #define MATH_UPPER_ARM 		160.2 	
 #define MATH_FRONT_HEADER 	25.00 // The distance between wrist to the front point we use.
 #define MATH_UPPER_LOWER 	MATH_UPPER_ARM/MATH_LOWER_ARM
-#define MAX_Z				260		// Max height.
+#define MAX_Z				260 // Max height.
 #define MIN_Z				(-120)
 #endif
 
@@ -79,22 +79,18 @@ public:
 
 	double getReverseServoAngle(byte servoNum, double servoAngle);
 	void writeServoAngle(double servoRotAngle, double servoLeftAngle, double servoRightAngle);
-	void writeServoAngle(byte servoNum, double servoAngle, boolean writeWithOffset = true);
-	double readServoAngle(byte servoNum, boolean withOffset = true);
-	double readServoAngles(double& servoRotAngle, double& servoLeftAngle, double& servoRightAngle, boolean withOffset = true);	
-	void updateAllServoAngle(boolean withOffset = true);
+	void writeServoAngle(byte servoNum, double servoAngle);
+	double readServoAngle(byte servoNum);
+	double readServoAngles(double& servoRotAngle, double& servoLeftAngle, double& servoRightAngle);	
+	void updateAllServoAngle();
 
 	double getServoAngles(double& servoRotAngle, double& servoLeftAngle, double& servoRightAngle);
-	double getServeAngle(byte servoNum);
 
 	unsigned char getCurrentXYZ(double& x, double& y, double& z);
 
-	unsigned char setServoSpeed(unsigned char speed);
-	unsigned char setServoSpeed(byte servoNum, unsigned char speed);
 	unsigned int getServoAnalogData(byte servoNum);
 	unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double& angleLeft, double& angleRight, boolean allowApproximate = true);
 	unsigned char limitRange(double& angleRot, double& angleLeft, double& angleRight);
-	double analogToAngle(byte servoNum, int inputAnalog);
 
 	/*!
 		\brief get analog value of pin
@@ -103,22 +99,17 @@ public:
 	 */
 	int getAnalogPinValue(unsigned int pin);
 
-private:
-	double readServoAngleOffset(byte servoNum);
-	void readLinearOffset(byte servoNum, double& interceptVal, double& slopeVal);
-	void sort(unsigned int array[], unsigned int len);
-
 protected:
 	Servo mServo[SERVO_COUNT];
 
-	unsigned char mServoSpeed = 255;
 	double mCurAngle[SERVO_COUNT] = {90, 90, 0, 90};
 
 	// Offset of assembling.
-	double mServoAngleOffset[SERVO_COUNT];
-	
 	const byte SERVO_CONTROL_PIN[SERVO_COUNT] = {SERVO_ROT_PIN, SERVO_LEFT_PIN, SERVO_RIGHT_PIN, SERVO_HAND_ROT_PIN};
 	const byte SERVO_ANALOG_PIN[SERVO_COUNT] = {SERVO_ROT_ANALOG_PIN, SERVO_LEFT_ANALOG_PIN, SERVO_RIGHT_ANALOG_PIN, SERVO_HAND_ROT_ANALOG_PIN};
+
+private:
+	void sort(unsigned int array[], unsigned int len);
 };
 
 extern uArmController controller;

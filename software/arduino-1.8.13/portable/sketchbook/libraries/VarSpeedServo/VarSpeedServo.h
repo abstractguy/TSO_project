@@ -139,11 +139,6 @@ typedef struct {
 	uint8_t speed;					// Extension for slowmove
 } servo_t;
 
-typedef struct {
-  uint8_t position;
-  uint8_t speed;
-} servoSequencePoint;
-
 class VarSpeedServo {
 public:
   VarSpeedServo();
@@ -164,9 +159,6 @@ public:
   int readMicroseconds();            // returns current pulse width in microseconds for this servo (was read_us() in first release)
   bool attached();                   // return true if this servo is attached, otherwise false
 
-  uint8_t sequencePlay(servoSequencePoint sequenceIn[], uint8_t numPositions, bool loop, uint8_t startPos);
-  uint8_t sequencePlay(servoSequencePoint sequenceIn[], uint8_t numPositions); // play a looping sequence starting at position 0
-  void sequenceStop(); // stop movement
   void wait(); // wait for movement to finish
   bool isMoving(); // return true if servo is still moving
   void setPulseWidthRange(int min, int max);
@@ -174,7 +166,6 @@ private:
    uint8_t servoIndex;               // index into the channel data for this servo
    int8_t min;                       // minimum is this value times 4 added to MIN_PULSE_WIDTH
    int8_t max;                       // maximum is this value times 4 added to MAX_PULSE_WIDTH
-   servoSequencePoint * curSequence; // for sequences
    uint8_t curSeqPosition; // for sequences
 
 };

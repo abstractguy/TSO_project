@@ -67,7 +67,7 @@ static void reportResult(int reportCode, String result) {
 static unsigned char cmdMove(int serialNum, int parameterCount, double value[4]) {
 	if (parameterCount != 4) return PARAMETER_ERROR;
 
-	if (moveTo(value[0], value[1], value[2], value[3]) != OUT_OF_RANGE_NO_SOLUTION)
+	if (moveTo(value[0], value[1], value[2]) != OUT_OF_RANGE_NO_SOLUTION)
 		replyOK(serialNum);
 	else return OUT_OF_RANGE;
 
