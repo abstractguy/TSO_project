@@ -261,19 +261,19 @@ uint8_t Servo::attach(int pin)
 
 void Servo::setPulseWidthRange(int min, int max)
 {
-    this->min  = (MIN_PULSE_WIDTH - min)/4; //resolution of min/max is 4 uS
-    this->max  = (MAX_PULSE_WIDTH - max)/4;
+    this->min = (MIN_PULSE_WIDTH - min) / 4; // resolution of min/max is 4 uS
+    this->max = (MAX_PULSE_WIDTH - max) / 4;
 }
 
 uint8_t Servo::attach(int pin, int min, int max)
 {
-  if(this->servoIndex < MAX_SERVOS ) {
-    pinMode( pin, OUTPUT) ;                                   // set servo pin to output
+  if (this->servoIndex < MAX_SERVOS ) {
+    pinMode(pin, OUTPUT);              // set servo pin to output
     servos[this->servoIndex].Pin.nbr = pin;
     
     // initialize the timer if it has not already been initialized
     timer16_Sequence_t timer = SERVO_INDEX_TO_TIMER(servoIndex);
-    if(isTimerActive(timer) == false)
+    if (isTimerActive(timer) == false)
       initISR(timer);
     servos[this->servoIndex].Pin.isActive = true;  // this must be set after the check for isTimerActive
   }
@@ -284,17 +284,15 @@ void Servo::detach()
 {
   servos[this->servoIndex].Pin.isActive = false;
   timer16_Sequence_t timer = SERVO_INDEX_TO_TIMER(servoIndex);
-  if(isTimerActive(timer) == false) {
+  if (isTimerActive(timer) == false) {
     finISR(timer);
   }
 }
 
-void Servo::write(float value)
-{
-  if(value < MIN_PULSE_WIDTH)
-  {  // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
-    if(value < 0) value = 0;
-    if(value > 180) value = 180;
+void Servo::write(float value) {
+  if (value < MIN_PULSE_WIDTH) {  // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
+    if (value < 0) value = 0;
+    if (value > 180) value = 180;
     value*=10;
     value = map(value, 0, 1800, SERVO_MIN(),  SERVO_MAX());
     //Serial.println(value-500, HEX);
@@ -324,9 +322,9 @@ void Servo::write(float value)
      if (value < MIN_PULSE_WIDTH) { 
        // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds) 
            // updated to use constrain instead of if, pva 
-          value = value * 10;//make the value tem times bigger, must after the if() detection or if() will fail
+          value = value * 10; //make the value tem times bigger, must after the if() detection or if() will fail
           value = constrain(value, 0, 1800); 
-          value = map(value, 0, 1800, SERVO_MIN(),  SERVO_MAX());     
+          value = map(value, 0, 1800, SERVO_MIN(), SERVO_MAX());     
      } 
 
      // calculate and store the values for the given channel 
@@ -348,28 +346,17 @@ void Servo::write(float value)
      } 
    }  
    else { 
-     write (value); 
+     write(value);
    } 
-} 
+}
 
-void Servo::setSpeed(unsigned char speed)
-{
-  byte channel = this->servoIndex; 
-  uint8_t oldSREG = SREG; 
-  cli();   
-  servos[channel].speed = speed;
-  SREG = oldSREG; 
-}  
-
-void Servo::writeMicroseconds(int value)
-{
+void Servo::writeMicroseconds(int value) {
   // calculate and store the values for the given channel
   byte channel = this->servoIndex;
-  if( (channel < MAX_SERVOS) )   // ensure channel is valid
-  {
-    if( value < SERVO_MIN() )          // ensure pulse width is valid
+  if (channel < MAX_SERVOS) {  // ensure channel is valid
+    if (value < SERVO_MIN()) { // ensure pulse width is valid
       value = SERVO_MIN();
-    else if( value > SERVO_MAX() )
+    } else if (value > SERVO_MAX())
       value = SERVO_MAX();
 
     value = value - TRIM_DURATION;
@@ -382,24 +369,21 @@ void Servo::writeMicroseconds(int value)
   }
 }
 
-int Servo::read() // return the value as degrees
-{
-  return  map( this->readMicroseconds()+1, SERVO_MIN(), SERVO_MAX(), 0, 180);
+int Servo::read() { // return the value as degrees
+  return map(this->readMicroseconds() + 1, SERVO_MIN(), SERVO_MAX(), 0, 180);
 }
 
-int Servo::readMicroseconds()
-{
+int Servo::readMicroseconds() {
   unsigned int pulsewidth;
-  if( this->servoIndex != INVALID_SERVO )
-    pulsewidth = ticksToUs(servos[this->servoIndex].ticks)  + TRIM_DURATION ;   // 12 aug 2009
+  if (this->servoIndex != INVALID_SERVO)
+    pulsewidth = ticksToUs(servos[this->servoIndex].ticks) + TRIM_DURATION;   // 12 aug 2009
   else
-    pulsewidth  = 0;
+    pulsewidth = 0;
 
   return pulsewidth;
 }
 
-bool Servo::attached()
-{
+bool Servo::attached() {
   return servos[this->servoIndex].Pin.isActive ;
 }
 

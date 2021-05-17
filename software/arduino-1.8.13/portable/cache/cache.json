@@ -4,14 +4,14 @@
     "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino-1.8.13/portable/cache/dl.espressif.com/dl/package_esp32_dev_index.json",
     "eTag" : "605dc50d-da3e",
     "md5" : "MD5:c10970c2155cd610524ec12d177e2d63",
-    "createdAt" : "2021-05-17T07:30:13.98",
+    "createdAt" : "2021-05-17T09:43:37.02",
     "cacheControl" : {
       "maxAge" : 3600,
       "mustRevalidate" : false,
       "noCache" : false,
       "noStore" : false
     },
-    "expires" : "2021-05-17T08:30:13.980"
+    "expires" : "2021-05-17T10:43:37.020"
   }, {
     "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.gz",
     "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino-1.8.13/portable/cache/downloads.arduino.cc/libraries/library_index.json.gz",
@@ -26,19 +26,6 @@
     },
     "expires" : "2021-05-17T11:30:15.710"
   }, {
-    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json.sig",
-    "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino-1.8.13/portable/cache/downloads.arduino.cc/packages/package_index.json.sig",
-    "eTag" : "86613c6c0d8f3e2ef65b975d1d4a3403",
-    "md5" : "MD5:86613c6c0d8f3e2ef65b975d1d4a3403",
-    "createdAt" : "2021-05-17T07:30:14.536",
-    "cacheControl" : {
-      "maxAge" : 3600,
-      "mustRevalidate" : false,
-      "noCache" : false,
-      "noStore" : false
-    },
-    "expires" : "2021-05-17T08:30:14.536"
-  }, {
     "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.sig",
     "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino-1.8.13/portable/cache/downloads.arduino.cc/libraries/library_index.json.sig",
     "eTag" : "e425635047d826a126963e5ca5b81905",
@@ -52,17 +39,30 @@
     },
     "expires" : "2021-05-17T11:30:15.987"
   }, {
-    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json",
-    "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino-1.8.13/portable/cache/downloads.arduino.cc/packages/package_index.json",
-    "eTag" : "b9a6c37856d63b5489d00227ad9f621e",
-    "md5" : "MD5:b9a6c37856d63b5489d00227ad9f621e",
-    "createdAt" : "2021-05-17T07:30:14.319",
+    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json.sig",
+    "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino-1.8.13/portable/cache/downloads.arduino.cc/packages/package_index.json.sig",
+    "eTag" : "86613c6c0d8f3e2ef65b975d1d4a3403",
+    "md5" : "MD5:86613c6c0d8f3e2ef65b975d1d4a3403",
+    "createdAt" : "2021-05-17T09:43:37.736",
     "cacheControl" : {
       "maxAge" : 3600,
       "mustRevalidate" : false,
       "noCache" : false,
       "noStore" : false
     },
-    "expires" : "2021-05-17T08:30:14.319"
+    "expires" : "2021-05-17T10:43:37.736"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json",
+    "localPath" : "/home/samuel/school/Projets/Final/TSO_project/software/arduino-1.8.13/portable/cache/downloads.arduino.cc/packages/package_index.json",
+    "eTag" : "b9a6c37856d63b5489d00227ad9f621e",
+    "md5" : "MD5:b9a6c37856d63b5489d00227ad9f621e",
+    "createdAt" : "2021-05-17T09:43:37.4",
+    "cacheControl" : {
+      "maxAge" : 3600,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2021-05-17T10:43:37.400"
   } ]
 }

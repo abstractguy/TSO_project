@@ -95,7 +95,14 @@ public:
 	unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double& angleLeft, double& angleRight, boolean allowApproximate = true);
 	unsigned char limitRange(double& angleRot, double& angleLeft, double& angleRight);
 	double analogToAngle(byte servoNum, int inputAnalog);
-	
+
+	/*!
+		\brief get analog value of pin
+		\param pin of arduino
+		\return value of analog data
+	 */
+	int getAnalogPinValue(unsigned int pin);
+
 private:
 	double readServoAngleOffset(byte servoNum);
 	void readLinearOffset(byte servoNum, double& interceptVal, double& slopeVal);

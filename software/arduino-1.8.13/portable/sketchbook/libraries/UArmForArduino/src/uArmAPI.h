@@ -11,7 +11,7 @@
 #define _UARMAPI_H_
 
 #include <Arduino.h>
-#include "UFServo.h"
+//#include "UFServo.h"
 #include "uArmConfig.h"
 #include "uArmPin.h"
 #include "uArmController.h"
@@ -93,13 +93,6 @@ void getCurrentXYZ(double& x, double& y, double& z);
    \return OUT_OF_RANGE can move to the closest pos   
  */
 unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double& angleLeft, double& angleRight);
-
-/*!
-   \brief get analog value of pin
-   \param pin of arduino
-   \return value of analog data
- */
-int getAnalogPinValue(unsigned int pin);
 
 #endif // _UARMAPI_H_
 

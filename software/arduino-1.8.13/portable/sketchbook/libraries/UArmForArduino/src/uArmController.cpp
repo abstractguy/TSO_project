@@ -10,7 +10,9 @@
   */
 
 #include "uArmController.h"
-#include "uArmAPI.h"
+//#include "uArmAPI.h"
+
+static void _sort(unsigned int array[], unsigned int len);
 
 uArmController controller;
 
@@ -248,5 +250,33 @@ unsigned char uArmController::setServoSpeed(unsigned char speed) {
 	setServoSpeed(SERVO_LEFT_NUM, speed);
 	setServoSpeed(SERVO_RIGHT_NUM, speed);
 	//setServoSpeed(SERVO_HAND_ROT_NUM, true);
+}
+
+static void _sort(unsigned int array[], unsigned int len) {
+	unsigned int temp = 0;
+	unsigned char i = 0, j = 0;
+
+	for (i = 0; i < len; i++) {
+		for (j = 0; i+j < (len-1); j++) {
+			if (array[j] > array[j+1]) {
+				temp = array[j];
+				array[j] = array[j+1];
+				array[j+1] = temp;
+			}
+		}
+	}	
+}
+
+/*!
+   \brief get analog value of pin
+   \param pin of arduino
+   \return value of analog data
+ */
+int uArmController::getAnalogPinValue(unsigned int pin) {
+	unsigned int dat[8], result;
+	for (int i = 0; i < 8; i++) dat[i] = analogRead(pin);
+	_sort(dat, 8);
+	result = (dat[2] + dat[3] + dat[4] + dat[5]) / 4;
+	return result;    
 }
 

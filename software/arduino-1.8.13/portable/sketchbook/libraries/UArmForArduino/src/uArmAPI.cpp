@@ -35,7 +35,6 @@ static double mPathY[STEP_MAX];
 static double mPathZ[STEP_MAX];
 
 static unsigned char _moveTo(double x, double y, double z, double speed);
-static void _sort(unsigned int array[], unsigned int len);
 static void _controllerRun();
 
 void initHardware() {
@@ -178,23 +177,6 @@ void pumpOff() {
 }
 
 /*!
-   \brief get analog value of pin
-   \param pin of arduino
-   \return value of analog data
- */
-int getAnalogPinValue(unsigned int pin) {
-	unsigned int dat[8], result;
-
-	for (int i = 0; i < 8; i++) dat[i] = analogRead(pin);
-
-	_sort(dat, 8);
-
-	result = (dat[2] + dat[3] + dat[4] + dat[5]) / 4;
-
-	return result;    
-}
-
-/*!
    \brief get current pos
    \output x, y, z(mm)
  */
@@ -218,21 +200,6 @@ unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double&
 ///////////////////////////////////////////////////////////////////////////////
 // private functions
 ///////////////////////////////////////////////////////////////////////////////
-
-static void _sort(unsigned int array[], unsigned int len) {
-	unsigned int temp = 0;
-	unsigned char i = 0, j = 0;
-
-	for (i = 0; i < len; i++) {
-		for (j = 0; i+j < (len-1); j++) {
-			if (array[j] > array[j+1]) {
-				temp = array[j];
-				array[j] = array[j+1];
-				array[j+1] = temp;
-			}
-		}
-	}	
-}
 
 static void _interpolate(double startVal, double endVal, double *interpVals, int steps, byte easeType) {
 	startVal = startVal / 10.0;
