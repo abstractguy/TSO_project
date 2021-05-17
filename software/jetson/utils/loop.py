@@ -101,7 +101,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                                   center_x=center_x, 
                                   center_y=center_y)
 
-            if show:
+            if show and frame is not None:
                 frame = show_fps(frame, fps)
 
                 if arducam_utils is not None:

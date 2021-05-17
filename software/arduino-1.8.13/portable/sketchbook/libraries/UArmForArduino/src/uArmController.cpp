@@ -31,11 +31,6 @@ void uArmController::init() {
 		mServoAngleOffset[i] = servoOffset;
 	}
 
-	// mServoAngleOffset[0] = 6;
-	// mServoAngleOffset[1] = 7;
-	// mServoAngleOffset[2] = 4;
-	// mServoAngleOffset[3] = 0;
-
 	for (int k = 0; k < 3; k++) {
 		unsigned int offset = (4 + k) * 1024 + 500;
 		unsigned char data[2];
@@ -53,7 +48,7 @@ void uArmController::init() {
 	// writeServoAngle(SERVO_ROT_NUM, 90);
 	// writeServoAngle(SERVO_LEFT_NUM, 90);
 	// writeServoAngle(SERVO_RIGHT_NUM, 0);
-	// writeServoAngle(SERVO_HAND_ROT_NUM, 90);   
+	// writeServoAngle(SERVO_HAND_ROT_NUM, 90);
 	mCurAngle[0] = readServoAngle(SERVO_ROT_NUM, true);
 	mCurAngle[1] = readServoAngle(SERVO_LEFT_NUM, true);
 	mCurAngle[2] = readServoAngle(SERVO_RIGHT_NUM, true);
