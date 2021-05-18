@@ -40,6 +40,9 @@ The main code was tested on PC and Jetson for easier modular tests while integra
 ## Firmware
 The firmware is portable across Arduino boards. Only pin definitions, PWM output and ADC input differ (defined for each microcontroller in a separate *.h/*.c). It runs on AVR, SAM and ESP32 boards. Only a #define at the beginning of software/arduino-1.8.13/firmware/firmware.ino selects the right board. The script in software/arduino-1.8.13/install/flash_firmware_custom.sh automates the flashing process (only tested on AVR for now). See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
 
+## ArduCAM Camarray
+An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
+
 ## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
 A platform featuring YOLOv4-mish-640, Deep SORT + OSNet ReID, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
 
