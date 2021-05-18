@@ -35,6 +35,7 @@ def add_input_args(parser):
     """Add parser arguments for input options."""
     parser.add_argument('--image', metavar='<image>', type=str, required=False, default='./doc/valid_test.png', help='Path of input image.')
     parser.add_argument('--video', metavar='<video>', type=str, required=False, default='./doc/valid_test.mp4', help='Path of input video.')
+    parser.add_argument('--test-type', metavar='<test-type>', type=str, required=False, choices=['x86_64', 'xavier', 'nano'], default='x86_64', help='Input type for inference ["x86_64", "xavier", "nano"].')
     parser.add_argument('--input-type', metavar='<input-type>', type=str, required=False, choices=['image', 'video', 'camera', 'arducam'], default='camera', help='Input type for inference ["image", "video", "camera", "arducam"].')
     parser.add_argument('--thread', metavar='<thread>', type=str, required=False, choices=['both', 'get', 'show', 'none', 'old'], default='show', help='Threading type ["both", "get", "show", "none", "old"].')
     parser.add_argument('--width', type=int, default=640, help='Image width [640].')
@@ -46,7 +47,7 @@ def add_input_args(parser):
 def add_inference_args(parser):
     """Add parser arguments for inference options."""
     parser.add_argument('--inference-type', metavar='<inference-type>', type=str, required=False, choices=['cvlib', 'fastmot'], default='cvlib', help='Input type for inference ["cvlib", "fastmot"].')
-    parser.add_argument('--object-category', metavar='<object-category>', type=str, required=False, default='scissors', help='COCO object category to select [person].')
+    parser.add_argument('--object-category', metavar='<object-category>', type=str, required=False, default='scissors', help='COCO object category to select [scissors].')
     parser.add_argument('--confidence-threshold', metavar='<confidence-threshold>', type=float, required=False, default=0.25, help='Confidence threshold.') # 0.5
     parser.add_argument('--nms-threshold', metavar='<nms-threshold>', type=float, required=False, default=0.3, help='NMS threshold.')
     parser.add_argument('--model', metavar='<model>', type=str, required=False, default='yolov4', help='Path of input image.')

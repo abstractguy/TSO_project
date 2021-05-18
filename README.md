@@ -25,7 +25,7 @@ This has not been attempted as I would lack the time to assemble the parts.
 It is available though.
 
 ## Simulation
-The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic (see software/jetson/jetson-containers/).
+The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic, all within Docker (see instructions in software/jetson/jetson-containers/README.md).
 If you add the Moveit plugins, simulation can run with the uARM in tandem.
 I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
 
@@ -36,6 +36,9 @@ Altium design files are provided in the electronics/ folder.
 ## Software
 There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software to program and deploy the environment, firmware for the PCB is in software/arduino-1.8.13/, theres is software, drivers, etc. for commanding everything from the Jetson (or computer).
 The main code was tested on PC and Jetson for easier modular tests while integrating.
+
+## Firmware
+The firmware is portable across Arduino boards. Only pin definitions, PWM output and ADC input differ (defined for each microcontroller in a separate *.h/*.c). It runs on AVR, SAM and ESP32 boards. Only a #define at the beginning of software/arduino-1.8.13/firmware/firmware.ino selects the right board. The script in software/arduino-1.8.13/install/flash_firmware_custom.sh automates the flashing process (only tested on AVR for now). See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
 
 ## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
 A platform featuring YOLOv4-mish-640, Deep SORT + OSNet ReID, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
@@ -335,7 +338,9 @@ $ cd ~/workspace/software/jetson && bash ~/workspace/software/jetson/fastmot/uti
 
 ##### On your TV, open a terminal and run everything to convert yolov4-mish-640 from ONNX *.onnx to TensorRT *.trt and run inference
 ```
-$ cd ~/workspace/software/jetson && sudo /opt/conda/envs/school/bin/python3 main.py --inference-type fastmot --input_uri /dev/video0 --mot --gui
+$ cd ~/workspace/software/jetson && sudo /opt/conda/envs/school/bin/python3 main.py --test-type nano
+$ cd ~/workspace/software/jetson && sudo /opt/conda/envs/school/bin/python3 main.py --test-type xavier
+$ cd ~/workspace/software/jetson && sudo /opt/conda/envs/school/bin/python3 main.py --test-type x86_64
 ```
 
 <p align="center"><img src="software/jetson/doc/valid_test.jpg" width="480"\></p>
@@ -356,11 +361,7 @@ $ tensorboard --logdir=runs
 - software/arduino-1.8.13/README.md
 - software/jetson/README.md
 - software/jetson/jetson-containers/README.md
-- software/jetson/jetson-containers/UArmForROS/README.md
-- software/arduino-1.8.13/portable/sketchbook/libraries/UArmForESP32/README.md
 - software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md
-- software/arduino-1.8.13/portable/sketchbook/libraries/arduino-esp32/README.md
-- software/arduino-1.8.13/portable/sketchbook/libraries/ESP32-Arduino-Servo-Library/README.md
 - and others... (in development)
 
 ## Credit

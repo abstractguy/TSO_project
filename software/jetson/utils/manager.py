@@ -9,9 +9,6 @@
 from multiprocessing import Value, Process, Manager
 from pyuarm import UArm
 from utils.pid import PIDController
-#from fastmot.loop import loop
-from utils.loop import loop
-#from utils.camera.camera import loop
 
 import logging
 
@@ -28,7 +25,7 @@ def set_servos(pan, tilt, uarm, height, width, flip_vertically=False, flip_horiz
             # Remember about depth!
             uarm.set_relative_position_from_center_in_grad(x=pan_grad, 
                                                            y=0, 
-                                                           z=tilt_grad * 0.4, 
+                                                           z=tilt_grad, 
                                                            speed=25, 
                                                            height=height, 
                                                            width=width)
@@ -75,7 +72,36 @@ def process_manager(args):
     image_shape = args.image_shape
     (height, width) = image_shape
 
+    if args.test_type == 'x86_64':
+        args.inference_type = 'cvlib'
+        args.input_type = 'camera'
+        args.thread = 'show'
+
+    elif args.test_type == 'xavier':
+        args.inference_type = 'fastmot'
+        args.input_type = 'video'
+        args.thread = 'show'
+        args.mot = True
+        args.gui = True
+
+    elif args.test_type == 'nano':
+        args.inference_type = 'fastmot'
+        args.input_type = 'arducam'
+        args.thread = 'show'
+        args.mot = True
+        args.gui = True
+
     try:
+        if args.inference_type == 'fastmot':
+            from fastmot.loop import loop
+
+        elif args.inference_type == 'cvlib':
+            if args.thread == 'old':
+                from utils.loop import loop
+
+            else:
+                from utils.camera.camera import loop
+
         uarm = UArm(uarm_speed=args.uarm_speed, 
                     servo_attach_delay=args.servo_attach_delay, 
                     set_position_delay=args.set_position_delay, 
