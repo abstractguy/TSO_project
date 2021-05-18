@@ -12,7 +12,7 @@ from fastmot.utils import ConfigDecoder, ObjectCenter, Profiler
 from utils.parsers import parse_args
 from pathlib import Path
 
-import argparse, cv2, fastmot, json
+import argparse, cv2, fastmot, json, logging
 
 IS_ARDUCAM = False
 
@@ -23,6 +23,10 @@ if IS_ARDUCAM:
 
 def main():
     args = parse_args()
+    args.test_type = 'xavier'
+    args.inference_type = 'fastmot'
+    args.input_type = 'video'
+    args.input_uri = 'doc/valid_test.mp4'
 
     # Set up logging.
     logging.basicConfig(format='%(asctime)s [%(levelname)8s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -38,12 +42,12 @@ def main():
 
     stream = fastmot.VideoIO(config['resize_to'], config['video_io'], args.input_uri, args.output_uri, flip_vertically=args.flip_vertically, flip_horizontally=args.flip_horizontally)
 
-    if args.mot:
+    if not args.no_mot:
         object_x = None
         object_y = None
         center_x = None
         center_y = None
-        draw = args.gui or args.output_uri is not None
+        draw = (not args.no_gui) or args.output_uri is not None
         obj = ObjectCenter(args)
         mot = fastmot.MOT(config['resize_to'], 
                           stream.cap_dt, 
@@ -57,7 +61,7 @@ def main():
             Path(args.log).parent.mkdir(parents=True, exist_ok=True)
             log = open(args.log, 'w')
 
-    if args.gui:
+    if not args.no_gui:
         cv2.namedWindow('uARM', cv2.WINDOW_AUTOSIZE)
 
     if IS_ARDUCAM:
@@ -69,7 +73,7 @@ def main():
 
     try:
         with Profiler('app') as prof:
-            while not args.gui or cv2.getWindowProperty('uARM', 0) >= 0:
+            while not (not args.no_gui) or cv2.getWindowProperty('uARM', 0) >= 0:
                 frame = stream.read()
 
                 if frame is None:
@@ -84,7 +88,7 @@ def main():
                     else:
                         frame = resize(frame, 1280.0)
 
-                if args.mot:
+                if not args.no_mot:
                     mot.step(frame, 
                              object_x=object_x, 
                              object_y=object_y, 
@@ -98,7 +102,7 @@ def main():
                             w, h = br - tl + 1
                             log.write(f'{mot.frame_count},{track.trk_id},{tl[0]:.6f},{tl[1]:.6f},{w:.6f},{h:.6f},-1,-1,-1\n')
 
-                if args.gui:
+                if not args.no_gui:
                     cv2.imshow('uARM', frame)
 
                     if cv2.waitKey(1) & 0xFF == 27:
@@ -115,7 +119,7 @@ def main():
         stream.release()
         cv2.destroyAllWindows()
 
-    if args.mot:
+    if not args.no_mot:
         # Timing statistics.
         avg_fps = round(mot.frame_count / prof.duration)
         logger.info('Average FPS: %d', avg_fps)

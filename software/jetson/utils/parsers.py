@@ -67,8 +67,8 @@ def add_sot_args(parser):
     parser.add_argument('-c', '--config', metavar='<FILE>', default=Path(__file__).parent / 'cfg' / 'mot.json', help='Path to configuration JSON file.')
     parser.add_argument('-o', '--output_uri', metavar='<URI>', help='URI to output video (e.g. output.mp4).')
     parser.add_argument('-l', '--log', metavar='<FILE>', help='Output a MOT Challenge format log (e.g. eval/results/mot17-04.txt).')
-    parser.add_argument('-m', '--mot', action='store_true', help='Run multiple object tracker.')
-    parser.add_argument('-g', '--gui', action='store_true', help='Enable display.')
+    parser.add_argument('-m', '--no_mot', action='store_true', help='Run multiple object tracker.')
+    parser.add_argument('-g', '--no_gui', action='store_true', help='Enable display.')
     parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output for debugging.')
     return parser
 

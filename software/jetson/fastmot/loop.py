@@ -33,8 +33,8 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
     stream = fastmot.VideoIO(config['resize_to'], config['video_io'], args.input_uri, args.output_uri, flip_vertically=args.flip_vertically, flip_horizontally=args.flip_horizontally)
 
-    if args.mot:
-        draw = args.gui or args.output_uri is not None
+    if not args.no_mot:
+        draw = (not args.no_gui) or args.output_uri is not None
         obj = ObjectCenter(args)
         mot = fastmot.MOT(config['resize_to'], 
                           stream.cap_dt, 
@@ -48,7 +48,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
             Path(args.log).parent.mkdir(parents=True, exist_ok=True)
             log = open(args.log, 'w')
 
-    if args.gui:
+    if not args.no_gui:
         cv2.namedWindow('uARM', cv2.WINDOW_AUTOSIZE)
 
     if IS_ARDUCAM:
@@ -60,7 +60,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
     try:
         with Profiler('app') as prof:
-            while not args.gui or cv2.getWindowProperty('uARM', 0) >= 0:
+            while not (not args.no_gui) or cv2.getWindowProperty('uARM', 0) >= 0:
                 frame = stream.read()
 
                 if frame is None:
@@ -75,7 +75,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                     else:
                         frame = resize(frame, 1280.0)
 
-                if args.mot:
+                if not args.no_mot:
                     mot.step(frame, 
                              object_x=object_x, 
                              object_y=object_y, 
@@ -89,7 +89,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                             w, h = br - tl + 1
                             log.write(f'{mot.frame_count},{track.trk_id},{tl[0]:.6f},{tl[1]:.6f},{w:.6f},{h:.6f},-1,-1,-1\n')
 
-                if args.gui:
+                if not args.no_gui:
                     cv2.imshow('uARM', frame)
 
                     if cv2.waitKey(1) & 0xFF == 27:
@@ -106,7 +106,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
         stream.release()
         cv2.destroyAllWindows()
 
-    if args.mot:
+    if not args.no_mot:
         # Timing statistics.
         avg_fps = round(mot.frame_count / prof.duration)
         logger.info('Average FPS: %d', avg_fps)

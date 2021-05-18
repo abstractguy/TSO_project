@@ -61,6 +61,8 @@ class VideoIO(object):
         self.input_uri = input_uri
         self.output_uri = output_uri
         self.proc_fps = proc_fps
+        self.flip_vertically = flip_vertically
+        self.flip_horizontally = flip_horizontally
 
         self.resolution = config['resolution']
         self.frame_rate = config['frame_rate']
