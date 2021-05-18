@@ -43,6 +43,12 @@ The firmware is portable across Arduino boards. Only pin definitions, PWM output
 ## ArduCAM Camarray
 An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
 
+## Custom uARM GCODE-based serial port controller in Python-3.7
+A custom controller communicating with the uARM firmware using a GCODE protocol through a USB connection to the serial port provides grad-based absolute coordinate with optional scaling with image frame dimensions for easy control. Bicubic easing, movement throttling, calibration, movement recording and replay, etc. are only available while using AVR and SAMD boards.
+
+## Multi-threading and multi-process management
+For faster and simpler parallel handling of the whole ecosystem, the main entrypoint process loop runs with parallel programs excluding the manager loop: the main camera/inference loop, a PID controller for the X axis, a PID controller for the Y axis and the uARM control process. Camera input is optionally threaded in 4 ways (no threading, video get, video show and both).
+
 ## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
 A platform featuring YOLOv4-mish-640, Deep SORT + OSNet ReID, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
 
