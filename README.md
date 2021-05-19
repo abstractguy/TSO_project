@@ -50,7 +50,7 @@ A custom controller communicating with the uARM firmware using a GCODE protocol 
 For faster and simpler parallel handling of the whole ecosystem, the main entrypoint process loop runs with parallel programs excluding the manager loop: the main camera/inference loop, a PID controller for the X axis, a PID controller for the Y axis and the uARM control process. Camera input is optionally threaded in 4 ways (no threading, video get, video show and both).
 
 ## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
-A platform featuring YOLOv4-608, Deep SORT + OSNet ReID, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
+A platform featuring YOLOv4-608, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
 
 ## Installation Instructions for Linux
 
@@ -148,9 +148,9 @@ $ ssh sam@192.168.55.1 'mkdir -p ~/workspace'
 $ scp -r ~/workspace/TSO_project/software sam@192.168.55.1:/home/sam/workspace
 ```
 
-##### Install Jetson prerequisites
+##### Install Jetson prerequisites (replace <JETSON_PASSWORD> with your Jetson user's password)
 ```
-$ ssh -t sam@192.168.55.1 'bash ~/workspace/software/jetson/install/install_jetson.sh'
+$ ssh -t sam@192.168.55.1 'bash ~/workspace/software/jetson/install/install_jetson.sh <JETSON_PASSWORD>'
 ```
 
 ### Download models

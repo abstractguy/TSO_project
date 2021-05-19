@@ -3,9 +3,11 @@
 # File:        software/jetson/install/install_jetson.sh
 # By:          Samuel Duclos
 # For:         Myself
-# Usage:       cd software/jetson && bash install/install_jetson.sh
+# Usage:       cd ~/workspace/software/jetson && bash install/install_jetson.sh <JETSON_PASSWORD>
 # Description: Install FastMOT Jetson packages.
 # Reference:   https://github.com/GeekAlexis/FastMOT.git
+
+JETSON_PASSWORD=$1
 
 DIR=$HOME
 
@@ -25,18 +27,20 @@ echo 'export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}' >> ~/.bashrc
 echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.bashrc 
 source ~/.bashrc
 
-# install pip, numpy, pycuda, tensorflow, cython-bbox
-sudo apt-get update
-sudo apt-get install python3-pip libhdf5-serial-dev hdf5-tools libcanberra-gtk-module
-sudo -H pip3 install cython
-sudo -H pip3 install numpy cython-bbox
-sudo -H pip3 install --global-option=build_ext --global-option="-I/usr/local/cuda/include" --global-option="-L/usr/local/cuda/lib64" pycuda
-#sudo ln -fs /usr/include/locale.h /usr/include/xlocale.h
-sudo -H pip3 install --no-cache-dir --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v$JP_VERSION tensorflow==$TF_VERSION+nv$NV_VERSION
+bash ${PWD}/install/update_cmake.sh $JETSON_PASSWORD
+bash ${PWD}/install/install_protobuf_1.8.0.sh $JETSON_PASSWORD
+
+# Install pip, numpy, pycuda, tensorflow, cython-bbox
+echo $JETSON_PASSWORD | sudo -S apt-get update
+echo $JETSON_PASSWORD | sudo -S apt-get install python3-pip libhdf5-serial-dev hdf5-tools libcanberra-gtk-module
+echo $JETSON_PASSWORD | sudo -SH pip3 install cython
+echo $JETSON_PASSWORD | sudo -SH pip3 install numpy cython-bbox
+echo $JETSON_PASSWORD | sudo -SH pip3 install --global-option=build_ext --global-option="-I/usr/local/cuda/include" --global-option="-L/usr/local/cuda/lib64" pycuda
+echo $JETSON_PASSWORD | sudo -SH pip3 install --no-cache-dir --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v$JP_VERSION tensorflow==$TF_VERSION+nv$NV_VERSION
 
 # install scipy
-sudo apt-get install libatlas-base-dev gfortran
-sudo -H pip3 install scipy==1.5.0
+echo $JETSON_PASSWORD | sudo -S apt-get install libatlas-base-dev gfortran
+echo $JETSON_PASSWORD | sudo -SH pip3 install scipy==1.5.0
 
 # install llvm (This may take a while)
 cd $DIR
@@ -47,12 +51,22 @@ mkdir llvm_build_dir
 cd llvm_build_dir/
 cmake ../ -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD="ARM;X86;AArch64"
 make -j4
-sudo make install
+echo $JETSON_PASSWORD | sudo -S make install
 cd bin/
 echo "export LLVM_CONFIG=\""`pwd`"/llvm-config\"" >> ~/.bashrc
 echo "alias llvm='"`pwd`"/llvm-lit'" >> ~/.bashrc
 source ~/.bashrc
-sudo -H pip3 install llvmlite==0.31.0
+echo $JETSON_PASSWORD | sudo -SH pip3 install llvmlite==0.31.0
 
-# install numba
-sudo -H pip3 install numba==0.48
+# Install numba==0.48.
+echo $JETSON_PASSWORD | sudo -SH pip3 install numba==0.48
+
+# Install onnx==1.4.1.
+pip3 install onnx==1.4.1
+
+# Install onnxruntime-gpu==1.7.0.
+wget https://nvidia.box.com/shared/static/ukszbm1iklzymrt54mgxbzjfzunq7i9t.whl -O onnxruntime_gpu-1.7.0-cp36-cp36m-linux_aarch64.whl
+
+# Install pip wheel.
+pip3 install onnxruntime_gpu-1.7.0-cp36-cp36m-linux_aarch64.whl
+

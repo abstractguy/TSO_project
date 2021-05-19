@@ -116,6 +116,7 @@ upx391w/
 images0/
 
 *.deb
+*.whl
 !gerber.zip
 !ArducamSDK.cpython-36m-aarch64-linux-gnu.so
 !ArducamSDK.so
