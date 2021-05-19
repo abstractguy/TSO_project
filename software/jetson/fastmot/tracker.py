@@ -174,8 +174,10 @@ class MultiTracker:
         lost_ids = list(self.lost.keys())
         u_det_ids = [det_id for det_id in u_det_ids if detections[det_id].conf >= self.conf_thresh]
         u_detections, u_embeddings = detections[u_det_ids], embeddings[u_det_ids]
-        cost = self._reid_cost(u_detections, u_embeddings)
-        reid_matches, _, u_det_ids = self._linear_assignment(cost, lost_ids, u_det_ids)
+
+        # Disable reid.
+        #cost = self._reid_cost(u_detections, u_embeddings)
+        #reid_matches, _, u_det_ids = self._linear_assignment(cost, lost_ids, u_det_ids)
 
         matches = itertools.chain(matches1, matches2, matches3)
         u_trk_ids = itertools.chain(u_trk_ids1, u_trk_ids2, u_trk_ids3)
@@ -195,18 +197,21 @@ class MultiTracker:
                 self._mark_lost(trk_id)
             else:
                 updated.append(trk_id)
-
+        #
+        # Disable reid.
+        #
         # reactivate matched lost tracks
-        for trk_id, det_id in reid_matches:
-            track = self.lost[trk_id]
-            det = detections[det_id]
-            LOGGER.info(f"{'Reidentified:':<14}{track}")
-            state = self.kf.initiate(det.tlbr)
-            track.reactivate(frame_id, det.tlbr, state, embeddings[det_id])
-            self.tracks[trk_id] = track
-            del self.lost[trk_id]
-            updated.append(trk_id)
-
+        #for trk_id, det_id in reid_matches:
+        #    track = self.lost[trk_id]
+        #    det = detections[det_id]
+        #    LOGGER.info(f"{'Reidentified:':<14}{track}")
+        #    state = self.kf.initiate(det.tlbr)
+        #    track.reactivate(frame_id, det.tlbr, state, embeddings[det_id])
+        #    self.tracks[trk_id] = track
+        #    del self.lost[trk_id]
+        #    updated.append(trk_id)
+        #
+        #
         # clean up lost tracks
         for trk_id in u_trk_ids:
             track = self.tracks[trk_id]

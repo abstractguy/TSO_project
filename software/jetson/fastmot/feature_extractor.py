@@ -59,14 +59,16 @@ class FeatureExtractor:
         extracted embeddings with dimension M.
         This function should be called after `extract_async`.
         """
-        if self.num_features == 0:
-            return np.empty((0, self.feature_dim))
-
-        embedding_out = self.backend.synchronize()[0][:self.num_features * self.feature_dim]
-        self.embeddings.append(embedding_out)
-        embeddings = np.concatenate(self.embeddings).reshape(-1, self.feature_dim)
-        embeddings /= np.linalg.norm(embeddings, axis=1, keepdims=True)
-        return embeddings
+        # Disable DeepSORT.
+        #if self.num_features == 0:
+        #    return np.empty((0, self.feature_dim))
+        #
+        #embedding_out = self.backend.synchronize()[0][:self.num_features * self.feature_dim]
+        #self.embeddings.append(embedding_out)
+        #embeddings = np.concatenate(self.embeddings).reshape(-1, self.feature_dim)
+        #embeddings /= np.linalg.norm(embeddings, axis=1, keepdims=True)
+        #return embeddings
+        return np.empty((0, self.feature_dim))
 
     def _preprocess(self, idx, img):
         img = cv2.resize(img, self.model.INPUT_SHAPE[:0:-1])
