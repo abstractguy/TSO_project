@@ -79,6 +79,7 @@ def process_manager(args):
     elif args.test_type == 'xavier':
         args.inference_type = 'fastmot'
         args.input_type = 'video'
+        args.input_uri = 'doc/valid_test.mp4'
         args.thread = 'show'
         args.mot = True
         args.gui = True

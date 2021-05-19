@@ -61,7 +61,7 @@ class ObjectCenter(object):
         else:
             return (frameCenter, None)
 
-    def filter(self, frame, object_x=None, object_y=None, center_x=None, center_y=None):
+    def filter_objects(self, frame, object_x=None, object_y=None, center_x=None, center_y=None):
         """Apply object detection."""
 
         predictions = self._filter_(frame)
