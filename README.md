@@ -50,7 +50,7 @@ A custom controller communicating with the uARM firmware using a GCODE protocol 
 For faster and simpler parallel handling of the whole ecosystem, the main entrypoint process loop runs with parallel programs excluding the manager loop: the main camera/inference loop, a PID controller for the X axis, a PID controller for the Y axis and the uARM control process. Camera input is optionally threaded in 4 ways (no threading, video get, video show and both).
 
 ## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
-A platform featuring YOLOv4-640, Deep SORT + OSNet ReID, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
+A platform featuring YOLOv4-608, Deep SORT + OSNet ReID, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
 
 ## Installation Instructions for Linux
 
@@ -224,7 +224,7 @@ Performance is evaluated with YOLOv4 using [py-motmetrics](https://github.com/ch
 FastMOT has MOTA scores close to **state-of-the-art** trackers from the MOT Challenge. Tracking speed can reach up to **38 FPS** depending on the number of objects. On a desktop CPU/GPU, FPS is expected to be much higher. More lightweight models can be used to achieve better tradeoff.
 
 Uses vanilla COCO-pretrained weights to make predictions on images, but you can [train your own YOLOv4](https://github.com/AlexeyAB/darknet). 
-The table below displays the inference times when using images scaled to 640x640 as inputs. The taken YOLOv4 measurements show the inference time of this implementation on Nvidia Jetson AGX Xavier.
+The table below displays the inference times when using images scaled to 608x608 as inputs. The taken YOLOv4 measurements show the inference time of this implementation on Nvidia Jetson AGX Xavier.
 
 | Backbone                | GPU        | FPS (max smoothed) | mAP@0.5 |
 | ----------------------- |:----------:|:------------------:|:-------:|
@@ -272,12 +272,14 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
   * `width=416 height=416` in cfg: **62.8% mAP@0.5 (41.2% AP@0.5:0.95) - 55(R) FPS / 96(V) FPS** - 60.1 BFlops
   * `width=320 height=320` in cfg:   **60% mAP@0.5 (  38% AP@0.5:0.95) - 63(R) FPS / 123(V) FPS** - 35.5 BFlops
 
-##### Convert yolov4-640 from Darknet *.weights to ONNX *.onnx and run inference
-```
-$ cd ~/workspace/software/jetson && bash ~/workspace/software/jetson/fastmot/utils/yolo_to_onnx.sh --help
+
+##### Convert yolov4-608 from Darknet *.weights to ONNX *.onnx
+```Bash
+$ #cd ~/workspace/software/jetson && bash ~/workspace/software/jetson/fastmot/utils/yolo_to_onnx.sh
+$ cd ~/workspace/software/jetson && python3 utils/convert_DarkNet_to_ONNX.py --darknet-weights ./fastmot/models/yolov4.weights --onnx-weights ./fastmot/models/yolov4.onnx --cfg ./utils/cfg/yolov4.cfg --image-shape 608 608 --names ./utils/cfg/coco.names --batch-size 1 --add-plugins
 ```
 
-##### On your TV, open a terminal and run everything to convert yolov4-640 from ONNX *.onnx to TensorRT *.trt and run inference
+##### On your TV, open a terminal and run everything to convert yolov4-608 from ONNX *.onnx to TensorRT *.trt and run inference
 ```
 $ cd ~/workspace/software/jetson && sudo python3 main.py --test-type nano
 $ cd ~/workspace/software/jetson && sudo python3 main.py --test-type xavier
