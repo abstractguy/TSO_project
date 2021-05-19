@@ -7,7 +7,6 @@
 # Description: This file implements a multiprocessing manager for PID motor control with object detection.
 
 from multiprocessing import Value, Process, Manager
-from pyuarm import UArm
 from utils.pid import PIDController
 
 import logging
@@ -83,6 +82,7 @@ def process_manager(args):
         args.thread = 'show'
         args.mot = True
         args.gui = True
+        args.no_uarm = True
 
     elif args.test_type == 'nano':
         args.inference_type = 'fastmot'
@@ -102,11 +102,13 @@ def process_manager(args):
             else:
                 from utils.camera.camera import loop
 
-        uarm = UArm(uarm_speed=args.uarm_speed, 
-                    servo_attach_delay=args.servo_attach_delay, 
-                    set_position_delay=args.set_position_delay, 
-                    servo_detach_delay=args.servo_detach_delay, 
-                    pump_delay=args.pump_delay)
+        if not args.no_uarm:
+            from pyuarm import UArm
+            uarm = UArm(uarm_speed=args.uarm_speed, 
+                        servo_attach_delay=args.servo_attach_delay, 
+                        set_position_delay=args.set_position_delay, 
+                        servo_detach_delay=args.servo_detach_delay, 
+                        pump_delay=args.pump_delay)
 
         with Manager() as manager:
             # Set initial bounding box (x, y)-coordinates to center of frame.
@@ -138,17 +140,19 @@ def process_manager(args):
             detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
             pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, center_x.value, 'pan'))
             tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, center_y.value, 'tilt'))
-            servo_process = Process(target=set_servos, args=(pan, tilt, uarm, height, width, args.flip_vertically, args.flip_horizontally))
 
             detect_process.start()
             pan_process.start()
             tilt_process.start()
-            servo_process.start()
 
             detect_process.join()
             pan_process.join()
             tilt_process.join()
-            servo_process.join()
+
+            if not args.no_uarm:
+                servo_process = Process(target=set_servos, args=(pan, tilt, uarm, height, width, args.flip_vertically, args.flip_horizontally))
+                servo_process.start()
+                servo_process.join()
 
     except KeyboardInterrupt:
         print('User terminated manager process.')

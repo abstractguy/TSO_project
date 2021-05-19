@@ -79,5 +79,6 @@ def add_output_args(parser):
     parser.add_argument('--output-image', metavar='<output-image>', type=str, required=False, default='./doc/object_detection_result.jpg', help='Path of saved output image.')
     parser.add_argument('--save', action='store_true', help='Save output inference results to file.')
     parser.add_argument('--no-show', action='store_true', help='Don\'t display live results on screen. Can improve FPS.')
+    parser.add_argument('--no-uarm', action='store_true', help='Don\'t assume a uARM is connected (for tests).')
     return parser
 

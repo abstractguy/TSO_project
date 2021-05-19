@@ -27,6 +27,7 @@ def main():
     args.inference_type = 'fastmot'
     args.input_type = 'video'
     args.input_uri = 'doc/valid_test.mp4'
+    args.no_uarm = True
 
     # Set up logging.
     logging.basicConfig(format='%(asctime)s [%(levelname)8s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')

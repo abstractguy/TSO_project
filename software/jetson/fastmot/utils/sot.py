@@ -1,38 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# File:        software/utils/sot.py
+# File:        software/jetson/fastmot/utils/sot.py
 # By:          Samuel Duclos
 # For:         Myself
 # Description: This file returns detection results from an image.
 
 from cvlib.object_detection import draw_bbox
-import cvlib
 
 class ObjectCenter(object):
     def __init__(self, args):
         """Initialize variables."""
         self.args = args
 
-    def _infer_(self, frame):
+    def _filter_(self, frame, predictions):
         """Apply object detection."""
 
-        predictions = cvlib.detect_common_objects(frame, 
-                                                  confidence=self.args.confidence_threshold, 
-                                                  nms_thresh=self.args.nms_threshold, 
-                                                  model=self.args.model, 
-                                                  enable_gpu=not self.args.disable_gpu)
-
-        if predictions is not None:
-            if not self.args.no_filter_object_category:
-                predictions = self.filter_inference_results(predictions, 
-                                                            object_category=object_category)
+        if not self.args.no_filter_object_category:
+            predictions = self.filter_inference_results(predictions, 
+                                                        object_category=object_category)
 
         return predictions
 
     def filter_inference_results(self, predictions, object_category=1):
         """Return bounding box of biggest object of selected category."""
-        if len(predictions) > 0:
+        if predictions is not None and len(predictions) > 0:
             biggest_bbox = None
             biggest_label = None
             biggest_conf = None
@@ -69,10 +61,10 @@ class ObjectCenter(object):
         else:
             return (frameCenter, None)
 
-    def infer(self, frame, object_x=None, object_y=None, center_x=None, center_y=None):
+    def filter(self, frame, object_x=None, object_y=None, center_x=None, center_y=None):
         """Apply object detection."""
 
-        predictions = self._infer_(frame)
+        predictions = self._filter_(frame)
 
         if predictions is not None and len(predictions) > 0:
             bbox, label, conf = predictions[0][0]

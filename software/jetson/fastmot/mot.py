@@ -115,11 +115,12 @@ class MOT:
                     self.tracker.track(frame)
 
         if self.sot:
-            frame = self.obj.infer(frame, 
-                                   object_x=object_x, 
-                                   object_y=object_y, 
-                                   center_x=center_x, 
-                                   center_y=center_y)
+            frame = self.obj.filter(frame, 
+                                    detections, 
+                                    object_x=object_x, 
+                                    object_y=object_y, 
+                                    center_x=center_x, 
+                                    center_y=center_y)
 
         LOGGER.info(str(detections))
 

@@ -275,7 +275,6 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 
 ##### Convert yolov4-608 from Darknet *.weights to ONNX *.onnx
 ```Bash
-$ #cd ~/workspace/software/jetson && bash ~/workspace/software/jetson/fastmot/utils/yolo_to_onnx.sh
 $ cd ~/workspace/software/jetson && python3 utils/convert_DarkNet_to_ONNX.py --darknet-weights ./fastmot/models/yolov4.weights --onnx-weights ./fastmot/models/yolov4.onnx --cfg ./utils/cfg/yolov4.cfg --image-shape 608 608 --names ./utils/cfg/coco.names --batch-size 1 --add-plugins
 ```
 

@@ -84,7 +84,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-*,cover
+*.cover
 .hypothesis/
 
 # Translations
@@ -117,6 +117,7 @@ images0/
 
 *.deb
 *.whl
+*.onnx
 !gerber.zip
 !ArducamSDK.cpython-36m-aarch64-linux-gnu.so
 !ArducamSDK.so
