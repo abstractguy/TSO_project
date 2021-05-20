@@ -80,6 +80,7 @@ def process_manager(args):
         args.inference_type = 'fastmot'
         args.input_type = 'video'
         args.input_uri = 'doc/valid_test.mp4'
+        args.object_category = 'person'
         args.thread = 'show'
         args.mot = True
         args.gui = True
@@ -111,49 +112,51 @@ def process_manager(args):
                         servo_detach_delay=args.servo_detach_delay, 
                         pump_delay=args.pump_delay)
 
-        with Manager() as manager:
-            # Set initial bounding box (x, y)-coordinates to center of frame.
-            center_x = manager.Value('i', 0)
-            center_y = manager.Value('i', 0)
+        if not args.no_uarm:
+            with Manager() as manager:
+                # Set initial bounding box (x, y)-coordinates to center of frame.
+                center_x = manager.Value('i', 0)
+                center_y = manager.Value('i', 0)
 
-            object_x = manager.Value('i', 0)
-            object_y = manager.Value('i', 0)
+                object_x = manager.Value('i', 0)
+                object_y = manager.Value('i', 0)
 
-            center_x.value = height // 2
-            center_y.value = width // 2
+                center_x.value = height // 2
+                center_y.value = width // 2
 
-            # Pan and tilt angles updated by independent PID processes.
-            pan = manager.Value('i', 0)
-            tilt = manager.Value('i', 0)
+                # Pan and tilt angles updated by independent PID processes.
+                pan = manager.Value('i', 0)
+                tilt = manager.Value('i', 0)
 
-            # PID gains for panning.
-            pan_p = manager.Value('f', 1.0)
-            # 0 time integral gain until inferencing is faster than ~50ms.
-            pan_i = manager.Value('f', 0)
-            pan_d = manager.Value('f', 0)
+                # PID gains for panning.
+                pan_p = manager.Value('f', 1.0)
+                # 0 time integral gain until inferencing is faster than ~50ms.
+                pan_i = manager.Value('f', 0)
+                pan_d = manager.Value('f', 0)
 
-            # PID gains for tilting.
-            tilt_p = manager.Value('f', 1.0)
-            # 0 time integral gain until inferencing is faster than ~50ms.
-            tilt_i = manager.Value('f', 0)
-            tilt_d = manager.Value('f', 0)
+                # PID gains for tilting.
+                tilt_p = manager.Value('f', 1.0)
+                # 0 time integral gain until inferencing is faster than ~50ms.
+                tilt_i = manager.Value('f', 0)
+                tilt_d = manager.Value('f', 0)
 
-            detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
-            pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, center_x.value, 'pan'))
-            tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, center_y.value, 'tilt'))
-
-            detect_process.start()
-            pan_process.start()
-            tilt_process.start()
-
-            detect_process.join()
-            pan_process.join()
-            tilt_process.join()
-
-            if not args.no_uarm:
+                detect_process = Process(target=loop, args=(args, object_x, object_y, center_x, center_y))
+                pan_process = Process(target=pid_process, args=(pan, pan_p, pan_i, pan_d, center_x, center_x.value, 'pan'))
+                tilt_process = Process(target=pid_process, args=(tilt, tilt_p, tilt_i, tilt_d, center_y, center_y.value, 'tilt'))
                 servo_process = Process(target=set_servos, args=(pan, tilt, uarm, height, width, args.flip_vertically, args.flip_horizontally))
+
+                detect_process.start()
+                pan_process.start()
+                tilt_process.start()
                 servo_process.start()
+
+                detect_process.join()
+                pan_process.join()
+                tilt_process.join()
                 servo_process.join()
+
+        else:
+            loop(args, object_x=0, object_y=0, center_x=0, center_y=0)
 
     except KeyboardInterrupt:
         print('User terminated manager process.')

@@ -77,6 +77,7 @@ class SSDDetector(Detector):
                                                  self.label_mask, self.max_area,
                                                  self.conf_thresh, self.scale_factor)
         detections = self._merge_dets(detections, tile_ids)
+        detections = detections.view(np.recarray)
         return detections
 
     def _preprocess(self, frame):
@@ -99,7 +100,7 @@ class SSDDetector(Detector):
         if len(detections) == 0:
             return detections
         detections = self._merge(detections, tile_ids, self.batch_size, self.merge_thresh)
-        return detections.view(np.recarray)
+        return detections
 
     @staticmethod
     @nb.njit(parallel=True, fastmath=True, cache=True)
@@ -264,7 +265,7 @@ class YOLODetector(Detector):
         detections = []
         for i in range(len(nms_dets)):
             tlbr = to_tlbr(nms_dets[i, :4])
-            # clip inside frame
+            # Clip inside frame.
             tlbr = np.maximum(tlbr, 0)
             tlbr = np.minimum(tlbr, np.append(size, size))
             label = int(nms_dets[i, 5])
