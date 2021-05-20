@@ -47,6 +47,7 @@ def add_input_args(parser):
 def add_inference_args(parser):
     """Add parser arguments for inference options."""
     parser.add_argument('--inference-type', metavar='<inference-type>', type=str, required=False, choices=['cvlib', 'fastmot'], default='cvlib', help='Input type for inference ["cvlib", "fastmot"].')
+    parser.add_argument('--names', metavar='<names>', type=str, required=False, default='./utils/cfg/coco.names', help='Path to *.names.')
     parser.add_argument('--object-category', metavar='<object-category>', type=str, required=False, default='scissors', help='COCO object category to select [scissors].')
     parser.add_argument('--confidence-threshold', metavar='<confidence-threshold>', type=float, required=False, default=0.25, help='Confidence threshold.') # 0.5
     parser.add_argument('--nms-threshold', metavar='<nms-threshold>', type=float, required=False, default=0.3, help='NMS threshold.')

@@ -13,10 +13,17 @@ class ObjectCenter(object):
         """Initialize variables."""
         self.args = args
 
+    def load_classes(self, path):
+        with open(path, 'r') as names_file:
+            names = names_file.read().split('\n')
+        return list(filter(None, names))
+
     def _filter_(self, frame, predictions):
         """Apply object detection."""
 
         if not self.args.no_filter_object_category:
+            names = self.load_classes(self.args.names)
+            object_category = names.index(self.args.object_category)
             predictions = self.filter_inference_results(predictions, 
                                                         object_category=object_category)
 
@@ -61,10 +68,10 @@ class ObjectCenter(object):
         else:
             return (frameCenter, None)
 
-    def filter_objects(self, frame, object_x=None, object_y=None, center_x=None, center_y=None):
+    def filter_objects(self, frame, predictions, object_x=None, object_y=None, center_x=None, center_y=None):
         """Apply object detection."""
 
-        predictions = self._filter_(frame)
+        predictions = self._filter_(frame, predictions)
 
         if predictions is not None and len(predictions) > 0:
             bbox, label, conf = predictions[0][0]
