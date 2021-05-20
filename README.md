@@ -232,8 +232,8 @@ The table below displays the inference times when using images scaled to 608x608
 
 | Backbone                | GPU        | FPS (max smoothed) | mAP@0.5 |
 | ----------------------- |:----------:|:------------------:|:-------:|
-| YOLOv4-608              | AGX Xavier | 32                 | 65.7    |
-| YOLOv4-mish-640         | AGX Xavier | --                 | --      |
+| YOLOv4-608              | AGX Xavier | 34                 | 65.7    |
+| YOLOv4-mish-640         | AGX Xavier | 23                 | 67.9    |
 
 * **IoU** (intersect over union) - average intersect over union of objects and detections for a certain threshold = 0.24
 
