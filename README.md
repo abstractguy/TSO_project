@@ -354,7 +354,11 @@ $ tensorboard --logdir=runs
 - software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md
 - and others... (in development)
 
-<img src="documentation/doc/yolov4.onnx.png" width="697" height="24000"/> <img src="documentation/doc/yolov4x-mish-640.onnx.png" width="767" height="24000"/>
+YOLOv4x-mish-640
+<img src="documentation/doc/yolov4x-mish-640.onnx.png" width="767" height="24000"/>
+
+YOLOv4-608
+<img src="documentation/doc/yolov4.onnx.png" width="697" height="24000"/>
 
 ## Credit
 
