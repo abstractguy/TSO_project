@@ -117,7 +117,9 @@ images0/
 
 *.deb
 *.whl
+*.weights
 *.onnx
+*.trt
 !gerber.zip
 !ArducamSDK.cpython-36m-aarch64-linux-gnu.so
 !ArducamSDK.so
