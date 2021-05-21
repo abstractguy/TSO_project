@@ -142,12 +142,6 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_envir
 
 ### Follow the instructions and when it can't SSH into the Jetson, plug a screen, keyboard and mouse to the Nvidia Jetson Nano (or AGX Xavier) devkit to configure the rest; the install will resume after
 
-### Download models
-This includes both pretrained OSNet, SSD, and custom YOLOv4 WEIGHTS/ONNX models
-```
-$ cd ~/workspace/TSO_project/software/jetson && bash install/download_models.sh
-```
-
 ##### Create workspace directory on the Jetson (from x86_64)
 ```
 $ ssh sam@192.168.55.1 'mkdir -p ~/workspace'
@@ -155,41 +149,41 @@ $ ssh sam@192.168.55.1 'mkdir -p ~/workspace'
 
 ##### Prepare directories on the Jetson (tested using an Nvidia Jetson AGX Xavier) (from x86_64)
 ```
-$ scp -r ~/workspace/TSO_project/software sam@192.168.55.1:/home/sam/workspace
+$ scp -r ~/workspace/TSO_project/software/jetson sam@192.168.55.1:/home/sam/workspace
 ```
 
 ##### Install Jetson prerequisites (replace <JETSON_PASSWORD> with your Jetson user's password)
 ```
-$ ssh -t sam@192.168.55.1 'bash ~/workspace/software/jetson/install/install_jetson.sh <JETSON_PASSWORD>'
+$ ssh -t sam@192.168.55.1 'bash ~/workspace/jetson/install/install_jetson.sh <JETSON_PASSWORD>'
 ```
 
 ##### If you have the Jetson Nano devkit and the dual ArduCAM camera array HAT style with OV9281 sensors (1MP Global Shutter Camera), install the camera drivers
 ```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/software/jetson && sudo chmod +x ArduCAM/install.sh && ./ArduCAM/install.sh'
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && sudo chmod +x ArduCAM/install.sh && ./ArduCAM/install.sh'
 ```
 
 ##### Make the TensorRT YOLO plugins
 ```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/software/jetson/fastmot/utils/plugins && make'
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson/fastmot/utils/plugins && make'
 ```
 
 ##### Install the custom uARM serial port GCODE spammer
 ```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/software/jetson && pip3 install -e pyuarm'
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && pip3 install -e pyuarm'
 ```
 
 ##### Flash the uARM with the custom firmware
 ```
-$ cd ~/workspace/software/jetson && bash install/flash_uarm_custom.sh
+$ cd ~/workspace/jetson && bash install/flash_uarm_custom.sh
 ```
 
 ##### Or flash the uARM with the old firmware
 ```
-$ cd ~/workspace/software/jetson && bash install/flash_uarm.sh
+$ cd ~/workspace/jetson && bash install/flash_uarm.sh
 ```
 
-##### If flashing the uARM with the old firmware, you must recalibrate
-##### When awaiting a D7 button press, place the pump directly on the table, the uARM facing the clockwise extremum
+##### If flashing the uARM with the old firmware, you must recalibrate (verify the correct tty port!)
+##### When awaiting a D7 button press, place the pump directly on the table, the uARM facing the center of its X axis
 ##### When awaiting a D4 button press, place the pump directly on the table, the uARM aligned by 45 degrees (pi/4 rad) from the clockwise extremum
 ```
 $ sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.calibration.calibrate --port /dev/ttyUSB0
@@ -327,16 +321,22 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 </details>
 
 
+##### Download models
+This includes both pretrained OSNet, SSD, and custom YOLOv4 WEIGHTS/ONNX models
+```
+$ cd ~/workspace/jetson && bash install/download_models.sh
+```
+
 ##### Convert yolov4x-mish-640 from Darknet *.weights to ONNX *.onnx
 ```Bash
-$ #cd ~/workspace/software/jetson && python3 utils/convert_DarkNet_to_ONNX.py --darknet-weights ./fastmot/models/yolov4.weights --onnx-weights ./fastmot/models/yolov4.onnx --cfg ./utils/cfg/yolov4.cfg --image-shape 608 608 --names ./utils/cfg/coco.names --batch-size 1 --add-plugins
-$ cd ~/workspace/software/jetson && python3 utils/yolo_to_onnx.py --model fastmot/models/yolov4x-mish-640 --category_num 80
+$ #cd ~/workspace/jetson && python3 utils/convert_DarkNet_to_ONNX.py --darknet-weights ./fastmot/models/yolov4.weights --onnx-weights ./fastmot/models/yolov4.onnx --cfg ./utils/cfg/yolov4.cfg --image-shape 608 608 --names ./utils/cfg/coco.names --batch-size 1 --add-plugins
+$ cd ~/workspace/jetson && python3 utils/yolo_to_onnx.py --model fastmot/models/yolov4x-mish-640 --category_num 80
 ```
 
 ##### On your TV, open a terminal and run everything to convert yolov4x-mish-640 from ONNX *.onnx to TensorRT *.trt and run inference
 ```
-$ cd ~/workspace/software/jetson && sudo python3 main.py --test-type nano
-$ cd ~/workspace/software/jetson && sudo python3 main.py --test-type xavier
+$ cd ~/workspace/jetson && sudo python3 main.py --test-type nano
+$ cd ~/workspace/jetson && sudo python3 main.py --test-type xavier
 $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/python3 main.py --test-type x86_64
 ```
 

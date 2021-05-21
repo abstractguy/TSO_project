@@ -43,57 +43,47 @@ static double mPathX[STEP_MAX];
 static double mPathY[STEP_MAX];
 static double mPathZ[STEP_MAX];
 
-
 static unsigned char _moveTo(double x, double y, double z, double speed);
 static void _sort(unsigned int array[], unsigned int len);
 static void _controllerRun();
 
-void initHardware()
-{
-
-	pinMode(BTN_D4, INPUT_PULLUP);        //special mode for calibration
+void initHardware() {
+	pinMode(BTN_D4, INPUT_PULLUP); // Special mode for calibration.
 	pinMode(BUZZER, OUTPUT);
 	pinMode(LIMIT_SW, INPUT_PULLUP);
 	pinMode(BTN_D7, INPUT_PULLUP);
 	pinMode(PUMP_EN, OUTPUT);
-    pinMode(GRIPPER, OUTPUT);
+	pinMode(GRIPPER, OUTPUT);
 
-    #ifdef MKII
-    pinMode(SYS_LED, OUTPUT);
+	#ifdef MKII
+	pinMode(SYS_LED, OUTPUT);
 
-    digitalWrite(PUMP_EN, HIGH);//keep the pump off
-    #endif 
+	digitalWrite(PUMP_EN, HIGH);// Keep the pump off.
+	#endif 
 
-    #ifdef METAL
+	#ifdef METAL
 	pinMode(VALVE_EN, OUTPUT);
-    #endif
+	#endif
 
+	buttonMenu.setPin(BTN_D4);
+	buttonPlay.setPin(BTN_D7);
 
-    buttonMenu.setPin(BTN_D4);
-    buttonPlay.setPin(BTN_D7);
+	buzzer.setPin(BUZZER);
 
-    buzzer.setPin(BUZZER);
-
-    #ifdef MKII
-    ledRed.setPin(SYS_LED);
-    #endif
-
-
-    
-
+	#ifdef MKII
+	ledRed.setPin(SYS_LED);
+	#endif
 }
 
 /*!
    \brief init components
  */
-void uArmInit()
-{
-
+void uArmInit() {
 	initHardware();
 	controller.init();
 
-    mCurStep = -1;
-    mTotalSteps = -1; 	
+	mCurStep = -1;
+	mTotalSteps = -1; 	
 }
 
 /*!
@@ -108,42 +98,28 @@ void uArmInit()
    \return OUT_OF_RANGE will move to the closest pos
    \return NO_NEED_TO_MOVE if it is already there
  */
-unsigned char moveTo(double x, double y, double z, double speed)
-{
+unsigned char moveTo(double x, double y, double z, double speed) {
 	unsigned char result = IN_RANGE;
 
 	debugPrint("moveTo: x=%f, y=%f, z=%f, speed=%f", x, y, z, speed);
 
-	// when speed less than 100 mm/min, move to destination directly
-	if (speed < 0)
-	{
-		return OUT_OF_RANGE_NO_SOLUTION;
-	}
-	else if (speed < 100)
-	{
+	// When speed less than 100 mm/min, move to destination directly.
+	if (speed < 0) return OUT_OF_RANGE_NO_SOLUTION;
+	else if (speed < 100) {
 		unsigned char dutyCycle = map(speed, 0, 99, 0,  255);   
 		
 		controller.setServoSpeed(dutyCycle);
 
 		double angleB, angleL, angleR;
 		result = controller.xyzToAngle(x, y, z, angleB, angleL, angleR);
-		if (result != OUT_OF_RANGE_NO_SOLUTION)
-		{
-			controller.writeServoAngle(angleB, angleL, angleR);
-		}
+		if (result != OUT_OF_RANGE_NO_SOLUTION) controller.writeServoAngle(angleB, angleL, angleR);
 
 		return result;		
-	}
-	else
-	{
+	} else {
 		controller.setServoSpeed(255);
 		result = _moveTo(x, y, z, speed);
 
-		if(result != OUT_OF_RANGE_NO_SOLUTION)
-		{
-			_controllerRun();
-			
-		}
+		if (result != OUT_OF_RANGE_NO_SOLUTION) _controllerRun();
 
 		return result;
 	}
@@ -752,49 +728,35 @@ double setE2PROMData(unsigned char device, unsigned int addr, unsigned char type
 
         unsigned char i=0;
         i = (addr % 128);
+
         // Since the eeprom's sector is 128 byte, if we want to write 5 bytes per cycle we need to care about when there's less than 5 bytes left
-        if (i >= (129-num)) 
-        {
+        if (i >= (129-num)) {
             i = 128 - i;
             iic_writebuf(FData.data, deviceAddr, addr, i);// write data
             delay(5);
             iic_writebuf(FData.data + i, deviceAddr, addr + i, num - i);// write data
         }
-        //if the left bytes are greater than 5, just do it
-        else
-        {
-            iic_writebuf(FData.data, deviceAddr, addr, num);// write data
-        }      
 
-
-       
-
+        // If the left bytes are greater than 5, just do it.
+        else iic_writebuf(FData.data, deviceAddr, addr, num); // Write data.
     }
-
 }
 
 #ifdef MKII
 /*!
    \brief stop move immediately
  */
-void stopMove()
-{
-	mCurStep = -1;
-}
+void stopMove() {mCurStep = -1;}
 
 /*!
    \brief is moving now
  */
-bool isMoving()
-{
-	return (mCurStep != -1);
-}
+bool isMoving() {return (mCurStep != -1);}
 
 /*!
    \brief check if power plug in
  */
-bool isPowerPlugIn()
-{
+bool isPowerPlugIn() {
     if (analogRead(POWER_DETECT) > 400)
         return true;
     else
@@ -805,8 +767,7 @@ bool isPowerPlugIn()
 ////////////////////////////////////////////////////////////////////////////
 // private functions
 
-static void _sort(unsigned int array[], unsigned int len)
-{
+static void _sort(unsigned int array[], unsigned int len) {
 	unsigned char i=0,j=0;
 	unsigned int temp = 0;
 
@@ -824,9 +785,7 @@ static void _sort(unsigned int array[], unsigned int len)
 	}	
 }
 
-static void _interpolate(double startVal, double endVal, double *interpVals, int steps, byte easeType)
-{
-
+static void _interpolate(double startVal, double endVal, double *interpVals, int steps, byte easeType) {
     startVal = startVal / 10.0;
     endVal = endVal / 10.0;
 
@@ -839,169 +798,126 @@ static void _interpolate(double startVal, double endVal, double *interpVals, int
     }
 }
 
-static unsigned char _moveTo(double x, double y, double z, double speed)
-{
-	
+static unsigned char _moveTo(double x, double y, double z, double speed) {	
 	double angleRot = 0, angleLeft = 0, angleRight = 0;
 	double curRot = 0, curLeft = 0, curRight = 0;
-    double targetRot = 0;
-    double targetLeft = 0;
-    double targetRight = 0;
-    double curX = 0;
-    double curY = 0;
-    double curZ = 0;
-    int i = 0;
-    int totalSteps = 0;
-    unsigned int timePerStep;
+	double targetRot = 0;
+	double targetLeft = 0;
+	double targetRight = 0;
+	double curX = 0;
+	double curY = 0;
+	double curZ = 0;
+	int i = 0;
+	int totalSteps = 0;
+	unsigned int timePerStep;
+	unsigned char status = 0;
 
-    unsigned char status = 0;
-
-    status = controller.xyzToAngle(x, y, z, targetRot, targetLeft, targetRight);
+	status = controller.xyzToAngle(x, y, z, targetRot, targetLeft, targetRight);
 	debugPrint("target B=%f, L=%f, R=%f\r\n", curRot, curLeft, curRight);
 
-    if (status == OUT_OF_RANGE_NO_SOLUTION)
-    {
-    	return OUT_OF_RANGE_NO_SOLUTION;
-    }
+	if (status == OUT_OF_RANGE_NO_SOLUTION) return OUT_OF_RANGE_NO_SOLUTION;
 
-    if (speed == 0)
-    {
-        mCurStep = -1;
-        controller.writeServoAngle(targetRot, targetLeft, targetRight);
-        return IN_RANGE;
-    }
+	if (speed == 0) {
+		mCurStep = -1;
+		controller.writeServoAngle(targetRot, targetLeft, targetRight);
+		return IN_RANGE;
+	}
 
-    // get current angles
-    controller.getServoAngles(curRot, curLeft, curRight);
-    // get current xyz
-    controller.getCurrentXYZ(curX, curY, curZ);
+	// Get current angles.
+	controller.getServoAngles(curRot, curLeft, curRight);
+	// Get current xyz.
+	controller.getCurrentXYZ(curX, curY, curZ);
 
 	debugPrint("B=%f, L=%f, R=%f\r\n", curRot, curLeft, curRight);
 
-    // calculate max steps
-    totalSteps = max(abs(targetRot - curRot), abs(targetLeft - curLeft));
-    totalSteps = max(totalSteps, abs(targetRight - curRight));
+	// Calculate max steps.
+	totalSteps = max(abs(targetRot - curRot), abs(targetLeft - curLeft));
+	totalSteps = max(totalSteps, abs(targetRight - curRight));
 
-    if (totalSteps <= 0)
-        return NO_NEED_TO_MOVE;
+	if (totalSteps <= 0) return NO_NEED_TO_MOVE;
 
-    totalSteps = totalSteps < STEP_MAX ? totalSteps : STEP_MAX;
+	totalSteps = totalSteps < STEP_MAX ? totalSteps : STEP_MAX;
 
-    // calculate step time
-    double distance = sqrt((x-curX) * (x-curX) + (y-curY) * (y-curY) + (z-curZ) * (z-curZ));
-    speed = constrain(speed, 100, 1000);
-    timePerStep = distance / speed * 1000.0 / totalSteps;
+	// Calculate step time.
+	double distance = sqrt((x-curX) * (x-curX) + (y-curY) * (y-curY) + (z-curZ) * (z-curZ));
+	speed = constrain(speed, 100, 1000);
+	timePerStep = distance / speed * 1000.0 / totalSteps;
 
+	// Keep timePerStep <= STEP_MAX_TIME.
+	if (timePerStep > STEP_MAX_TIME) {
+		double ratio = double(timePerStep) / STEP_MAX_TIME;
 
-    // keep timePerStep <= STEP_MAX_TIME
-    if (timePerStep > STEP_MAX_TIME)
-    {
-        double ratio = double(timePerStep) / STEP_MAX_TIME;
+		if (totalSteps * ratio < STEP_MAX) {
+			totalSteps *= ratio;
+			timePerStep = STEP_MAX_TIME;
+		} else {
+			totalSteps = STEP_MAX;
+			timePerStep = STEP_MAX_TIME;
+		}
+	}
 
-        if (totalSteps * ratio < STEP_MAX)
-        {
-            totalSteps *= ratio;
-            timePerStep = STEP_MAX_TIME;
-        }
-        else
-        {
-            totalSteps = STEP_MAX;
-            timePerStep = STEP_MAX_TIME;
-        }
-    }
+	totalSteps = totalSteps < STEP_MAX ? totalSteps : STEP_MAX;
 
+	debugPrint("totalSteps= %d\n", totalSteps);
 
-    totalSteps = totalSteps < STEP_MAX ? totalSteps : STEP_MAX;
+	// Trajectory planning.
+	_interpolate(curX, x, mPathX, totalSteps, INTERP_EASE_INOUT_CUBIC);
+	_interpolate(curY, y, mPathY, totalSteps, INTERP_EASE_INOUT_CUBIC);
+	_interpolate(curZ, z, mPathZ, totalSteps, INTERP_EASE_INOUT_CUBIC);
 
-    debugPrint("totalSteps= %d\n", totalSteps);
+	for (i = 0; i < totalSteps; i++) {
+		status = controller.xyzToAngle(mPathX[i], mPathY[i], mPathZ[i], angleRot, angleLeft, angleRight);
 
-    // trajectory planning
-    _interpolate(curX, x, mPathX, totalSteps, INTERP_EASE_INOUT_CUBIC);
-    _interpolate(curY, y, mPathY, totalSteps, INTERP_EASE_INOUT_CUBIC);
-    _interpolate(curZ, z, mPathZ, totalSteps, INTERP_EASE_INOUT_CUBIC);
+		if (status != IN_RANGE) break;
+		else {
+			mPathX[i] = angleRot;
+			mPathY[i] = angleLeft;
+			mPathZ[i] = angleRight;
+		}
+	}
 
-    for (i = 0; i < totalSteps; i++)
-    {
-    	status = controller.xyzToAngle(mPathX[i], mPathY[i], mPathZ[i], angleRot, angleLeft, angleRight);
+	if (i < totalSteps) {
+		debugPrint("i < totalSteps\r\n");
+		_interpolate(curRot, targetRot, mPathX, totalSteps, INTERP_EASE_INOUT_CUBIC);
+		_interpolate(curLeft, targetLeft, mPathY, totalSteps, INTERP_EASE_INOUT_CUBIC);
+		_interpolate(curRight, targetRight, mPathZ, totalSteps, INTERP_EASE_INOUT_CUBIC);
+	}
 
-    	if (status != IN_RANGE)
-    	{
-    		break;
-    	}
-    	else
-    	{
-    		mPathX[i] = angleRot;
-    		mPathY[i] = angleLeft;
-    		mPathZ[i] = angleRight;
-    	}
-    }
+	mPathX[totalSteps - 1] = targetRot;
+	mPathY[totalSteps - 1] = targetLeft;
+	mPathZ[totalSteps - 1] = targetRight;
 
-    if (i < totalSteps)
-    {
-    	debugPrint("i < totalSteps\r\n");
-    	_interpolate(curRot, targetRot, mPathX, totalSteps, INTERP_EASE_INOUT_CUBIC);
-    	_interpolate(curLeft, targetLeft, mPathY, totalSteps, INTERP_EASE_INOUT_CUBIC);
-    	_interpolate(curRight, targetRight, mPathZ, totalSteps, INTERP_EASE_INOUT_CUBIC);    	
-    }
+	mTimePerStep = timePerStep;
+	mTotalSteps = totalSteps;
+	mCurStep = 0;
+	mStartTime = millis();
 
-    mPathX[totalSteps - 1] = targetRot;
-    mPathY[totalSteps - 1] = targetLeft;
-    mPathZ[totalSteps - 1] = targetRight;
-
-
-    mTimePerStep = timePerStep;
-    mTotalSteps = totalSteps;
-    mCurStep = 0;
-    mStartTime = millis();
-
-    return IN_RANGE;
+	return IN_RANGE;
 }
 
-
-
-static void _controllerRun()
-{
-
-
-	while (mCurStep >= 0 && mCurStep < mTotalSteps)
-	{
-
-		if((millis() - mStartTime) >= (mCurStep * mTimePerStep)) 
-		{
-
-            // ignore the point if cannot reach
-			if (controller.limitRange(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]) != OUT_OF_RANGE_NO_SOLUTION)
-			{
+static void _controllerRun() {
+	while (mCurStep >= 0 && mCurStep < mTotalSteps) {
+		if ((millis() - mStartTime) >= (mCurStep * mTimePerStep)) {
+			// Ignore the point if cannot reach.
+			if (controller.limitRange(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]) != OUT_OF_RANGE_NO_SOLUTION) {
 				debugPrint("curStep:%d, %f, %f, %f", mCurStep, mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]);
-				if (mCurStep == (mTotalSteps - 1))
-                {
-                    double angles[3];
-                    angles[0] = controller.getReverseServoAngle(0, mPathX[mCurStep]);
-                    angles[1] = controller.getReverseServoAngle(1, mPathY[mCurStep]);
-                    angles[2] = controller.getReverseServoAngle(2, mPathZ[mCurStep]);
-                    //debugPrint("curStep:%d, %f, %f, %f", mCurStep, angles[0], angles[1], angles[2]);
-                    controller.writeServoAngle(angles[0], angles[1], angles[2]);
-                    //controller.writeServoAngle(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]);
-                }
-                else
-                
-                {
-                    controller.writeServoAngle(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]);
-                }
+				if (mCurStep == (mTotalSteps - 1)) {
+					double angles[3];
+					angles[0] = controller.getReverseServoAngle(0, mPathX[mCurStep]);
+					angles[1] = controller.getReverseServoAngle(1, mPathY[mCurStep]);
+					angles[2] = controller.getReverseServoAngle(2, mPathZ[mCurStep]);
+					//debugPrint("curStep:%d, %f, %f, %f", mCurStep, angles[0], angles[1], angles[2]);
+					controller.writeServoAngle(angles[0], angles[1], angles[2]);
+					//controller.writeServoAngle(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]);
+				} else controller.writeServoAngle(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]);
 			}
-              
-            mCurStep++;
 
+			mCurStep++;
 
-           	if (mCurStep >= mTotalSteps)       
-           	{
-           		mCurStep = -1;
-
-               
-           	}  
+			if (mCurStep >= mTotalSteps) mCurStep = -1;
 		}	
 
 		manage_inactivity();
 	}
-
 }
+

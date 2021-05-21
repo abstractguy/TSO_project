@@ -27,10 +27,12 @@ void uArmController::init() {
 
 	attachAllServo();  
 
-	//writeServoAngle(SERVO_ROT_NUM, 90);
-	//writeServoAngle(SERVO_LEFT_NUM, 90);
+        // Ensure base position.
+	//writeServoAngle(SERVO_ROT_NUM, 0);
+	//writeServoAngle(SERVO_LEFT_NUM, 0);
 	//writeServoAngle(SERVO_RIGHT_NUM, 0);
-	//writeServoAngle(SERVO_HAND_ROT_NUM, 90);
+	//writeServoAngle(SERVO_HAND_ROT_NUM, 0);
+
 	mCurAngle[0] = readServoAngle(SERVO_ROT_NUM);
 	mCurAngle[1] = readServoAngle(SERVO_LEFT_NUM);
 	mCurAngle[2] = readServoAngle(SERVO_RIGHT_NUM);
@@ -44,7 +46,7 @@ void uArmController::attachAllServo() {
 }
 
 void uArmController::attachServo(byte servoNum) {
-    mServo[servoNum].attach(SERVO_CONTROL_PIN[servoNum]);
+	mServo[servoNum].attach(SERVO_CONTROL_PIN[servoNum]);
 }
 
 void uArmController::detachServo(byte servoNum) {
@@ -52,9 +54,7 @@ void uArmController::detachServo(byte servoNum) {
 }
 
 void uArmController::detachAllServo() {
-	for (int i = SERVO_ROT_NUM; i < SERVO_COUNT; i++) {
-		detachServo(i);
-	}
+	for (int i = SERVO_ROT_NUM; i < SERVO_COUNT; i++) detachServo(i);
 }
 
 void uArmController::writeServoAngle(double servoRotAngle, double servoLeftAngle, double servoRightAngle) {
@@ -135,8 +135,8 @@ unsigned char uArmController::xyzToAngle(double x, double y, double z, double& a
 		if (x < 0) angleRot = 180 + atan(y / x) * MATH_TRANS; // Angle transfer 0-180 CCW.
 	}
 
-	// Calculate value of theta 3
-	if (angleRot != 90) xIn = (x / cos(angleRot / MATH_TRANS) - MATH_L2 - MATH_FRONT_HEADER) / MATH_LOWER_ARM; // xIn is the stretch
+	// Calculate value of theta 3.
+	if (angleRot != 90) xIn = (x / cos(angleRot / MATH_TRANS) - MATH_L2 - MATH_FRONT_HEADER) / MATH_LOWER_ARM; // xIn is the stretch.
 	else xIn = (y - MATH_L2 - MATH_FRONT_HEADER) / MATH_LOWER_ARM;
 
 	phi = atan(zIn / xIn) * MATH_TRANS; // phi is the angle of line (from joint 2 to joint 4) with the horizon.
@@ -173,9 +173,9 @@ unsigned char uArmController::limitRange(double& angleRot, double& angleLeft, do
 	angleLeft = constrain(angleLeft, 0.00, 180.00);
 	angleRight = constrain(angleRight, 0.00, 180.00);
 
-	angleRot -= 90;
-	angleLeft -= 90;
-	angleRight -= 90;
+	//angleRot -= 90;
+	//angleLeft -= 90;
+	//angleRight -= 90;
 
 	return result;
 }
