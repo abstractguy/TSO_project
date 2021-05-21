@@ -82,16 +82,16 @@ def process_manager(args):
         args.input_uri = 'doc/valid_test.mp4'
         args.object_category = 'person'
         args.thread = 'show'
-        args.mot = True
-        args.gui = True
+        args.no_mot = False
+        args.no_gui = False
         args.no_uarm = True
 
     elif args.test_type == 'nano':
         args.inference_type = 'fastmot'
         args.input_type = 'arducam'
         args.thread = 'show'
-        args.mot = True
-        args.gui = True
+        args.no_mot = False
+        args.no_gui = False
 
     try:
         if args.inference_type == 'fastmot':
@@ -166,4 +166,3 @@ def process_manager(args):
 
     finally: # Release resources.
         print('Manager process done.')
-

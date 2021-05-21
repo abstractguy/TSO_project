@@ -323,7 +323,7 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 ##### Convert yolov4x-mish-640 from Darknet *.weights to ONNX *.onnx
 ```Bash
 $ #cd ~/workspace/software/jetson && python3 utils/convert_DarkNet_to_ONNX.py --darknet-weights ./fastmot/models/yolov4.weights --onnx-weights ./fastmot/models/yolov4.onnx --cfg ./utils/cfg/yolov4.cfg --image-shape 608 608 --names ./utils/cfg/coco.names --batch-size 1 --add-plugins
-$ cd ~/workspace/software/jetson && python3 utils/yolo_to_onnx.py --model fastmot/models/yolov4x-mish-640 --category_num 80 && mv fastmot/models/yolov4x-mish-640.onnx fastmot/models/yolov4.onnx
+$ cd ~/workspace/software/jetson && python3 utils/yolo_to_onnx.py --model fastmot/models/yolov4x-mish-640 --category_num 80
 ```
 
 ##### On your TV, open a terminal and run everything to convert yolov4x-mish-640 from ONNX *.onnx to TensorRT *.trt and run inference

@@ -82,4 +82,3 @@ def add_output_args(parser):
     parser.add_argument('--no-show', action='store_true', help='Don\'t display live results on screen. Can improve FPS.')
     parser.add_argument('--no-uarm', action='store_true', help='Don\'t assume a uARM is connected (for tests).')
     return parser
-

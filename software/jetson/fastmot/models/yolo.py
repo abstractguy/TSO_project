@@ -120,13 +120,12 @@ class YOLOv4(YOLO):
 '''
 
 class YOLOv4(YOLO):
-    ENGINE_PATH = Path(__file__).parent / 'yolov4.trt'
-    MODEL_PATH = Path(__file__).parent /  'yolov4.onnx'
+    ENGINE_PATH = Path(__file__).parent / 'yolov4x-mish-640.trt'
+    MODEL_PATH = Path(__file__).parent /  'yolov4x-mish-640.onnx'
     NUM_CLASSES = 80
-    INPUT_SHAPE = (3, 608, 608)
+    INPUT_SHAPE = (3, 640, 640)
     LAYER_FACTORS = [8, 16, 32]
-    SCALES = [1.2, 1.1, 1.05]
+    SCALES = [2.0, 2.0, 2.0]
     ANCHORS = [[12, 16, 19, 36, 40, 28], 
                [36, 75, 76, 55, 72, 146], 
                [142, 110, 192, 243, 459, 401]]
-
