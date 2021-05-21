@@ -9,6 +9,7 @@
   ******************************************************************************
   */
 
+#include <assert.h>
 #include "uArmController.h" 
 #include "uArmIIC.h"
 #include "uArmAPI.h"
@@ -18,22 +19,10 @@ uArmController controller;
 uArmController::uArmController() {mServoSpeed = 255;}
 
 void uArmController::init() {
-	for (int i = SERVO_ROT_NUM; i < SERVO_COUNT; i++) {
-		double servoOffset = 0;
-		servoOffset = readServoAngleOffset(i);
-
-		if (isnan(servoOffset)) {
-			servoOffset = 0;
-			EEPROM.put(MANUAL_OFFSET_ADDRESS + i * sizeof(servoOffset), servoOffset);
-		}
-
-		mServoAngleOffset[i] = servoOffset;
-	}
-
-	// mServoAngleOffset[0] = 6;
-	// mServoAngleOffset[1] = 7;
-	// mServoAngleOffset[2] = 4;
-	// mServoAngleOffset[3] = 0;
+	mServoAngleOffset[0] = SERVO_0_MANUAL;
+	mServoAngleOffset[1] = SERVO_1_MANUAL;
+	mServoAngleOffset[2] = SERVO_2_MANUAL;
+	mServoAngleOffset[3] = SERVO_3_MANUAL;
 
 	for (int k = 0; k < 3; k++) {
 		delay(10);
@@ -88,26 +77,7 @@ void uArmController::writeServoAngle(double servoRotAngle, double servoLeftAngle
     writeServoAngle(SERVO_RIGHT_NUM, servoRightAngle);
 }
 
-double uArmController::getReverseServoAngle(byte servoNum, double servoAngle) {
-#ifdef MKII
-    if (servoAngle < mCurAngle[servoNum]) {
-        unsigned char data[2];
-
-            int i_val = 0;
-            int addr = (4 + servoNum) * 1024 + 362 + servoAngle * 2;
-
-            addr &= 0xfffe;
-
-            iic_readbuf(data, EXTERNAL_EEPROM_SYS_ADDRESS, addr, 2);
-
-            i_val = (data[0] << 8) + data[1];
-
-            servoAngle = servoAngle - (i_val) - 1;
-    }
-#endif
-    return servoAngle;
-
-}
+double uArmController::getReverseServoAngle(byte servoNum, double servoAngle) {return servoAngle;}
 
 void uArmController::writeServoAngle(byte servoNum, double servoAngle, boolean writeWithOffset) {
 	servoAngle = constrain(servoAngle, 0.00, 180.00);
@@ -115,76 +85,8 @@ void uArmController::writeServoAngle(byte servoNum, double servoAngle, boolean w
 	mCurAngle[servoNum] = servoAngle;
 	servoAngle = writeWithOffset ? (servoAngle + mServoAngleOffset[servoNum]) : servoAngle;
 
-#ifdef MKII
-	servoAngle = getReverseServoAngle(servoNum, servoAngle);
-
-	switch (servoNum) {
-		case SERVO_ROT_NUM:
-			readServoCalibrationData(ROT_SERVO_ADDRESS, servoAngle);
-			break;
-
-		case SERVO_LEFT_NUM:
-			readServoCalibrationData(LEFT_SERVO_ADDRESS, servoAngle);
-			break;
-
-		case SERVO_RIGHT_NUM:
-			readServoCalibrationData(RIGHT_SERVO_ADDRESS, servoAngle);
-			break;
-	}
-#endif
-
 	mServo[servoNum].write(servoAngle, mServoSpeed);
 }
-
-
-#ifdef MKII
-void uArmController::readServoCalibrationData(unsigned int address, double& angle)
-{
-    unsigned char calibration_data[DATA_LENGTH]; //get the calibration data around the data input
-    unsigned int min_data_calibration_address;
-    double closest_data, another_closest_data;
-    unsigned int deltaA = 0xffff, deltaB = 0, i, i_min = 0;
-    deltaA = 0xffff;
-    deltaB = 0;
-
-    if (abs(angle - 0.0) < 0.001) return;
-
-    if (angle < (DATA_LENGTH >> 2)) min_data_calibration_address = 0;
-    else if (angle > (180 - (DATA_LENGTH >> 2))) min_data_calibration_address = (((unsigned int)180 - (DATA_LENGTH >> 1)) * 2);
-    else min_data_calibration_address = (((unsigned int)angle - (DATA_LENGTH >> 2)) * 2);
-
-    unsigned char dataLen = DATA_LENGTH;
-    if (min_data_calibration_address + dataLen > 360) {
-        dataLen = 360 - min_data_calibration_address;
-    }
-
-    iic_readbuf(calibration_data, EXTERNAL_EEPROM_SYS_ADDRESS, address + min_data_calibration_address, dataLen);
-
-    for (i = 0; i < (dataLen >> 1); i++) {
-        deltaB = abs ((calibration_data[i+i]<<8) + calibration_data[1+(i+i)] - angle * 10);
-        if (deltaA > deltaB) {
-            i_min = i;
-            deltaA = deltaB;
-        }
-    }
-
-    closest_data = ((calibration_data[i_min + i_min] << 8) + calibration_data[1 + (i_min + i_min)]) / 10.0; // Transfer the data from ideal data to servo angles.
-    if (angle >= closest_data) {
-        if (i_min == 0 || (i_min > 0 && (i_min - 1) * 2 < dataLen)) {
-            another_closest_data = ((calibration_data[i_min + i_min + 2] << 8) + calibration_data[3 + i_min + i_min]) / 10.0; // Bigger than the closest.
-            if (abs(another_closest_data - closest_data) < 0.001) angle = min_data_calibration_address / 2 + i_min + 0.5;
-            else angle = 1.0 * (angle - closest_data) / (another_closest_data - closest_data) + min_data_calibration_address / 2 + i_min;
-        }
-        else angle = min_data_calibration_address / 2 + i_min + 0.5;
-    } else {
-        if (i_min > 0) {
-            another_closest_data = ((calibration_data[i_min + i_min - 2] << 8) + calibration_data[i_min + i_min - 1]) / 10.0; // Smaller than the closest.
-            if(abs(another_closest_data - closest_data) < 0.001) angle = min_data_calibration_address/2 + i_min - 1 + 0.5;
-            else angle = 1.0 * (angle - another_closest_data) / (closest_data - another_closest_data) + min_data_calibration_address / 2 + i_min - 1;
-        } else angle = min_data_calibration_address / 2 + i_min + 0.5;
-    }
-}
-#endif
 
 double uArmController::readServoAngle(byte servoNum, boolean withOffset) {
 	double angle;
@@ -233,14 +135,6 @@ unsigned char uArmController::getCurrentXYZ(double& x, double& y, double& z) {
 
     return IN_RANGE;
 }
-
-// unsigned char uArmController::getXYZFromPolar(double& x, double& y, double& z, double s, double r, double h) {
-//     double stretch = s;
-    
-//     z = h;  
-//     x = s * cos(r / MATH_TRANS);
-//     y = s * sin(r / MATH_TRANS);
-// }
 
 unsigned char uArmController::getXYZFromAngle(double& x, double& y, double& z, double rot, double left, double right) {
     double stretch = MATH_LOWER_ARM * cos(left / MATH_TRANS) + MATH_UPPER_ARM * cos(right / MATH_TRANS) + MATH_L2 + MATH_FRONT_HEADER;
@@ -323,207 +217,43 @@ unsigned char uArmController::limitRange(double& angleRot, double& angleLeft, do
     return result;
 }
 
-void uArmController::readLinearOffset(byte servoNum, double& interceptVal, double& slopeVal) {
-    EEPROM.get(LINEAR_INTERCEPT_START_ADDRESS + servoNum * sizeof(interceptVal), interceptVal);
-    EEPROM.get(LINEAR_SLOPE_START_ADDRESS + servoNum * sizeof(slopeVal), slopeVal);
-}
-
-#ifdef MKII
 double uArmController::analogToAngle(byte servoNum, int inputAnalog) {
-    int startAddr = (4 + servoNum) * 1024;
-    // binary search
-    bool done = false;
-    int min = 0;
-    int max = mMaxAdcPos[servoNum];
-    int angle = (min + max) / 2;
-    unsigned char data[2];
-    int val = 0;
+	double intercept = 0.0f;
+	double slope = 0.0f;
 
-    //debugPrint("inputAnalog=%d", inputAnalog);
-    while (!done && (min < max))
-    {
-        //debugPrint("angle=%d", angle);
-        //gRecorder.read(startAddr+angle*2, data, 2);
-        iic_readbuf(data, EXTERNAL_EEPROM_SYS_ADDRESS, startAddr+angle*2, 2);
+	switch (servoNum) {
+		case 0:
+			intercept = SERVO_0_INTERCEPT;
+			slope = SERVO_0_SLOPE;
+			break;
 
-        val = (data[0] << 8) + data[1];
-        //debugPrint("val=%d", val);
-        //Serial.print("val=");
-        //Serial.println(val);
+		case 1:
+			intercept = SERVO_1_INTERCEPT;
+			slope = SERVO_1_SLOPE;
+			break;
 
-#ifdef METAL_MOTOR
-        if (val == inputAnalog) return angle;
-        else if (val > inputAnalog) min = angle;
-        else max = angle;
-#else
-        if (val == inputAnalog) return angle;
-        else if (val < inputAnalog) min = angle;
-        else max = angle;
-#endif
+		case 2:
+			intercept = SERVO_2_INTERCEPT;
+			slope = SERVO_2_SLOPE;
+			break;
 
-        angle = (min + max) / 2;
+		case 3:
+			intercept = SERVO_3_INTERCEPT;
+			slope = SERVO_3_SLOPE;
+			break;
 
-        //debugPrint("addr2=%d", angle);
-        if (angle == min || angle == max)
-            break;
-    }
+		default:
+			assert(0);
+			break;
+	}
 
-    // Serial.print("angle=");
-    // Serial.println(angle);
+	double angle = intercept + slope * inputAnalog;  
 
-    if (angle == 0 || angle == mMaxAdcPos[servoNum]) return angle;
-
-    unsigned char adc_data[6];
-
-    iic_readbuf(adc_data, EXTERNAL_EEPROM_SYS_ADDRESS, startAddr+(angle-1)*2, 6);
-
-    min = (adc_data[0] << 8) + adc_data[1];
-    int mid = (adc_data[2] << 8) + adc_data[3];
-    max = (adc_data[4] << 8) + adc_data[5];
-
-    double angleMin = 0.0;
-    double angleMax = 0.0;
-    double angleValue = 0;
-
-    if (inputAnalog > min && inputAnalog <= mid) {
-        angleMin = angle - 1;
-        angleMax = angle;
-        max = mid;
-    } else {
-        angleMin = angle;
-        angleMax = angle+1;
-        min = mid;
-    }
-
-    angleValue = (inputAnalog - min) * (angleMax - angleMin) / (max - min) + angleMin ;
-
-    return angleValue;
-
-/*    
-    unsigned char adc_calibration_data[DATA_LENGTH],data[4]; //get the calibration data around the data input
-    unsigned int min_data_calibration_address, max_calibration_data, min_calibration_data;
-    unsigned int angle_range_min, angle_range_max;
-
-    double angle = 0;
-
-    debugPrint("servoNum=%d, input=%d", servoNum, inputAnalog);
-
-    switch(servoNum)
-    {
-    case  SERVO_ROT_NUM:      
-        iic_readbuf(&data[0], EXTERNAL_EEPROM_SYS_ADDRESS, ROT_SERVO_ADDRESS + 360, 2);//get the min adc calibration data for the map() function                      
-        iic_readbuf(&data[2], EXTERNAL_EEPROM_SYS_ADDRESS, ROT_SERVO_ADDRESS + 360 + 358, 2);//get the max adc calibraiton data for the map() function
-        break;
-
-    case  SERVO_LEFT_NUM:     
-        iic_readbuf(&data[0], EXTERNAL_EEPROM_SYS_ADDRESS, LEFT_SERVO_ADDRESS + 360, 2);//get the min adc calibration data for the map() function
-        iic_readbuf(&data[2], EXTERNAL_EEPROM_SYS_ADDRESS, LEFT_SERVO_ADDRESS + 360 + 358, 2);//get the max adc calibraiton data for the map() function
-        break;
-
-    case  SERVO_RIGHT_NUM:    
-        iic_readbuf(&data[0], EXTERNAL_EEPROM_SYS_ADDRESS, RIGHT_SERVO_ADDRESS + 360, 2);//get the min adc calibration data for the map() function
-        iic_readbuf(&data[2], EXTERNAL_EEPROM_SYS_ADDRESS, RIGHT_SERVO_ADDRESS + 360 + 358, 2);//get the max adc calibraiton data for the map() function
-        break;
-
-    default:                  
-        break;
-    }
-
-    max_calibration_data = (data[2]<<8) + data[3];
-    min_calibration_data = (data[0]<<8) + data[1];
-
-    //debugPrint("min%d, max=%d", min_calibration_data, max_calibration_data);
-
-    angle_range_min = map(inputAnalog, min_calibration_data, max_calibration_data, 1, 180) - (DATA_LENGTH>>2);
-    min_data_calibration_address = (angle_range_min * 2);
-
-
-    //debugPrint("mindata%d, ", min_data_calibration_address);
-
-    switch(servoNum)
-    {
-    case  SERVO_ROT_NUM:      
-        iic_readbuf(adc_calibration_data, EXTERNAL_EEPROM_SYS_ADDRESS, ROT_SERVO_ADDRESS + min_data_calibration_address + 360, DATA_LENGTH);//360 means the adc calibration data offset
-        break;
-    case  SERVO_LEFT_NUM:     
-        iic_readbuf(adc_calibration_data, EXTERNAL_EEPROM_SYS_ADDRESS, LEFT_SERVO_ADDRESS + min_data_calibration_address + 360, DATA_LENGTH);//360 means the adc calibration data offset
-        break;
-    case  SERVO_RIGHT_NUM:    
-        iic_readbuf(adc_calibration_data, EXTERNAL_EEPROM_SYS_ADDRESS, RIGHT_SERVO_ADDRESS + min_data_calibration_address + 360, DATA_LENGTH);//360 means the adc calibration data offset
-        break;
-    default:                 
-        break;
-    }
-
-    unsigned int deltaA = 0xffff, deltaB = 0, i, i_min = 0;
-    for(i=0;i<(DATA_LENGTH >> 1);i++)
-    {
-        deltaB = abs ((adc_calibration_data[i+i]<<8) + adc_calibration_data[1+(i+i)] - inputAnalog);
-        if(deltaA > deltaB)
-        {
-            i_min = i;
-            deltaA = deltaB;
-        }
-    }
-
-    angle_range_min = angle_range_min + i_min;
-    angle_range_max = angle_range_min + 1;
-
-    //debugPrint("mina%d, maxa=%d", angle_range_min, angle_range_max);
-
-    if((((adc_calibration_data[i_min+i_min]<<8) + adc_calibration_data[1+i_min+i_min]) - inputAnalog) >= 0)//determine if the current value bigger than the inputAnalog
-    {
-    
-        max_calibration_data = (adc_calibration_data[i_min+i_min]<<8) + adc_calibration_data[i_min+i_min+1];
-        min_calibration_data = (adc_calibration_data[i_min+i_min-2]<<8) + adc_calibration_data[i_min+i_min-1];
-
-    }
-    else
-    {
-        angle_range_min++;//change the degree range
-        angle_range_max++;
-        max_calibration_data = (adc_calibration_data[i_min+i_min+2]<<8) + adc_calibration_data[i_min+i_min+3];
-        min_calibration_data = (adc_calibration_data[i_min+i_min]<<8) + adc_calibration_data[i_min+i_min+1];
-    }
-
-    if(min_calibration_data < max_calibration_data)//return the angle
-    {
-        angle = ( 1.0 * (inputAnalog - min_calibration_data)/(max_calibration_data - min_calibration_data) + angle_range_min);
-    }
-    else
-    {
-        angle = (angle_range_min + angle_range_max) / 2.0;//angle from 1-180 but the address from 0-179
-    }    
-
-
-
-
-    return angle;
-*/
+	return angle;
 }
-
-#elif defined(METAL)
-
-double uArmController::analogToAngle(byte servoNum, int inputAnalog) {
-    double intercept = 0.0f;
-    double slope = 0.0f;
-
-    readLinearOffset(servoNum, intercept, slope);
-
-    double angle = intercept + slope * inputAnalog;  
-
-    return angle;
-}
-#endif
 
 unsigned int uArmController::getServoAnalogData(byte servoNum) {
     return getAnalogPinValue(SERVO_ANALOG_PIN[servoNum]);
-}
-
-double uArmController::readServoAngleOffset(byte servoNum) {
-	double manualServoOffset = 0.0f;
-	EEPROM.get(MANUAL_OFFSET_ADDRESS + servoNum * sizeof(manualServoOffset), manualServoOffset);
-	return manualServoOffset;	
 }
 
 unsigned char uArmController::setServoSpeed(byte servoNum, unsigned char speed) {
