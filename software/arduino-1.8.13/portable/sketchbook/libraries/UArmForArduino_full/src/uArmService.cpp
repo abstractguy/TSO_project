@@ -9,17 +9,13 @@
   ******************************************************************************
   */
 
-#include "uArm.h" 
+#include "uArmFull.h" 
 
 #include "uArmComm.h"
 
 uArmService service;
 
-
-
-uArmService::uArmService()
-{
-
+uArmService::uArmService() {
     mRecordAddr = 0;
 
     mReportInterval = 0; 
@@ -31,39 +27,19 @@ uArmService::uArmService()
     mTickRecorderTime = millis();
 }
 
-void uArmService::setButtonService(bool on)
-{
-    if (on)
-    {
-        mButtonServiceDisable = false;
-    }
-    else
-    {
-        mButtonServiceDisable = true;
-    }
+void uArmService::setButtonService(bool on) {
+    if (on) mButtonServiceDisable = false;
+    else mButtonServiceDisable = true;
 }
 
+void uArmService::setReportInterval(unsigned int interval) {mReportInterval = interval;}
 
+void uArmService::init() {}
 
-void uArmService::setReportInterval(unsigned int interval)
-{
-    mReportInterval = interval;
-}
+void uArmService::recorderTick() {
+    // Sys led function detec every 0.05s-----------------------------------------------------------------
 
-void uArmService::init()
-{
-
-}
-
-
-
-
-void uArmService::recorderTick()
-{
-    //sys led function detec every 0.05s-----------------------------------------------------------------
-
-    switch(mSysStatus)//every 0.125s per point
-    {
+    switch(mSysStatus) { // Every 0.125s per point.
     case SINGLE_PLAY_MODE:
         if(play() == false)
         {
@@ -98,47 +74,31 @@ void uArmService::recorderTick()
 
 }
 
-
-
-void uArmService::systemRun()
-{
+void uArmService::systemRun() {
 //check the button4 status------------------------------------------------------------------------
-    if (mButtonServiceDisable)
-    {
-        if (buttonMenu.longPressed())
-        {
+    if (mButtonServiceDisable) {
+        if (buttonMenu.longPressed()) {
             buttonMenu.clearEvent();
             reportButtonEvent(0, EVENT_LONG_PRESS);
-        }
-        else if (buttonMenu.clicked())
-        {
+        } else if (buttonMenu.clicked()) {
             //debugPrint("btnD4 down");
             buttonMenu.clearEvent();
             reportButtonEvent(0, EVENT_CLICK);
         }
 
-        
-
         //check the button7 status-------------------------------------------------------------------------
-        if (buttonPlay.longPressed())
-        {
+        if (buttonPlay.longPressed()) {
             buttonPlay.clearEvent();
             reportButtonEvent(1, EVENT_LONG_PRESS);
-        }
-        else if (buttonPlay.clicked())
-        {
+        } else if (buttonPlay.clicked()) {
             buttonPlay.clearEvent();
             reportButtonEvent(1, EVENT_CLICK);
         }         
-    }
-    else
-    {
-        if (buttonMenu.clicked())
-        {
+    } else {
+        if (buttonMenu.clicked()) {
         	//debugPrint("btnD4 down");
             buttonMenu.clearEvent();
-            switch (mSysStatus)
-            {
+            switch (mSysStatus) {
             case NORMAL_MODE:
             case NORMAL_BT_CONNECTED_MODE:
                 mSysStatus = LEARNING_MODE;
@@ -157,8 +117,6 @@ void uArmService::systemRun()
             default: break;
             }
         }
-
-        
 
         //check the button7 status-------------------------------------------------------------------------
         if (buttonPlay.longPressed())
@@ -253,56 +211,35 @@ void uArmService::btDetect()
 #endif
 }
 
-
-void uArmService::run()
-{
-
+void uArmService::run() {
 	systemRun();
 
-    if (millis() - mTickRecorderTime >= 50)
-    {
+    if (millis() - mTickRecorderTime >= 50) {
         mTickRecorderTime= millis();
         recorderTick();
     }
 }
 
-
-
-
-bool uArmService::play()
-{
-
+bool uArmService::play() {
     unsigned char data[5]; // 0: L  1: R  2: Rotation 3: hand rotation 4:gripper
-
 
     recorder.read(mRecordAddr, data, 5);
 	debugPrint("mRecordAddr = %d, data=%d, %d, %d", mRecordAddr, data[0], data[1], data[2]);
 
-    if(data[0] != 255)
-    {
+    if(data[0] != 255) {
         //double x, y, z;
         //controller.getXYZFromAngle(x, y, z, (double)data[2], (double)data[0], (double)data[1]);
         //moveToAngle((double)data[2], (double)data[0], (double)data[1]);
     	controller.writeServoAngle((double)data[2], (double)data[0], (double)data[1]);
         controller.writeServoAngle(SERVO_HAND_ROT_NUM, (double)data[3]);
         unsigned char pumpStatus = getPumpStatus() > 0 ? 1 : 0;
-        if (pumpStatus != data[4])
-        {
-            if (data[4])
-            {
-                pumpOn();
-            }
-            else
-            {
-                pumpOff();
-            }   
+        if (pumpStatus != data[4]) {
+            if (data[4]) pumpOn();
+            else pumpOff();
         }
-    }
-    else
-    {
-
+    } else {
         pumpOff();
-         
+
         return false;
     }
 
@@ -311,8 +248,7 @@ bool uArmService::play()
     return true;
 }
 
-bool uArmService::record()
-{
+bool uArmService::record() {
 	debugPrint("mRecordAddr = %d", mRecordAddr);
 
     if(mRecordAddr <= 65530)

@@ -58,7 +58,16 @@
  * _Nbr_16timers indicates how many 16 bit timers are available.
  */
 
+// Architecture specific include
+#if defined(ARDUINO_ARCH_AVR)
 #include "ServoTimers.h"
+#elif defined(ARDUINO_ARCH_SAM)
+#include "sam/ServoTimers.h"
+#elif defined(ARDUINO_ARCH_SAMD)
+#include "samd/ServoTimers.h"
+#else
+#error "This library only supports boards with an AVR, SAM or SAMD processor."
+#endif
 
 #define Servo_VERSION           2     // software version of this library
 
@@ -96,12 +105,13 @@ public:
   void writeMicroseconds(int value); // Write pulse width in microseconds 
   int read();                        // returns current pulse width as an angle between 0 and 180 degrees
   int readMicroseconds();            // returns current pulse width in microseconds for this servo (was read_us() in first release)
-  bool attached();                   // return true if this servo is attached, otherwise false
+  bool attached();                   // return true if this servo is attached, otherwise false 
   void setPulseWidthRange(int min, int max);
+  void setSpeed(unsigned char speed);
 private:
    uint8_t servoIndex;               // index into the channel data for this servo
-   int8_t min;                       // minimum is this value times 4 added to MIN_PULSE_WIDTH
-   int8_t max;                       // maximum is this value times 4 added to MAX_PULSE_WIDTH
+   int8_t min;                       // minimum is this value times 4 added to MIN_PULSE_WIDTH    
+   int8_t max;                       // maximum is this value times 4 added to MAX_PULSE_WIDTH   
 };
 
 #endif

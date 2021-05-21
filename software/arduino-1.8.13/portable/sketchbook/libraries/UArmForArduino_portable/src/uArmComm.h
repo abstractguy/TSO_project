@@ -1,9 +1,10 @@
 /**
   ******************************************************************************
-  * @file	  uArmComm.h
+  * @file	uArmComm.h
   * @author	David.Long	
   * @email	xiaokun.long@ufactory.cc
-  * @date	  2016-10-08
+  * @date	2016-10-08
+  * @modified	Samuel Duclos (nomfullcreatif@gmail.com)
   * @license GNU
   * copyright(c) 2016 UFactory Team. All right reserved
   ******************************************************************************
@@ -14,7 +15,6 @@
 
 #include <Arduino.h>
 #include "uArm.h"
-#include "uArmBuzzer.h"
 
 #define COM_LEN_MAX   48
 
@@ -22,30 +22,13 @@
 #define NO_SUCH_CMD       20
 #define PARAMETER_ERROR   21
 #define ADDRESS_ERROR     22
+#define REPORT_POS        3
 
-enum CommState
-{
-  IDLE,
-  START,
-  CMD,
-  END,
-
-  STATE_COUNT
-};
-
-
-#define REPORT_POS        3 
-#define REPORT_BUTTON     4
-
-void reportPos();
-
-void reportButtonEvent(unsigned char buttonId, unsigned char event);
+enum CommState {IDLE, START, CMD, END, STATE_COUNT};
 
 void serialCmdInit();
-
 void getSerialCmd();
-
 void handleSerialCmd();
 
-
 #endif // _UARMCOMM_H_
+

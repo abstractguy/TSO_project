@@ -915,9 +915,7 @@ static void _controllerRun() {
 			mCurStep++;
 
 			if (mCurStep >= mTotalSteps) mCurStep = -1;
-		}	
-
-		manage_inactivity();
+		}
 	}
 }
 

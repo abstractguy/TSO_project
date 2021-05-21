@@ -137,11 +137,9 @@ void uArmController::writeServoAngle(byte servoNum, double servoAngle, boolean w
 	mServo[servoNum].write(servoAngle, mServoSpeed);
 }
 
-
 #ifdef MKII
-void uArmController::readServoCalibrationData(unsigned int address, double& angle)
-{
-    unsigned char calibration_data[DATA_LENGTH]; //get the calibration data around the data input
+void uArmController::readServoCalibrationData(unsigned int address, double& angle) {
+    unsigned char calibration_data[DATA_LENGTH]; // Get the calibration data around the data input.
     unsigned int min_data_calibration_address;
     double closest_data, another_closest_data;
     unsigned int deltaA = 0xffff, deltaB = 0, i, i_min = 0;
@@ -264,6 +262,7 @@ unsigned char uArmController::xyzToAngle(double x, double y, double z, double& a
     x = constrain(x, -3276, 3276);
     y = constrain(y, -3276, 3276);
     z = constrain(z, -3276, 3276);
+
     x = (double)((int)(x * 10) / 10.0);
     y = (double)((int)(y * 10) / 10.0);
     z = (double)((int)(z * 10) / 10.0);
@@ -273,8 +272,7 @@ unsigned char uArmController::xyzToAngle(double x, double y, double z, double& a
     zIn = (z - MATH_L1) / MATH_LOWER_ARM;
 
     if (!allowApproximate) { // If need the move to closest point we have to jump over the return function.
-        // Check the range of x.
-        if (y < 0) return OUT_OF_RANGE_NO_SOLUTION;
+        if (y < 0) return OUT_OF_RANGE_NO_SOLUTION; // Check the range of x.
     }
     // Calculate value of theta 1: the rotation angle
     if (x == 0) angleRot = 90;
@@ -283,9 +281,8 @@ unsigned char uArmController::xyzToAngle(double x, double y, double z, double& a
             if (x < 0) angleRot = 180 + atan(y / x) * MATH_TRANS; // Angle tranfer  0-180 CCW.
     }
     // Calculate value of theta 3
-    if (angleRot != 90) { // xIn is the stretch.
-            xIn = (x / cos(angleRot / MATH_TRANS) - MATH_L2 - MATH_FRONT_HEADER) / MATH_LOWER_ARM;
-    } else xIn = (y - MATH_L2 - MATH_FRONT_HEADER) / MATH_LOWER_ARM;
+    if (angleRot != 90) xIn = (x / cos(angleRot / MATH_TRANS) - MATH_L2 - MATH_FRONT_HEADER) / MATH_LOWER_ARM; // xIn is the stretch.
+    else xIn = (y - MATH_L2 - MATH_FRONT_HEADER) / MATH_LOWER_ARM;
 
     phi = atan(zIn / xIn) * MATH_TRANS;//phi is the angle of line (from joint 2 to joint 4) with the horizon
 
@@ -309,12 +306,12 @@ unsigned char uArmController::limitRange(double& angleRot, double& angleLeft, do
     unsigned char result = IN_RANGE;
 
     // Determine if the angle can be reached.
-    if(isnan(angleRot) || isnan(angleLeft) || isnan(angleRight)) result = OUT_OF_RANGE_NO_SOLUTION;
-    else if (((angleLeft + mServoAngleOffset[SERVO_LEFT_NUM]) < LOWER_ARM_MIN_ANGLE) || ((angleLeft + mServoAngleOffset[SERVO_LEFT_NUM]) > LOWER_ARM_MAX_ANGLE)) { // Check the right in range.
+    if (isnan(angleRot) || isnan(angleLeft) || isnan(angleRight)) result = OUT_OF_RANGE_NO_SOLUTION;
+    else if (((angleLeft + mServoAngleOffset[SERVO_LEFT_NUM]) < LOWER_ARM_MIN_ANGLE) || ((angleLeft + mServoAngleOffset[SERVO_LEFT_NUM]) > LOWER_ARM_MAX_ANGLE)) // Check the right in range.
 		result = OUT_OF_RANGE;
-    else if (((angleRight + mServoAngleOffset[SERVO_RIGHT_NUM]) < UPPER_ARM_MIN_ANGLE)||((angleRight + mServoAngleOffset[SERVO_RIGHT_NUM]) > UPPER_ARM_MAX_ANGLE)) { // Check the left in range.
+    else if (((angleRight + mServoAngleOffset[SERVO_RIGHT_NUM]) < UPPER_ARM_MIN_ANGLE) || ((angleRight + mServoAngleOffset[SERVO_RIGHT_NUM]) > UPPER_ARM_MAX_ANGLE)) // Check the left in range.
 		result = OUT_OF_RANGE;
-    else if (((180 - angleLeft - angleRight) > LOWER_UPPER_MAX_ANGLE) || ((180 - angleLeft - angleRight) < LOWER_UPPER_MIN_ANGLE)) { // Check the angle of upper arm and lowe arm in range.
+    else if (((180 - angleLeft - angleRight) > LOWER_UPPER_MAX_ANGLE) || ((180 - angleLeft - angleRight) < LOWER_UPPER_MIN_ANGLE)) // Check the angle of upper arm and lower arm in range.
 		result = OUT_OF_RANGE;
 
     angleRot = constrain(angleRot, 0.00, 180.00);
@@ -341,8 +338,7 @@ double uArmController::analogToAngle(byte servoNum, int inputAnalog) {
     int val = 0;
 
     //debugPrint("inputAnalog=%d", inputAnalog);
-    while (!done && (min < max))
-    {
+    while (!done && (min < max)) {
         //debugPrint("angle=%d", angle);
         //gRecorder.read(startAddr+angle*2, data, 2);
         iic_readbuf(data, EXTERNAL_EEPROM_SYS_ADDRESS, startAddr+angle*2, 2);
@@ -494,10 +490,7 @@ double uArmController::analogToAngle(byte servoNum, int inputAnalog) {
     else
     {
         angle = (angle_range_min + angle_range_max) / 2.0;//angle from 1-180 but the address from 0-179
-    }    
-
-
-
+    }
 
     return angle;
 */

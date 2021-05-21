@@ -26,19 +26,12 @@
 #include "uArmAPI.h"
 #include "uArmComm.h"
 
-
-
-
 #define NORMAL_MODE                 0
 #define NORMAL_BT_CONNECTED_MODE    1
 #define LEARNING_MODE               2
 #define SINGLE_PLAY_MODE            3
 #define LOOP_PLAY_MODE              4
 #define LEARNING_MODE_STOP          5
-
-
-
-
 
 #define OK                      0
 #define ERR1                    1
