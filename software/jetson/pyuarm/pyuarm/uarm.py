@@ -233,6 +233,44 @@ class UArm(object):
 
 # -------------------------------------------------------- Commands ----------------------------------------------------
 
+    def get_rom_data(self, address, data_type=protocol.EEPROM_DATA_TYPE_BYTE):
+        """
+        Get DATA From EEPROM
+        :param address: 0 - 2048
+        :param data_type: EEPROM_DATA_TYPE_FLOAT, EEPROM_DATA_TYPE_INTEGER, EEPROM_DATA_TYPE_BYTE
+        :return:
+        """
+        cmd = protocol.GET_EEPROM.format(address, data_type)
+        response = self.__send_and_receive(cmd)
+        value = self.__gen_response_value(response)
+        if value:
+            # print("val: {}".format(type)))
+            val = "".join(value)[1:]
+
+            if data_type == protocol.EEPROM_DATA_TYPE_FLOAT:
+                return float(val)
+            elif data_type == protocol.EEPROM_DATA_TYPE_INTEGER:
+                return int(val)
+            elif data_type == protocol.EEPROM_DATA_TYPE_BYTE:
+                return int(val)
+        else:
+            return False
+
+    def set_rom_data(self, address, data, data_type=protocol.EEPROM_DATA_TYPE_BYTE):
+        """
+        Set DATA to EEPROM
+        :param address: 0 - 2048
+        :param data: Value
+        :param data_type: EEPROM_DATA_TYPE_FLOAT, EEPROM_DATA_TYPE_INTEGER, EEPROM_DATA_TYPE_BYTE
+        :return:
+        """
+        cmd = protocol.SET_EEPROM.format(address, data_type, data)
+        response = self.__send_and_receive(cmd)
+        if response.startswith(protocol.OK.lower()):
+            return True
+        else:
+            return False
+
     def get_firmware_version(self):
         """
         Get the firmware version.
