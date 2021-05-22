@@ -240,9 +240,9 @@ uint8_t Servo::attach(int pin, int min, int max) {
   if (this->servoIndex < MAX_SERVOS) {
     pinMode(pin, OUTPUT);                          // set servo pin to output
     servos[this->servoIndex].Pin.nbr = pin;
-    // todo min/max check: abs(min - MIN_PULSE_WIDTH) /4 < 128
-    this->min  = (MIN_PULSE_WIDTH - min)/4; //resolution of min/max is 4 us
-    this->max  = (MAX_PULSE_WIDTH - max)/4;
+    // Todo min/max check: abs(min - MIN_PULSE_WIDTH) / 4 < 128.
+    this->min = (MIN_PULSE_WIDTH - min) / 4; // Resolution of min/max is 4 us.
+    this->max = (MAX_PULSE_WIDTH - max) / 4;
     // initialize the timer if it has not already been initialized
     timer16_Sequence_t timer = SERVO_INDEX_TO_TIMER(servoIndex);
     if (isTimerActive(timer) == false)
@@ -320,15 +320,13 @@ void Servo::write(int value) {
    } else write (value);
 }
 
-void Servo::writeMicroseconds(int value)
-{
+void Servo::writeMicroseconds(int value) {
   // calculate and store the values for the given channel
   byte channel = this->servoIndex;
-  if( (channel < MAX_SERVOS) )   // ensure channel is valid
-  {
-    if( value < SERVO_MIN() )          // ensure pulse width is valid
+  if ((channel < MAX_SERVOS)) { // ensure channel is valid
+    if (value < SERVO_MIN())          // ensure pulse width is valid
       value = SERVO_MIN();
-    else if( value > SERVO_MAX() )
+    else if (value > SERVO_MAX())
       value = SERVO_MAX();
 
     value = value - TRIM_DURATION;
@@ -341,15 +339,13 @@ void Servo::writeMicroseconds(int value)
   }
 }
 
-int Servo::read() // return the value as degrees
-{
+int Servo::read() { // Return the value as degrees.
   return  map( this->readMicroseconds() + 1, SERVO_MIN(), SERVO_MAX(), 0, 180);
 }
 
-int Servo::readMicroseconds()
-{
+int Servo::readMicroseconds() {
   unsigned int pulsewidth;
-  if( this->servoIndex != INVALID_SERVO )
+  if (this->servoIndex != INVALID_SERVO)
     pulsewidth = ticksToUs(servos[this->servoIndex].ticks)  + TRIM_DURATION ;   // 12 aug 2009
   else
     pulsewidth  = 0;
@@ -357,9 +353,9 @@ int Servo::readMicroseconds()
   return pulsewidth;
 }
 
-bool Servo::attached()
-{
+bool Servo::attached() {
   return servos[this->servoIndex].Pin.isActive ;
 }
 
 #endif // ARDUINO_ARCH_AVR
+

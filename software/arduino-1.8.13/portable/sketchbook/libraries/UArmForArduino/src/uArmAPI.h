@@ -10,9 +10,7 @@
 #define _UARMAPI_H_
 
 #include <Arduino.h>
-#ifdef ARDUINO_ARCH_AVR
-	#include <Servo.h>
-#elif defined(ARDUINO_ESP32_DEV)
+#ifdef ARDUINO_ESP32_DEV
 	#include <ESP32Servo.h>
 #else
 	#include <Servo.h>

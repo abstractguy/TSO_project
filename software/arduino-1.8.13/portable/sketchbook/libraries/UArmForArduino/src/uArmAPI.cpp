@@ -39,8 +39,10 @@ static void _controllerRun();
 
 void initHardware() {
 	pinMode(PUMP_EN, OUTPUT);
-	pinMode(GRIPPER, OUTPUT);
-	pinMode(VALVE_EN, OUTPUT);
+	#ifndef ARDUINO_ESP32_DEV
+		pinMode(GRIPPER, OUTPUT);
+		pinMode(VALVE_EN, OUTPUT);
+	#endif
 }
 
 /*!
@@ -193,28 +195,29 @@ unsigned char setServoAngle(unsigned char servoNumber, double angle)
    \return value of angle
    \return -1 if servoNumber not in range(0~3)
  */
-double getServoAngle(unsigned char servoNumber)
-{
+double getServoAngle(unsigned char servoNumber) {
 	if (servoNumber >= SERVO_COUNT)
 		return -1;	
 
 	return controller.readServoAngle(servoNumber);
 }
 
-
 /*!
    \brief gripper work
  */
-void gripperCatch()
-{
-	digitalWrite(GRIPPER, LOW); 
+void gripperCatch() {
+	#ifndef ARDUINO_ESP32_DEV
+		digitalWrite(GRIPPER, LOW);
+	#endif
 }
 
 /*!
    \brief gripper stop
  */
 void gripperRelease() {
- 	digitalWrite(GRIPPER, HIGH); 
+	#ifndef ARDUINO_ESP32_DEV
+	 	digitalWrite(GRIPPER, HIGH);
+	#endif
 }
 
 /*!
@@ -224,11 +227,15 @@ void gripperRelease() {
    \return GRABBING if gripper got sth   
  */
 unsigned char getGripperStatus() {
-	if (digitalRead(GRIPPER) == HIGH) return STOP;
-	else {
-		if (getAnalogPinValue(GRIPPER_FEEDBACK) > 600) return WORKING;
-		else return GRABBING;
-	}
+	#ifndef ARDUINO_ESP32_DEV
+		if (digitalRead(GRIPPER) == HIGH) return STOP;
+		else {
+			if (getAnalogPinValue(GRIPPER_FEEDBACK) > 600) return WORKING;
+			else return GRABBING;
+		}
+	#else
+		return STOP;
+	#endif
 }
 
 /*!
@@ -246,8 +253,10 @@ unsigned char getPumpStatus() {
    \brief pump working
  */
 void pumpOn() {
-	digitalWrite(PUMP_EN, HIGH); 
-	digitalWrite(VALVE_EN, LOW);
+	digitalWrite(PUMP_EN, HIGH);
+	#ifndef ARDUINO_ESP32_DEV
+		digitalWrite(VALVE_EN, LOW);
+	#endif
 }
 
 /*!
@@ -255,7 +264,9 @@ void pumpOn() {
  */
 void pumpOff() {
 	digitalWrite(PUMP_EN, LOW); 
-	digitalWrite(VALVE_EN, HIGH);
+	#ifndef ARDUINO_ESP32_DEV
+		digitalWrite(VALVE_EN, HIGH);
+	#endif
 }
 
 /*!
