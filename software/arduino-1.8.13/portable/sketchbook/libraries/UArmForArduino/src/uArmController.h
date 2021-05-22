@@ -35,9 +35,9 @@
 #define MATH_L2 			21.17	
 #define MATH_LOWER_ARM 		148.25	
 #define MATH_UPPER_ARM 		160.2 	
-#define MATH_FRONT_HEADER 	25.00// the distance between wrist to the front point we use
+#define MATH_FRONT_HEADER 	25.00 // The distance between wrist to the front point we use.
 #define MATH_UPPER_LOWER 	MATH_UPPER_ARM/MATH_LOWER_ARM
-#define MAX_Z				260		// max height
+#define MAX_Z				260 // Max height.
 #define MIN_Z				(-120)
 
 #define LOWER_ARM_MAX_ANGLE      120

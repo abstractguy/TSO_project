@@ -23,10 +23,10 @@ class UArm(object):
                  logger=None, 
                  debug=False, 
                  uarm_speed=100, 
-                 servo_attach_delay=2, 
-                 set_position_delay=0.5, 
-                 servo_detach_delay=2, 
-                 pump_delay=2):
+                 servo_attach_delay=3, 
+                 set_position_delay=6, 
+                 servo_detach_delay=3, 
+                 pump_delay=3):
 
         """
         :param port_name: UArm Serial Port name, if no port provide, will try first port we detect

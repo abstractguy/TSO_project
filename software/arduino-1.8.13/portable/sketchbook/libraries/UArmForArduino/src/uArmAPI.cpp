@@ -272,16 +272,9 @@ int getDigitalPinValue(unsigned int pin) {
    \param pin of arduino
    \param value: HIGH or LOW
  */
-void setDigitalPinValue(unsigned int pin, unsigned char value)
-{
-	if (value)
-	{
-		digitalWrite(pin, HIGH);
-	}
-	else
-	{
-		digitalWrite(pin, LOW);
-	}
+void setDigitalPinValue(unsigned int pin, unsigned char value) {
+	if (value) digitalWrite(pin, HIGH);
+	else digitalWrite(pin, LOW);
 }
 
 /*!
@@ -289,19 +282,19 @@ void setDigitalPinValue(unsigned int pin, unsigned char value)
    \param pin of arduino
    \return value of analog data
  */
-int getAnalogPinValue(unsigned int pin)
-{
+int getAnalogPinValue(unsigned int pin) {
     unsigned int dat[8];
 
-
-    for(int i = 0; i < 8; i++)
-    {
+    for (int i = 0; i < 8; i++) {
         dat[i] = analogRead(pin);
+        #ifdef ARDUINO_ESP32_DEV
+            dat[i] = map(dat[i], 0, ADC_MAX, 0, 180);
+        #endif
     }
 
     _sort(dat, 8);
 
-    unsigned int result = (dat[2]+dat[3]+dat[4]+dat[5])/4;
+    unsigned int result = (dat[2] + dat[3] + dat[4] + dat[5]) / 4;
 
     return result;    
 }
@@ -311,8 +304,7 @@ int getAnalogPinValue(unsigned int pin)
    \param s(mm), r(0~180), h(mm)
    \output x, y, z(mm)
  */
-void polToXYZ(double s, double r, double h, double& x, double& y, double& z)
-{
+void polToXYZ(double s, double r, double h, double& x, double& y, double& z) {
     z = h;  
     x = s * cos(r / MATH_TRANS);
     y = s * sin(r / MATH_TRANS);	
@@ -324,8 +316,7 @@ void polToXYZ(double s, double r, double h, double& x, double& y, double& z)
    \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
    \return OUT_OF_RANGE can move to the closest pos
  */
-unsigned char validatePos(double x, double y, double z)
-{
+unsigned char validatePos(double x, double y, double z) {
 	double angleRot, angleLeft, angleRight;
 	return controller.xyzToAngle(x, y, z, angleRot, angleLeft, angleRight, false);
 }
@@ -334,8 +325,7 @@ unsigned char validatePos(double x, double y, double z)
    \brief get current pos
    \output x, y, z(mm)
  */
-void getCurrentXYZ(double& x, double& y, double& z)
-{
+void getCurrentXYZ(double& x, double& y, double& z) {
     controller.updateAllServoAngle();
     controller.getCurrentXYZ(x, y, z);	
 }
@@ -344,21 +334,20 @@ void getCurrentXYZ(double& x, double& y, double& z)
    \brief get current pos of polor coordinates
    \output s(mm), r(0~180), h(mm)
  */
-void getCurrentPosPol(double& s, double& r, double& h)
-{
-
+void getCurrentPosPol(double& s, double& r, double& h) {
 	double angleRot, angleLeft, angleRight;
 	double x, y, z;
 
-    controller.updateAllServoAngle();
+	controller.updateAllServoAngle();
 	controller.getCurrentXYZ(x, y, z);
 	controller.getServoAngles(angleRot, angleLeft, angleRight);
-    double stretch;
-    stretch = sqrt(x * x + y * y);
 
-    s = stretch;
-    r = angleRot;
-    h = z;
+	double stretch;
+	stretch = sqrt(x * x + y * y);
+
+	s = stretch;
+	r = angleRot;
+	h = z;
 }
 
 /*!

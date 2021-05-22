@@ -15,6 +15,8 @@
 	//#include <Servo.h>
 #elif defined(ARDUINO_ESP32_DEV)
 	#include <ESP32Servo.h>
+#else
+	#include <Servo.h>
 #endif
 
 #include "uArmConfig.h"

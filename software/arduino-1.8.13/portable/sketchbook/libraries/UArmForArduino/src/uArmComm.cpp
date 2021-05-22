@@ -220,7 +220,6 @@ static unsigned char cmdCoordinateToAngle(int serialNum, int parameterCount, dou
 
     replyResult(serialNum, result);
 
-
     return 0;
 }
 

@@ -1,8 +1,7 @@
 import re
 #__version__ = '2.2.5.1'
-__version__ = '3.0'
+__version__ = '2.2.3'
 support_versions = ['2.2']
-
 
 def is_a_version(version):
     version_pattern = re.compile(r'\d+\.\d+\.\d+\w*')
@@ -11,7 +10,6 @@ def is_a_version(version):
     else:
         return False
 
-
 def is_supported_version(version):
     pattern = re.compile(r'\d+\.\d+')
     major_version = pattern.match(version).group()
@@ -19,3 +17,4 @@ def is_supported_version(version):
         if major_version == v:
             return True
     return False
+

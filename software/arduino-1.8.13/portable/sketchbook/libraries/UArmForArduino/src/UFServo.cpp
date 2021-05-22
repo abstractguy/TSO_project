@@ -281,12 +281,10 @@ void Servo::detach()
   }
 }
 
-void Servo::write(float value)
-{
-  if(value < MIN_PULSE_WIDTH)
-  {  // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
-    if(value < 0) value = 0;
-    if(value > 180) value = 180;
+void Servo::write(float value) {
+  if(value < MIN_PULSE_WIDTH) { // Treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds)
+    if (value < 0) value = 0;
+    if (value > 180) value = 180;
     value*=10;
     value = map(value, 0, 1800, SERVO_MIN(),  SERVO_MAX());
     //Serial.println(value-500, HEX);
@@ -309,7 +307,6 @@ void Servo::write(float value)
    // in target instead of in ticks in the servo structure and speed will be save 
    // there too. 
  
-
    //double degrees = value; 
  
    if (speed) { 
@@ -318,15 +315,15 @@ void Servo::write(float value)
            // updated to use constrain instead of if, pva 
           value = value * 10;//make the value tem times bigger, must after the if() detection or if() will fail
           value = constrain(value, 0, 1800); 
-          value = map(value, 0, 1800, SERVO_MIN(),  SERVO_MAX());     
+          value = map(value, 0, 1800, SERVO_MIN(), SERVO_MAX());     
      } 
 
      // calculate and store the values for the given channel 
-     byte channel = this->servoIndex; 
-     if( (channel >= 0) && (channel < MAX_SERVOS) ) {   // ensure channel is valid 
-           // updated to use constrain instead of if, pva 
-           //value = constrain(value, SERVO_MIN(), SERVO_MAX()); 
-      //Serial.println(value,DEC);
+     byte channel = this->servoIndex;
+     if ((channel >= 0) && (channel < MAX_SERVOS)) { // Ensure channel is valid.
+           // updated to use constrain instead of if, pva.
+           //value = constrain(value, SERVO_MIN(), SERVO_MAX());
+       //Serial.println(value, DEC);
  
        //value = value - TRIM_DURATION; 
        value = usToTicks(value);  // convert to ticks after compensating for interrupt overhead - 12 Aug 2009 
@@ -338,11 +335,8 @@ void Servo::write(float value)
        servos[channel].speed = speed;   
        SREG = oldSREG;    
      } 
-   }  
-   else { 
-     write (value); 
-   } 
-} 
+   } else write (value);
+}
 
 void Servo::writeMicroseconds(int value) {
   // calculate and store the values for the given channel

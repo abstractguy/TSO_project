@@ -276,6 +276,52 @@ void Servo::write(int value)
   this->writeMicroseconds(value);
 }
 
+// Extension for slowmove 
+/* 
+   write(value, speed) - Just like write but at reduced speed. 
+  
+   value - Target position for the servo. Identical use as value of the function write. 
+   speed - Speed at which to move the servo. 
+           speed=0 - Full speed, identical to write 
+           speed=1 - Minimum speed 
+           speed=255 - Maximum speed 
+ */ 
+ void Servo::write(float value, uint8_t speed) { 
+   // This fuction is a copy of write and writeMicroseconds but value will be saved 
+   // in target instead of in ticks in the servo structure and speed will be save 
+   // there too. 
+ 
+   //double degrees = value; 
+ 
+   if (speed) { 
+     if (value < MIN_PULSE_WIDTH) { 
+       // treat values less than 544 as angles in degrees (valid values in microseconds are handled as microseconds) 
+           // updated to use constrain instead of if, pva 
+          value = value * 10;//make the value tem times bigger, must after the if() detection or if() will fail
+          value = constrain(value, 0, 1800); 
+          value = map(value, 0, 1800, SERVO_MIN(), SERVO_MAX());     
+     } 
+
+     // calculate and store the values for the given channel 
+     byte channel = this->servoIndex;
+     if ((channel >= 0) && (channel < MAX_SERVOS)) { // Ensure channel is valid.
+           // updated to use constrain instead of if, pva.
+           //value = constrain(value, SERVO_MIN(), SERVO_MAX());
+       //Serial.println(value, DEC);
+ 
+       //value = value - TRIM_DURATION; 
+       value = usToTicks(value);  // convert to ticks after compensating for interrupt overhead - 12 Aug 2009 
+ 
+       // Set speed and direction 
+       uint8_t oldSREG = SREG; 
+       cli(); 
+       servos[channel].target = value;   
+       servos[channel].speed = speed;   
+       SREG = oldSREG;    
+     } 
+   } else write (value);
+}
+
 void Servo::writeMicroseconds(int value)
 {
   // calculate and store the values for the given channel
