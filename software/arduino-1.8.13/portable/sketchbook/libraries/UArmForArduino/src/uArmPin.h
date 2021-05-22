@@ -12,9 +12,6 @@
 
 #include "uArmConfig.h"
 
-#define EXTERNAL_EEPROM_SYS_ADDRESS 0xA2
-#define EXTERNAL_EEPROM_USER_ADDRESS  0xA0
-
 #define PUMP_EN                 6    // HIGH = Valve OPEN
 #define VALVE_EN                5    // HIGH = Pump ON
 #define GRIPPER                 9    // LOW = Catch

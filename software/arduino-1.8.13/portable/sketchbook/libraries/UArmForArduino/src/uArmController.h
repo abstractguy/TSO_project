@@ -13,7 +13,6 @@
 #define _UARMCONTROLLER_H_
 
 #include <Arduino.h>
-#include <EEPROM.h>
 #include <Wire.h>
 #include "UFServo.h"
 #include "uArmConfig.h"
@@ -67,8 +66,6 @@ Servo 3 INTERCEPT: -42.67, SLOPE: 0.47, MANUAL: 0.0
 
 #define SERVO_9G_MAX    460
 #define SERVO_9G_MIN    98
-
-#define EXTERNAL_EEPROM_SYS_ADDRESS 0xA2
 
 #define DATA_LENGTH  0x40
 #define LEFT_SERVO_ADDRESS   0x0000

@@ -2,7 +2,6 @@
 #define _UARM_H_
 
 #include <Arduino.h>
-#include <EEPROM.h>
 #include "UFServo.h"
 #include "uArmConfig.h"
 #include "uArmTypes.h"

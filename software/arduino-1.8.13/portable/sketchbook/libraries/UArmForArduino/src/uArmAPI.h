@@ -10,8 +10,6 @@
 #define _UARMAPI_H_
 
 #include <Arduino.h>
-#include <EEPROM.h>
-#include "uArmIIC.h"
 #include "UFServo.h"
 #include "uArmConfig.h"
 #include "uArmPin.h"
@@ -207,23 +205,6 @@ void setDigitalPinValue(unsigned int pin, unsigned char value);
    \return value of analog data
  */
 int getAnalogPinValue(unsigned int pin);
-
-/*!
-   \brief get e2prom data
-   \param device:  EEPROM_ON_CHIP, EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM
-   \param addr: 0~2047(EEPROM_ON_CHIP), 0~65535(EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM)
-   \param type: DATA_TYPE_BYTE, DATA_TYPE_INTEGER, DATA_TYPE_FLOAT
- */
-double getE2PROMData(unsigned char device, unsigned int addr, unsigned char type);
-
-/*!
-   \brief set e2prom data
-   \param device:  EEPROM_ON_CHIP, EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM
-   \param addr: 0~2047(EEPROM_ON_CHIP), 0~65535(EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM)
-   \param type: DATA_TYPE_BYTE, DATA_TYPE_INTEGER, DATA_TYPE_FLOAT
-   \param value: value to write
- */
-double setE2PROMData(unsigned char device, unsigned int addr, unsigned char type, double value);
 
 #endif // _UARMAPI_H_
 

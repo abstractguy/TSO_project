@@ -1,9 +1,10 @@
 /**
   ******************************************************************************
-  * @file	  uArmComm.h
-  * @author	David.Long	
-  * @email	xiaokun.long@ufactory.cc
-  * @date	  2016-10-08
+  * @file		uArmComm.h
+  * @author		David.Long	
+  * @email		xiaokun.long@ufactory.cc
+  * @date		2016-10-08
+  * @modified		Samuel Duclos
   * @license GNU
   * copyright(c) 2016 UFactory Team. All right reserved
   ******************************************************************************

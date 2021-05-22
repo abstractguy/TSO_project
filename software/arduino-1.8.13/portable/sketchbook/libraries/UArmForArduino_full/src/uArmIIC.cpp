@@ -8,9 +8,14 @@
   */
 
 #include "uArmIIC.h" 
-void delay_us() {}
+void delay_us()
+{
 
-void iic_start() {
+
+}
+
+void iic_start()
+{
         SCL_SET;//  SCL=1
         delay_us();
         SDA_SET;//  SDA=1
@@ -21,7 +26,8 @@ void iic_start() {
         delay_us();
 }
 
-void iic_stop() {
+void iic_stop()
+{
         SCL_CLEAR;//  SCL=0
         delay_us();
         SDA_CLEAR;//  SDA=0
@@ -34,21 +40,24 @@ void iic_stop() {
 
 //return 0:ACK=0
 //return 1:NACK=1
-unsigned char read_ack() {
+unsigned char read_ack()
+{
         unsigned char old_state;
         old_state = PORT_DDR;
-        SDA_INPUT; //SDA INPUT
-        SDA_SET; // SDA = 1;
+        SDA_INPUT;//SDA INPUT
+        SDA_SET;//  SDA = 1;
         delay_us();
-        SCL_SET; // SCL=1
+        SCL_SET;//  SCL=1
         delay_us();
-        if (SDA_READ) { // if(SDA)
-                SCL_CLEAR; // SCL=0
+        if(SDA_READ) // if(SDA)
+        {
+                SCL_CLEAR;//  SCL=0
                 iic_stop();
                 PORT_DDR = old_state;
                 return 1;
-        } else {
-                SCL_CLEAR; // SCL=0
+        }
+        else{
+                SCL_CLEAR;//  SCL=0
                 PORT_DDR = old_state;
                 return 0;
         }
@@ -56,18 +65,19 @@ unsigned char read_ack() {
 
 //ack=0:send ack
 //ack=1:do not send ack
-void send_ack() {
+void send_ack()
+{
         unsigned char old_state;
         old_state = PORT_DDR;
-        SDA_OUTPUT; //SDA OUTPUT
-        SDA_CLEAR; // SDA=0
+        SDA_OUTPUT;//SDA OUTPUT
+        SDA_CLEAR;//  SDA=0
         delay_us();
-        SCL_SET; // SCL=1
+        SCL_SET;//  SCL=1
         delay_us();
-        SCL_CLEAR; // SCL=0
+        SCL_CLEAR;//  SCL=0
         delay_us();
         PORT_DDR = old_state;
-        SDA_SET; // SDA=1
+        SDA_SET;//  SDA=1
         delay_us();
 }
 

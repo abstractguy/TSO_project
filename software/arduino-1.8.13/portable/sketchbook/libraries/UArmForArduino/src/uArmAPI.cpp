@@ -23,9 +23,6 @@
 
 #define STEP_MAX_TIME				20	// ms
 
-#define EXTERNAL_EEPROM_SYS_ADDRESS 0xA2
-#define EXTERNAL_EEPROM_USER_ADDRESS  0xA0
-
 #define PUMP_GRABBING_CURRENT 	55    
 
 static int mCurStep;
@@ -216,8 +213,7 @@ void gripperCatch()
 /*!
    \brief gripper stop
  */
-void gripperRelease()
-{
+void gripperRelease() {
  	digitalWrite(GRIPPER, HIGH); 
 }
 
@@ -227,43 +223,12 @@ void gripperRelease()
    \return WORKING if gripper is working but not catched sth
    \return GRABBING if gripper got sth   
  */
-unsigned char getGripperStatus()
-{
-#ifdef MKII
-    //Serial.println(getAnalogData(GRIPPER_FEEDBACK));
-    if (digitalRead(GRIPPER) == HIGH)
-    {
-        return STOP;//NOT WORKING
-    }
-    else
-    {
-        
-        if (getAnalogPinValue(GRIPPER_FEEDBACK) > 600)
-        {
-            return WORKING;
-        }
-        else
-        {
-            return GRABBING;
-        }
-    }    
-#elif defined(METAL)    
-    if(digitalRead(GRIPPER) == HIGH)
-    {
-        return STOP;
-    }
-    else
-    {
-        if(getAnalogPinValue(GRIPPER_FEEDBACK) > 600)
-        {
-            return WORKING;
-        }
-        else
-        {
-            return GRABBING;
-        }
-    }
-#endif
+unsigned char getGripperStatus() {
+	if (digitalRead(GRIPPER) == HIGH) return STOP;
+	else {
+		if (getAnalogPinValue(GRIPPER_FEEDBACK) > 600) return WORKING;
+		else return GRABBING;
+	}
 }
 
 /*!
@@ -272,63 +237,25 @@ unsigned char getGripperStatus()
    \return WORKING if pump is working but not catched sth
    \return GRABBING if pump got sth   
  */
-unsigned char getPumpStatus()
-{
-#ifdef MKII
-    if (digitalRead(PUMP_EN) == HIGH)
-    {
-        return STOP;
-    }
-    else
-    {
-        //Serial.println(getAnalogData(PUMP_FEEDBACK));
-        if (getAnalogPinValue(PUMP_FEEDBACK) <= PUMP_GRABBING_CURRENT)
-        {
-            return GRABBING;
-        }
-        else
-        {
-            return WORKING;
-        }
-    }
-#elif defined (METAL)
-    if (digitalRead(PUMP_EN) == HIGH)
-    {
-        return 1;
-    }
-    else 
-    {
-        return 0;
-    }
-#endif
+unsigned char getPumpStatus() {
+	if (digitalRead(PUMP_EN) == HIGH) return 1;
+	else return 0;
 }
 
 /*!
    \brief pump working
  */
-void pumpOn()
-{
-    #ifdef MKII
-    digitalWrite(PUMP_EN, LOW); 
-    #elif defined(METAL)
-    digitalWrite(PUMP_EN, HIGH); 
-    digitalWrite(VALVE_EN, LOW);
-    #endif
+void pumpOn() {
+	digitalWrite(PUMP_EN, HIGH); 
+	digitalWrite(VALVE_EN, LOW);
 }
 
 /*!
    \brief pump stop
  */
-void pumpOff()
-{
-
-
-    #ifdef MKII
-    digitalWrite(PUMP_EN, HIGH); 
-    #elif defined(METAL)
-    digitalWrite(PUMP_EN, LOW); 
-    digitalWrite(VALVE_EN, HIGH);
-    #endif
+void pumpOff() {
+	digitalWrite(PUMP_EN, LOW); 
+	digitalWrite(VALVE_EN, HIGH);
 }
 
 /*!
@@ -336,8 +263,7 @@ void pumpOff()
    \param pin of arduino
    \return HIGH or LOW
  */
-int getDigitalPinValue(unsigned int pin)
-{
+int getDigitalPinValue(unsigned int pin) {
 	return digitalRead(pin);
 }
 
@@ -443,8 +369,7 @@ void getCurrentPosPol(double& s, double& r, double& h)
    \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
    \return OUT_OF_RANGE can move to the closest pos   
  */
-unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double& angleLeft, double& angleRight)
-{
+unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double& angleLeft, double& angleRight) {
 	return controller.xyzToAngle(x, y, z, angleRot, angleLeft, angleRight);
 }
 
@@ -456,279 +381,20 @@ unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double&
    \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
    \return OUT_OF_RANGE can move to the closest pos   
  */
-unsigned char angleToXYZ(double angleRot, double angleLeft, double angleRight, double& x, double& y, double& z)
-{
+unsigned char angleToXYZ(double angleRot, double angleLeft, double angleRight, double& x, double& y, double& z) {
 	return controller.getXYZFromAngle(x, y, z, angleRot, angleLeft, angleRight);
 }
-
-/*!
-   \brief get e2prom data
-   \param device:  EEPROM_ON_CHIP, EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM
-   \param addr: 0~2047(EEPROM_ON_CHIP), 0~65535(EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM)
-   \param type: DATA_TYPE_BYTE, DATA_TYPE_INTEGER, DATA_TYPE_FLOAT
- */
-double getE2PROMData(unsigned char device, unsigned int addr, unsigned char type)
-{
-   	double result = 0;
-
-    uint8_t deviceAddr;
- 
-
-    union {
-        float fdata;
-        uint8_t data[4];
-    } FData;
-
-
-    switch(device)
-    {
-
-    case 0:
-
-        switch(type)
-        {
-        case DATA_TYPE_BYTE:
-        	{
-                int val = EEPROM.read(addr);
-                result = val;
-                break;
-        	}
-        case DATA_TYPE_INTEGER:
-        	{
-                int i_val = 0;
-                EEPROM.get(addr, i_val);
-         		result = i_val;
-                break;
-        	}
-        case DATA_TYPE_FLOAT:
-        	{
-                double f_val = 0.0f;
-                EEPROM.get(addr,f_val);
-            	result = f_val;
-                break;
-        	}
-        }
-
-        break;
-
-    case 1:
-        deviceAddr = EXTERNAL_EEPROM_USER_ADDRESS;
-        break;
-
-    case 2:
-        deviceAddr = EXTERNAL_EEPROM_SYS_ADDRESS;
-        break;
-
-    default:
-        return ADDRESS_ERROR;
-    }
-
-    
-    if (device == 1 || device == 2)
-    {
-        int num = 0;
-        switch(type)
-        {
-        case DATA_TYPE_BYTE:
-            {
-                num = 1;
-                break;
-            }
-        case DATA_TYPE_INTEGER:
-            {
-                num = 2;
-                break;
-            }
-        case DATA_TYPE_FLOAT:
-            {
-                num = 4;
-                break;
-            }
-        default:
-            return PARAMETER_ERROR;
-        }
-
-        unsigned char i=0;
-        i = (addr % 128);
-        // Since the eeprom's sector is 128 byte, if we want to write 5 bytes per cycle we need to care about when there's less than 5 bytes left
-        if (i >= (129-num)) 
-        {
-            i = 128 - i;
-            iic_readbuf(FData.data, deviceAddr, addr, i);// write data
-            delay(5);
-            iic_readbuf(FData.data + i, deviceAddr, addr + i, num - i);// write data
-        }
-        //if the left bytes are greater than 5, just do it
-        else
-        {
-            iic_readbuf(FData.data, deviceAddr, addr, num);// write data
-        }      
-
-
-        switch(type)
-        {
-        case DATA_TYPE_BYTE:
-            {
-                result = FData.data[0];
-                break;
-            }
-        case DATA_TYPE_INTEGER:
-            {
-                result = (FData.data[0] << 8) + FData.data[1];
-                break;
-            }
-        case DATA_TYPE_FLOAT:
-            {
-                result = FData.fdata;
-                break;
-            }
-        }
-    }
-
-    return result;
-
-}
-
-/*!
-   \brief set e2prom data
-   \param device:  EEPROM_ON_CHIP, EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM
-   \param addr: 0~2047(EEPROM_ON_CHIP), 0~65535(EEPROM_EXTERN_USER, EEPROM_EXTERN_SYSTEM)
-   \param type: DATA_TYPE_BYTE, DATA_TYPE_INTEGER, DATA_TYPE_FLOAT
-   \param value: value to write
- */
-double setE2PROMData(unsigned char device, unsigned int addr, unsigned char type, double value)
-{
-    uint8_t deviceAddr;
-
-    union {
-        float fdata;
-        uint8_t data[4];
-    } FData;
-
-	switch(device)
-    {
-
-    case 0:    
-        switch(type)
-        {
-        case DATA_TYPE_BYTE:
-        	{
-                byte b_val;
-                b_val = byte(value);
-                EEPROM.write(addr, b_val);
-                break;
-        	}
-        case DATA_TYPE_INTEGER:
-        	{
-                int i_val = 0;
-                i_val = int(value);
-                EEPROM.put(addr, i_val);
-                break;
-        	}
-        case DATA_TYPE_FLOAT:
-        	{
-        	    float f_val = 0.0f;
-                f_val = float(value);
-                EEPROM.put(addr,f_val);
-                // Serial.println(f_val);
-                break;
-        	}
-        }
-        break;
-    case 1:
-        deviceAddr = EXTERNAL_EEPROM_USER_ADDRESS;
-        break;
-
-    case 2:
-        deviceAddr = EXTERNAL_EEPROM_SYS_ADDRESS;
-        break;
-
-    default:
-        return ADDRESS_ERROR;
-    }       
-
-
-    if (device == 1 || device == 2)
-    {
-        int num = 0;
-        switch(type)
-        {
-        case DATA_TYPE_BYTE:
-            {
-                FData.data[0] = byte(value);
-                num = 1;
-                break;
-            }
-        case DATA_TYPE_INTEGER:
-            {
-                int i_val = 0;
-                i_val = int(value); 
-                FData.data[0] = (i_val & 0xff00) >> 8;
-                FData.data[1] = i_val & 0xff;
-                num = 2;
-                break;
-            }
-        case DATA_TYPE_FLOAT:
-            {
-                FData.fdata = float(value);
-                num = 4;
-                break;
-            }
-        default:
-            return PARAMETER_ERROR;
-        }
-
-        unsigned char i=0;
-        i = (addr % 128);
-
-        // Since the eeprom's sector is 128 byte, if we want to write 5 bytes per cycle we need to care about when there's less than 5 bytes left
-        if (i >= (129-num)) {
-            i = 128 - i;
-            iic_writebuf(FData.data, deviceAddr, addr, i);// write data
-            delay(5);
-            iic_writebuf(FData.data + i, deviceAddr, addr + i, num - i);// write data
-        }
-
-        // If the left bytes are greater than 5, just do it.
-        else iic_writebuf(FData.data, deviceAddr, addr, num); // Write data.
-    }
-}
-
-#ifdef MKII
-/*!
-   \brief stop move immediately
- */
-void stopMove() {mCurStep = -1;}
-
-/*!
-   \brief is moving now
- */
-bool isMoving() {return (mCurStep != -1);}
-
-/*!
-   \brief check if power plug in
- */
-bool isPowerPlugIn() {
-    if (analogRead(POWER_DETECT) > 400)
-        return true;
-    else
-        return false;
-}
-#endif 
 
 ////////////////////////////////////////////////////////////////////////////
 // private functions
 
 static void _sort(unsigned int array[], unsigned int len) {
-	unsigned char i=0,j=0;
 	unsigned int temp = 0;
+	unsigned char i = 0, j = 0;
 
-	for(i = 0; i < len; i++) 
-	{
-		for(j = 0; i+j < (len-1); j++) 
-		{
-			if(array[j] > array[j+1]) 
-			{
+	for(i = 0; i < len; i++) {
+		for(j = 0; i+j < (len-1); j++) {
+			if(array[j] > array[j+1]) {
 				temp = array[j];
 				array[j] = array[j+1];
 				array[j+1] = temp;
@@ -742,8 +408,7 @@ static void _interpolate(double startVal, double endVal, double *interpVals, int
     endVal = endVal / 10.0;
 
     double delta = endVal - startVal;
-    for (byte i = 1; i <= steps; i++)
-    {
+    for (byte i = 1; i <= steps; i++) {
         float t = (float)i / steps;
         //*(interp_vals+f) = 10.0*(start_val + (3 * delta) * (t * t) + (-2 * delta) * (t * t * t));
         *(interpVals + i - 1) = 10.0 * (startVal + t * t * delta * (3 + (-2) * t));
