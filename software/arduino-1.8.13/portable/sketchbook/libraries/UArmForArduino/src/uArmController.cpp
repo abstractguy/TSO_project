@@ -24,30 +24,12 @@ void uArmController::init() {
 	mServoAngleOffset[2] = SERVO_2_MANUAL;
 	mServoAngleOffset[3] = SERVO_3_MANUAL;
 
-	for (int k = 0; k < 3; k++) {
-		delay(10);
-		unsigned char data[2];
-		unsigned int offset = (4 + k) * 1024 + 500;
-
-		iic_readbuf(data, EXTERNAL_EEPROM_SYS_ADDRESS, offset, 2);
-
-		mMaxAdcPos[k] = (data[0] << 8) + data[1];
-
-		//Serial.println(mMaxAdcPos[k]);
-	}
-
 	mServo[SERVO_ROT_NUM].setPulseWidthRange(500, 2500);
 	mServo[SERVO_LEFT_NUM].setPulseWidthRange(500, 2500);
 	mServo[SERVO_RIGHT_NUM].setPulseWidthRange(500, 2500);
 	mServo[SERVO_HAND_ROT_NUM].setPulseWidthRange(600, 2400);
 
 	attachAllServo();  
-
-        // Ensure base position.
-	//writeServoAngle(SERVO_ROT_NUM, 90);
-	//writeServoAngle(SERVO_LEFT_NUM, 90);
-	//writeServoAngle(SERVO_RIGHT_NUM, 0);
-	//writeServoAngle(SERVO_HAND_ROT_NUM, 90);   
 
 	mCurAngle[0] = readServoAngle(SERVO_ROT_NUM, true);
 	mCurAngle[1] = readServoAngle(SERVO_LEFT_NUM, true);

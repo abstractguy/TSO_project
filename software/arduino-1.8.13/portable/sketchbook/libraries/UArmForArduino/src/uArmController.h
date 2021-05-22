@@ -112,7 +112,7 @@ protected:
 	unsigned char mServoSpeed = 255;
 	double mCurAngle[SERVO_COUNT] = {90, 90, 0, 90};
 
-	unsigned int mMaxAdcPos[SERVO_COUNT] = {180};
+	unsigned int mMaxAdcPos[SERVO_COUNT] = {0};
 	// Offset of assembling.
 	double mServoAngleOffset[SERVO_COUNT];
 	
