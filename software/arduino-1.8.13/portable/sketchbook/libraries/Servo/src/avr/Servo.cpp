@@ -217,7 +217,6 @@ static boolean isTimerActive(timer16_Sequence_t timer)
   return false;
 }
 
-
 /****************** end of static functions ******************************/
 
 Servo::Servo()
@@ -250,6 +249,11 @@ uint8_t Servo::attach(int pin, int min, int max)
     servos[this->servoIndex].Pin.isActive = true;  // this must be set after the check for isTimerActive
   }
   return this->servoIndex ;
+}
+
+void Servo::setPulseWidthRange(int min, int max) {
+    this->min  = (MIN_PULSE_WIDTH - min) / 4; // Resolution of min/max is 4 uS.
+    this->max  = (MAX_PULSE_WIDTH - max) / 4;
 }
 
 void Servo::detach()

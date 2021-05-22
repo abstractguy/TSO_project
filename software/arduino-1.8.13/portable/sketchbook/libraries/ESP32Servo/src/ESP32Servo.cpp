@@ -63,29 +63,24 @@ Servo::Servo()
 	this->min = DEFAULT_uS_LOW;
 	this->max = DEFAULT_uS_HIGH;
 	this->timer_width_ticks = pow(2,this->timer_width);
-
 }
 ESP32PWM * Servo::getPwm(){
-
 	return &pwm;
 }
 
 int Servo::attach(int pin)
 {
-
     return (this->attach(pin, DEFAULT_uS_LOW, DEFAULT_uS_HIGH));
 }
 
 int Servo::attach(int pin, int min, int max)
 {
-
 #ifdef ENFORCE_PINS
         // ESP32 Recommend only the following pins 2,4,12-19,21-23,25-27,32-33
 		// ESP32-S2 only the following pins 1-21,26,33-42
         if (pwm.hasPwm(pin))
         {
 #endif
-
             // OK to proceed; first check for new/reuse
             if (this->pinNumber < 0) // we are attaching to a new or previously detached pin; we need to initialize/reinitialize
             {
@@ -108,7 +103,6 @@ int Servo::attach(int pin, int min, int max)
             return 0;
         }
 #endif
-
 
         // min/max checks 
         if (min < MIN_PULSE_WIDTH)          // ensure pulse width is valid

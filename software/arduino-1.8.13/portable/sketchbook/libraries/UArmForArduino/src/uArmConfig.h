@@ -15,22 +15,15 @@
 
 #include <Arduino.h>
 
-#define METAL
 //#define DEBUG                 // uncomment if you want to print debug info
 
-#ifdef METAL
-	#define HW_VER  "2.1"
-	#define SW_VER  "2.2.3"
-#else
-	#error "NO machine model defined(METAL)"
-#endif
+#define HW_VER  "2.1"
+#define SW_VER  "2.2.3"
 
-#ifdef METAL
-	#define DEVICE_NAME "Metal"
-#elif defined(MKII)
-	#define DEVICE_NAME "MKII"
+#ifdef ARDUINO_ESP32_DEV
+	#define DEVICE_NAME "ESP32Metal"
 #else
-	#define DEVICE_NAME "UNKNOWN"
+	#define DEVICE_NAME "Metal"
 #endif
 
 #define TICK_INTERVAL    50    // ms

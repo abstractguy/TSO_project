@@ -24,10 +24,27 @@ void uArmController::init() {
 	mServoAngleOffset[2] = SERVO_2_MANUAL;
 	mServoAngleOffset[3] = SERVO_3_MANUAL;
 
-	mServo[SERVO_ROT_NUM].setPulseWidthRange(500, 2500);
-	mServo[SERVO_LEFT_NUM].setPulseWidthRange(500, 2500);
-	mServo[SERVO_RIGHT_NUM].setPulseWidthRange(500, 2500);
-	mServo[SERVO_HAND_ROT_NUM].setPulseWidthRange(600, 2400);
+	#ifdef ARDUINO_ARCH_AVR
+		mServo[SERVO_ROT_NUM].setPulseWidthRange(500, 2500);
+		mServo[SERVO_LEFT_NUM].setPulseWidthRange(500, 2500);
+		mServo[SERVO_RIGHT_NUM].setPulseWidthRange(500, 2500);
+		mServo[SERVO_HAND_ROT_NUM].setPulseWidthRange(600, 2400);
+	#elif defined(ARDUINO_ESP32_DEV)
+		ESP32PWM::allocateTimer(0);		// Allocate one timer.
+		ESP32PWM::allocateTimer(1);		// Allocate one timer.
+		ESP32PWM::allocateTimer(2);		// Allocate one timer.
+		ESP32PWM::allocateTimer(3);		// Allocate one timer.
+
+		mServo[0].setPeriodHertz(50);		// Standard 50hz servo.
+		mServo[1].setPeriodHertz(50);		// Standard 50hz servo.
+		mServo[2].setPeriodHertz(50);		// Standard 50hz servo.
+		mServo[3].setPeriodHertz(50);		// Standard 50hz servo.
+	#else
+		mServo[SERVO_ROT_NUM].setPulseWidthRange(500, 2500);
+		mServo[SERVO_LEFT_NUM].setPulseWidthRange(500, 2500);
+		mServo[SERVO_RIGHT_NUM].setPulseWidthRange(500, 2500);
+		mServo[SERVO_HAND_ROT_NUM].setPulseWidthRange(600, 2400);
+	#endif
 
 	attachAllServo();  
 

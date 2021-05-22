@@ -27,16 +27,14 @@
 #define usToTicks(_us)    (( clockCyclesPerMicrosecond()* _us) / 8)     // converts microseconds to tick (assumes prescale of 8)  // 12 Aug 2009
 #define ticksToUs(_ticks) (( (unsigned)_ticks * 8)/ clockCyclesPerMicrosecond() ) // converts from ticks back to microseconds
 
-
 #define TRIM_DURATION       2                               // compensation ticks to trim adjust for digitalWrite delays // 12 August 2009
 
 //#define NBR_TIMERS        (MAX_SERVOS / SERVOS_PER_TIMER)
 
 static servo_t servos[MAX_SERVOS];                          // static array of servo structures
-static volatile int8_t Channel[_Nbr_16timers ];             // counter for the servo being pulsed for each timer (or -1 if refresh interval)
+static volatile int8_t Channel[_Nbr_16timers];             // counter for the servo being pulsed for each timer (or -1 if refresh interval)
 
 uint8_t ServoCount = 0;                                     // the total number of attached servos
-
 
 // convenience macros
 #define SERVO_INDEX_TO_TIMER(_servo_nbr) ((timer16_Sequence_t)(_servo_nbr / SERVOS_PER_TIMER)) // returns the timer controlling this servo
@@ -49,19 +47,16 @@ uint8_t ServoCount = 0;                                     // the total number 
 
 /************ static functions common to all instances ***********************/
 
-static inline void handle_interrupts(timer16_Sequence_t timer, volatile uint16_t *TCNTn, volatile uint16_t* OCRnA)
-{
-  if( Channel[timer] < 0 )
+static inline void handle_interrupts(timer16_Sequence_t timer, volatile uint16_t *TCNTn, volatile uint16_t* OCRnA) {
+  if (Channel[timer] < 0)
     *TCNTn = 0; // channel set to -1 indicated that refresh interval completed so reset the timer
-  else{
+  else {
     if( SERVO_INDEX(timer,Channel[timer]) < ServoCount && SERVO(timer,Channel[timer]).Pin.isActive == true )
       digitalWrite( SERVO(timer,Channel[timer]).Pin.nbr,LOW); // pulse this channel low if activated
   }
 
   Channel[timer]++;    // increment to the next channel
   if( SERVO_INDEX(timer,Channel[timer]) < ServoCount && Channel[timer] < SERVOS_PER_TIMER) {
-
-
       // Extension for slowmove 
    if (SERVO(timer,Channel[timer]).speed) { 
      // Increment ticks by speed until we reach the target. 
@@ -144,7 +139,6 @@ void Timer3Service()
 }
 #endif
 #endif
-
 
 static void initISR(timer16_Sequence_t timer)
 {
@@ -241,7 +235,6 @@ static boolean isTimerActive(timer16_Sequence_t timer)
   return false;
 }
 
-
 /****************** end of static functions ******************************/
 
 Servo::Servo()
@@ -259,10 +252,9 @@ uint8_t Servo::attach(int pin)
   return this->attach(pin, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
 }
 
-void Servo::setPulseWidthRange(int min, int max)
-{
-    this->min  = (MIN_PULSE_WIDTH - min)/4; //resolution of min/max is 4 uS
-    this->max  = (MAX_PULSE_WIDTH - max)/4;
+void Servo::setPulseWidthRange(int min, int max) {
+    this->min  = (MIN_PULSE_WIDTH - min) / 4; // Resolution of min/max is 4 uS.
+    this->max  = (MAX_PULSE_WIDTH - max) / 4;
 }
 
 uint8_t Servo::attach(int pin, int min, int max)
@@ -352,17 +344,7 @@ void Servo::write(float value)
    } 
 } 
 
-void Servo::setSpeed(unsigned char speed)
-{
-  byte channel = this->servoIndex; 
-  uint8_t oldSREG = SREG; 
-  cli();   
-  servos[channel].speed = speed;
-  SREG = oldSREG; 
-}  
-
-void Servo::writeMicroseconds(int value)
-{
+void Servo::writeMicroseconds(int value) {
   // calculate and store the values for the given channel
   byte channel = this->servoIndex;
   if( (channel < MAX_SERVOS) )   // ensure channel is valid

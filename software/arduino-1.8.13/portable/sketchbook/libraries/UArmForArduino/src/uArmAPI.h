@@ -10,7 +10,13 @@
 #define _UARMAPI_H_
 
 #include <Arduino.h>
-#include "UFServo.h"
+#ifdef ARDUINO_ARCH_AVR
+	#include "UFServo.h"
+	//#include <Servo.h>
+#elif defined(ARDUINO_ESP32_DEV)
+	#include <ESP32Servo.h>
+#endif
+
 #include "uArmConfig.h"
 #include "uArmPin.h"
 #include "uArmDebug.h"
