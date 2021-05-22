@@ -38,7 +38,7 @@ There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc
 The main code was tested on PC and Jetson for easier modular tests while integrating.
 
 ## Firmware
-The firmware is portable across Arduino boards. Only pin definitions, PWM output and ADC input differ (defined for each microcontroller in a separate *.h/*.c). It runs on AVR, SAM and ESP32 boards. Only a #define at the beginning of software/arduino-1.8.13/firmware/firmware.ino selects the right board. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process (only tested on AVR for now). See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
+The firmware is portable across Arduino boards (it runs AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h need to be redefined. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process (only tested on AVR for now). See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
 
 ## ArduCAM Camarray
 An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
@@ -359,6 +359,7 @@ $ tensorboard --logdir=runs
 - software/jetson/README.md
 - software/jetson/jetson-containers/README.md
 - software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md
+- software/arduino-1.8.13/portable/sketchbook/libraries/Servo/README.md
 - and others... (in development)
 
 YOLOv4x-mish-640

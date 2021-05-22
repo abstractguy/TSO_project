@@ -4,8 +4,7 @@
 	#include <Arduino.h>
 
 	#ifdef ARDUINO_ARCH_AVR
-		#include "UFServo.h"
-		//#include <Servo.h>
+		#include <Servo.h>
 	#elif defined(ARDUINO_ESP32_DEV)
 		#include <ESP32Servo.h>
 	#else
