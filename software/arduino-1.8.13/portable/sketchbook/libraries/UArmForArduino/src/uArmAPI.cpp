@@ -72,12 +72,16 @@ void uArmInit() {
 unsigned char moveTo(double x, double y, double z, double speed) {
 	unsigned char result = IN_RANGE;
 
+	#ifdef DISABLE_SERVO_SPEED
+		speed = 255;
+	#endif
+
 	debugPrint("moveTo: x=%f, y=%f, z=%f, speed=%f", x, y, z, speed);
 
 	// When speed less than 100 mm/min, move to destination directly.
 	if (speed < 0) return OUT_OF_RANGE_NO_SOLUTION;
 	else if (speed < 100) {
-		unsigned char dutyCycle = map(speed, 0, 99, 0,  255);   
+		unsigned char dutyCycle = map(speed, 0, 99, 0, 255);   
 		
 		controller.setServoSpeed(dutyCycle);
 
@@ -106,15 +110,20 @@ unsigned char moveTo(double x, double y, double z, double speed) {
    \return NO_NEED_TO_MOVE if it is already there
  */
 unsigned char relativeMove(double x, double y, double z, double speed) {
-    double x1, y1, z1;
-    // Get current xyz.
-    controller.getCurrentXYZ(x1, y1, z1);
+	double x1, y1, z1;
 
-    x1 += x;
-    y1 += y;
-    z1 += z;
+	#ifdef DISABLE_SERVO_SPEED
+		speed = 255;
+	#endif
 
-    return moveTo(x1, y1, z1, speed);	
+	// Get current xyz.
+	controller.getCurrentXYZ(x1, y1, z1);
+
+	x1 += x;
+	y1 += y;
+	z1 += z;
+
+	return moveTo(x1, y1, z1, speed);	
 }
 
 /*!
@@ -130,6 +139,11 @@ unsigned char relativeMove(double x, double y, double z, double speed) {
  */
 unsigned char moveToPol(double s, double r, double h, double speed) {
 	double x, y, z;
+
+	#ifdef DISABLE_SERVO_SPEED
+		speed = 255;
+	#endif
+
 	polToXYZ(s, r, h, x, y, z);
 	return moveTo(x, y, z, speed);		
 }
@@ -427,6 +441,10 @@ static unsigned char _moveTo(double x, double y, double z, double speed) {
 
 	if (status == OUT_OF_RANGE_NO_SOLUTION) return OUT_OF_RANGE_NO_SOLUTION;
 
+	#ifdef DISABLE_SERVO_SPEED
+		speed = 0;
+	#endif
+
 	if (speed == 0) {
 		mCurStep = -1;
 		controller.writeServoAngle(targetRot, targetLeft, targetRight);
@@ -449,7 +467,7 @@ static unsigned char _moveTo(double x, double y, double z, double speed) {
 	totalSteps = totalSteps < STEP_MAX ? totalSteps : STEP_MAX;
 
 	// Calculate step time.
-	double distance = sqrt((x-curX) * (x-curX) + (y-curY) * (y-curY) + (z-curZ) * (z-curZ));
+	double distance = sqrt((x - curX) * (x - curX) + (y - curY) * (y - curY) + (z - curZ) * (z - curZ));
 	speed = constrain(speed, 100, 1000);
 	timePerStep = distance / speed * 1000.0 / totalSteps;
 
@@ -511,8 +529,10 @@ static void _controllerRun() {
 			// Ignore the point if cannot reach.
 			if (controller.limitRange(mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]) != OUT_OF_RANGE_NO_SOLUTION) {
 				debugPrint("curStep:%d, %f, %f, %f", mCurStep, mPathX[mCurStep], mPathY[mCurStep], mPathZ[mCurStep]);
+
 				if (mCurStep == (mTotalSteps - 1)) {
 					double angles[3];
+
 					angles[0] = controller.getReverseServoAngle(0, mPathX[mCurStep]);
 					angles[1] = controller.getReverseServoAngle(1, mPathY[mCurStep]);
 					angles[2] = controller.getReverseServoAngle(2, mPathZ[mCurStep]);

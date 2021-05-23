@@ -1,5 +1,6 @@
 # Servo library
 
+Modified by Samuel Duclos to include a slowmove extension for AVR and to support uArm servo specifications.
 
 This library allows an Arduino board to control RC (hobby) servo motors. Servos have integrated gears and a shaft that can be precisely controlled. Standard servos allow the shaft to be positioned at various angles, usually between 0 and 180 degrees. Continuous rotation servos allow the rotation of the shaft to be set to various speeds.
 
@@ -19,3 +20,4 @@ Servo motors have three wires: power, ground, and signal. The power wire is typi
 
 * [Knob](https://www.arduino.cc/en/Tutorial/Knob): control the shaft of a servo motor by turning a potentiometer
 * [Sweep](https://www.arduino.cc/en/Tutorial/LibraryExamples/Sweep): sweeps the shaft of a servo motor back and forth
+

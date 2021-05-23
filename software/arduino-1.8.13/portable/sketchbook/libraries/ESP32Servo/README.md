@@ -1,5 +1,7 @@
 # Servo Library for ESP32
 
+Slightly modified by Samuel Duclos for uArm servos.
+
 This library attempts to faithfully replicate the semantics of the
 Arduino Servo library (see http://www.arduino.cc/en/Reference/Servo)
 for the ESP32, with two (optional) additions. The two new functions

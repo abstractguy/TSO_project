@@ -359,7 +359,7 @@ $ tensorboard --logdir=runs
 - software/jetson/README.md
 - software/jetson/jetson-containers/README.md
 - software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md
-- software/arduino-1.8.13/portable/sketchbook/libraries/Servo/README.md
+- software/arduino-1.8.13/portable/sketchbook/libraries/Servo/docs/readme.md
 - software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md
 - and others... (in development)
 

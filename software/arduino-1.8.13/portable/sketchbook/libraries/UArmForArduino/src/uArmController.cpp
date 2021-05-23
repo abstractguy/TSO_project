@@ -49,10 +49,16 @@ void uArmController::init() {
 
 	attachAllServo();  
 
-	mCurAngle[0] = readServoAngle(SERVO_ROT_NUM, true);
-	mCurAngle[1] = readServoAngle(SERVO_LEFT_NUM, true);
-	mCurAngle[2] = readServoAngle(SERVO_RIGHT_NUM, true);
-	mCurAngle[3] = readServoAngle(SERVO_HAND_ROT_NUM, true);
+	bool withOffset = true;
+
+	#ifdef DISABLE_SERVO_OFFSET
+		withOffset = false;
+	#endif
+
+	mCurAngle[0] = readServoAngle(SERVO_ROT_NUM, withOffset);
+	mCurAngle[1] = readServoAngle(SERVO_LEFT_NUM, withOffset);
+	mCurAngle[2] = readServoAngle(SERVO_RIGHT_NUM, withOffset);
+	mCurAngle[3] = readServoAngle(SERVO_HAND_ROT_NUM, withOffset);
 }
 
 void uArmController::attachAllServo() {
@@ -80,16 +86,28 @@ void uArmController::writeServoAngle(double servoRotAngle, double servoLeftAngle
 double uArmController::getReverseServoAngle(byte servoNum, double servoAngle) {return servoAngle;}
 
 void uArmController::writeServoAngle(byte servoNum, double servoAngle, boolean writeWithOffset) {
+	#ifdef DISABLE_SERVO_OFFSET
+		writeWithOffset = false;
+	#endif
+
 	servoAngle = constrain(servoAngle, 0.00, 180.00);
 
 	mCurAngle[servoNum] = servoAngle;
 	servoAngle = writeWithOffset ? (servoAngle + mServoAngleOffset[servoNum]) : servoAngle;
 
-	mServo[servoNum].write(servoAngle, mServoSpeed);
+	#ifdef DISABLE_SERVO_SPEED
+		mServo[servoNum].write(servoAngle);
+	#else
+		mServo[servoNum].write(servoAngle, mServoSpeed);
+	#endif
 }
 
 double uArmController::readServoAngle(byte servoNum, boolean withOffset) {
 	double angle;
+
+	#ifdef DISABLE_SERVO_OFFSET
+		withOffset = false;
+	#endif
 
 	if (servoNum == SERVO_HAND_ROT_NUM) angle = map(getServoAnalogData(SERVO_HAND_ROT_ANALOG_PIN), SERVO_9G_MIN, SERVO_9G_MAX, 0, 180);
 	else angle = analogToAngle(servoNum, getServoAnalogData(servoNum));
@@ -102,6 +120,10 @@ double uArmController::readServoAngle(byte servoNum, boolean withOffset) {
 }
 
 double uArmController::readServoAngles(double& servoRotAngle, double& servoLeftAngle, double& servoRightAngle, boolean withOffset) {
+	#ifdef DISABLE_SERVO_OFFSET
+		withOffset = false;
+	#endif
+
 	servoRotAngle = readServoAngle(SERVO_ROT_NUM, withOffset);
 	servoLeftAngle = readServoAngle(SERVO_LEFT_NUM, withOffset);
 	servoRightAngle = readServoAngle(SERVO_RIGHT_NUM, withOffset);
@@ -118,6 +140,10 @@ double uArmController::getServeAngle(byte servoNum) {
 }
 
 void uArmController::updateAllServoAngle(boolean withOffset) {
+	#ifdef DISABLE_SERVO_OFFSET
+		withOffset = false;
+	#endif
+
 	for (unsigned char servoNum = SERVO_ROT_NUM; servoNum < SERVO_COUNT; servoNum++) {
 		mCurAngle[servoNum] = readServoAngle(servoNum, withOffset); 	
 	}
@@ -257,13 +283,17 @@ unsigned int uArmController::getServoAnalogData(byte servoNum) {
 }
 
 unsigned char uArmController::setServoSpeed(byte servoNum, unsigned char speed) {
-	mServoSpeed = speed;
+	#ifndef DISABLE_SERVO_SPEED
+		mServoSpeed = speed;
+	#endif
 }
 
 unsigned char uArmController::setServoSpeed(unsigned char speed) {
-	setServoSpeed(SERVO_ROT_NUM, speed);
-	setServoSpeed(SERVO_LEFT_NUM, speed);
-	setServoSpeed(SERVO_RIGHT_NUM, speed);
-	//setServoSpeed(SERVO_HAND_ROT_NUM, true);
+	#ifndef DISABLE_SERVO_SPEED
+		setServoSpeed(SERVO_ROT_NUM, speed);
+		setServoSpeed(SERVO_LEFT_NUM, speed);
+		setServoSpeed(SERVO_RIGHT_NUM, speed);
+		//setServoSpeed(SERVO_HAND_ROT_NUM, true);
+	#endif
 }
 
