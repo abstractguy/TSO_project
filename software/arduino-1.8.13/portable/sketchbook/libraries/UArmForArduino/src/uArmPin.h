@@ -4,6 +4,7 @@
   * @author	David.Long	
   * @email	xiaokun.long@ufactory.cc
   * @date	2016-10-17
+  * @modified	Samuel Duclos
   ******************************************************************************
   */
 
@@ -12,8 +13,7 @@
 
 #include "uArmConfig.h"
 
-#elif defined(ARDUINO_ESP32_DEV)
-
+#if defined(ARDUINO_ESP32_DEV)
 	// Possible PWM GPIO pins on the ESP32: 0 (used by on-board button), 2, 4, 5 (used by on-board LED), 12-19, 21-23, 25-27 and 32-33.
 	#define SERVO_ROT_PIN           25
 	#define SERVO_LEFT_PIN          27
@@ -34,6 +34,29 @@
 	// This is the default ADC max value on the ESP32 (12 bit ADC width).
 	// This width can be set (in low-level oode) from 9-12 bits, for a range of values between 512 and 4096 extremums.
 	#define ADC_MAX 4096
+
+#elif defined(ARDUINO_ESP32S2_DEV)
+	// Possible PWM GPIO pins on the ESP32-S2: 0 (used by on-board button), 1-17, 18 (used by on-board LED), 19-21, 26, 33-42
+	#define SERVO_ROT_PIN           14
+	#define SERVO_LEFT_PIN          16
+	#define SERVO_RIGHT_PIN         15
+	#define SERVO_HAND_ROT_PIN      13
+
+	// Possible ADC pins on the ESP32-S2: 1-20 are recommended for analog input
+	#define SERVO_ROT_ANALOG_PIN 		19
+	#define SERVO_LEFT_ANALOG_PIN 		17
+	#define SERVO_RIGHT_ANALOG_PIN 		18
+	#define SERVO_HAND_ROT_ANALOG_PIN 	20
+
+	#define PUMP_EN                 9			// HIGH = Valve OPEN
+	#define VALVE_EN                10			// HIGH = Pump ON, so plugged to VCC
+	#define GRIPPER                 11			// LOW = Catch
+	#define GRIPPER_FEEDBACK        12
+
+	// This is the default ADC max value on the ESP32 (12 bit ADC width).
+	// This width can be set (in low-level oode) from 9-12 bits, for a range of values between 512 and 4096 extremums.
+	#define ADC_MAX 4096
+
 #else
 	#define SERVO_ROT_PIN           11
 	#define SERVO_LEFT_PIN          13

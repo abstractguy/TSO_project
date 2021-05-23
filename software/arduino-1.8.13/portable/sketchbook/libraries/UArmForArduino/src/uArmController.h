@@ -6,6 +6,7 @@
   * @date	2016-09-28
   * @license GNU
   * copyright(c) 2016 UFactory Team. All right reserved
+  * @modified	Samuel Duclos
   ******************************************************************************
   */
 
@@ -14,15 +15,15 @@
 
 #include <Arduino.h>
 
-#ifdef ARDUINO_ESP32_DEV
+#include "uArmConfig.h"
+#include "uArmPin.h"
+#include "uArmTypes.h"
+
+#ifdef DEVICE_ESP32
 	#include <ESP32Servo.h>
 #else
 	#include <Servo.h>
 #endif
-
-#include "uArmConfig.h"
-#include "uArmPin.h"
-#include "uArmTypes.h"
 
 #define DEFAULT_ANGLE			60
 
@@ -33,7 +34,7 @@
 #define MATH_LOWER_ARM 		148.25	
 #define MATH_UPPER_ARM 		160.2 	
 #define MATH_FRONT_HEADER 	25.00 // The distance between wrist to the front point we use.
-#define MATH_UPPER_LOWER 	MATH_UPPER_ARM/MATH_LOWER_ARM
+#define MATH_UPPER_LOWER 	MATH_UPPER_ARM / MATH_LOWER_ARM
 #define MAX_Z				260 // Max height.
 #define MIN_Z				(-120)
 
@@ -58,7 +59,7 @@ Servo 3 INTERCEPT: -42.67, SLOPE: 0.47, MANUAL: 0.0
 */
 #define SERVO_0_INTERCEPT -30.45
 #define SERVO_0_SLOPE 0.35
-#define SERVO_0_MANUAL  -18.76
+#define SERVO_0_MANUAL -18.76
 #define SERVO_1_INTERCEPT -28.37
 #define SERVO_1_SLOPE 0.34
 #define SERVO_1_MANUAL 10.0

@@ -4,23 +4,24 @@
    \author 	David Long
    \license GNU
    \copyright(c) 2016 UFactory Team. All right reserved
+   \modified	Samuel Duclos
  */
 
 #ifndef _UARMAPI_H_
 #define _UARMAPI_H_
 
 #include <Arduino.h>
-#ifdef ARDUINO_ESP32_DEV
-	#include <ESP32Servo.h>
-#else
-	#include <Servo.h>
-#endif
-
 #include "uArmConfig.h"
 #include "uArmPin.h"
 #include "uArmDebug.h"
 #include "uArmController.h"
 #include "uArmTypes.h"
+
+#ifdef DEVICE_ESP32
+	#include <ESP32Servo.h>
+#else
+	#include <Servo.h>
+#endif
 
 #define PARAMETER_ERROR   21
 #define ADDRESS_ERROR     22
@@ -141,7 +142,6 @@ unsigned char getPumpStatus();
    \return true if limit switch hit
  */
 bool getTip();
-
 
 /*!
    \brief check pos reachable

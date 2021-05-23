@@ -6,12 +6,12 @@
   * @date	2016-10-08
   * @license GNU
   * copyright(c) 2016 UFactory Team. All right reserved
+  * @modified		Samuel Duclos
   ******************************************************************************
   */
 
 #include "uArmComm.h" 
 #include "uArmRingBuffer.h"
-
 
 static CommState commState = IDLE;
 static unsigned char cmdReceived[COM_LEN_MAX];
@@ -202,8 +202,7 @@ static unsigned char cmdGetCurrentAngle(int serialNum, int parameterCount, doubl
     return 0;
 }
 
-static unsigned char cmdCoordinateToAngle(int serialNum, int parameterCount, double value[4])
-{
+static unsigned char cmdCoordinateToAngle(int serialNum, int parameterCount, double value[4]) {
     double rot, left, right;
 
     if (parameterCount != 3)
@@ -319,37 +318,25 @@ static unsigned char cmdRelativeMove(int serialNum, int parameterCount, double v
 
 static unsigned char cmdGetDeviceName(int serialNum, int parameterCount, double value[4]) {
     if (parameterCount != 0) return PARAMETER_ERROR;
-
     char result[RESULT_BUFFER_SIZE];
-
     msprintf(result, "V%s", DEVICE_NAME);
- 
     replyResult(serialNum, result);
-
     return 0;
 }
 
 static unsigned char cmdGetAPIVersion(int serialNum, int parameterCount, double value[4]) {
     if (parameterCount != 0) return PARAMETER_ERROR;
-
     char result[RESULT_BUFFER_SIZE];
-
     msprintf(result, "V%s", SW_VER);
-
     replyResult(serialNum, result);
-
     return 0;
 }
 
 static unsigned char cmdGetDeviceUUID(int serialNum, int parameterCount, double value[4]) {
     if (parameterCount != 0) return PARAMETER_ERROR;
-
     char result[RESULT_BUFFER_SIZE];
-
     strcpy(result, "V1234567890");
-
     replyResult(serialNum, result);
-
     return 0;
 }
 
@@ -441,8 +428,7 @@ static void HandleSettingCmd(int cmdCode, int serialNum, int parameterCount, dou
         return;
     }
 
-    if (result > 0)
-    {
+    if (result > 0) {
         Serial.print("$");
         Serial.print(serialNum);
         Serial.print(" ");
@@ -451,12 +437,10 @@ static void HandleSettingCmd(int cmdCode, int serialNum, int parameterCount, dou
     }
 }
 
-static void HandleQueryCmd(int cmdCode, int serialNum, int parameterCount, double value[4])
-{
+static void HandleQueryCmd(int cmdCode, int serialNum, int parameterCount, double value[4]) {
     unsigned char result = false;
 
-    switch (cmdCode)
-    {
+    switch (cmdCode) {
     case 200:
         result = cmdGetCurrentAngle(serialNum, parameterCount, value);
         break;
@@ -510,89 +494,59 @@ static void HandleQueryCmd(int cmdCode, int serialNum, int parameterCount, doubl
         return;
     }
 
-    if (result > 0)
-    {
+    if (result > 0) {
        replyError(serialNum, result);
     }
 }
 
-static bool parseCommand(char *message)
-{
+static bool parseCommand(char *message) {
     double value[6];
     int index = 0;
     bool hasSerialNum = false;
     debugPrint("message=%s", message);
-
 
     int len = strlen(message);
 
     char *pch;
     char cmdType;
 
-    // skip white space
-    while (len > 0)
-    {
-        if (isspace(message[len-1]))
-        {
-            message[len-1] = '\0';
-        }
-        else
-        {
-            break;
-        }
-
+    // Skip white space.
+    while (len > 0) {
+        if (isspace(message[len - 1])) message[len - 1] = '\0';
+        else break;
         len--;
     }
 
-    if (len <= 0)
-        return false;
+    if (len <= 0) return false;
 
-
-
-    
-
-    if (message[0] == '#')
-    {
-        hasSerialNum = true;
-    }
+    if (message[0] == '#') hasSerialNum = true;
 
     pch = strtok(message, " ");
-    while (pch != NULL && index < 6)
-    {
+    while (pch != NULL && index < 6) {
         //debugPrint("pch=%s", pch);
-        
-        switch (index)
-        {
+
+        switch (index) {
         case 0:
-            if (!hasSerialNum)
-            {
-                cmdType = *(pch);
-            }
-            value[index] = atof(pch+1);
+            if (!hasSerialNum) cmdType = *(pch);
+            value[index] = atof(pch + 1);
             break;
 
         case 1:
-            if (hasSerialNum)
-            {
-                cmdType = *(pch);
-            }
+            if (hasSerialNum) cmdType = *(pch);
             //debugPrint("cmdType=%d", cmdType);
-            value[index] = atof(pch+1);
+            value[index] = atof(pch + 1);
             break;
 
         default:
-            value[index] = atof(pch+1);
+            value[index] = atof(pch + 1);
             break;
         }
-
 
         //debugPrint("value=%f", value[index]);
 
         pch = strtok(NULL, " ");
 
-
         index++;
-
     }
 
     int serialNum = 0;
@@ -600,23 +554,19 @@ static bool parseCommand(char *message)
     int parameterCount = 0;
     int valueStartIndex = 0;
 
-    if (hasSerialNum)
-    {
+    if (hasSerialNum) {
         serialNum = value[0];
         cmdCode = value[1];
         parameterCount = index - 2;
         valueStartIndex = 2;
-    }
-    else
-    {
+    } else {
         serialNum = 0;
         cmdCode = value[0];
         parameterCount = index - 1;        
         valueStartIndex = 1;
     }
 
-    switch (cmdType)
-    {
+    switch (cmdType) {
     case 'G':
         HandleMoveCmd(cmdCode, serialNum, parameterCount, value + valueStartIndex);
         break;
@@ -628,75 +578,47 @@ static bool parseCommand(char *message)
     case 'P':
         HandleQueryCmd(cmdCode, serialNum, parameterCount, value + valueStartIndex);
         break;
-
     }
-
 }
 
-static void handleSerialData(char data)
-{
+static void handleSerialData(char data) {
     static unsigned char cmdCount = 0;
 
-
-    switch (commState)
-    {
+    switch (commState) {
     case IDLE:
-        if (data == '#' || data == 'G' || data == 'M' || data == 'P')
-        {
+        if (data == '#' || data == 'G' || data == 'M' || data == 'P') {
             commState = START;
             cmdIndex = 0;
-            if (data != '#')
-            {
-                cmdCount = 1;   // get cmd code
-            }
-            else
-            {
-                cmdCount = 0;
-            }
+            if (data != '#') cmdCount = 1; // Get cmd code.
+            else cmdCount = 0;
 
             cmdReceived[cmdIndex++] = data;
         }
+
         break;
         
     case START:
-        
-        if (cmdIndex >= COM_LEN_MAX)
-        {
-
-            commState = IDLE;
-        }
-        else if (data == '#')   // restart 
-        {
+        if (cmdIndex >= COM_LEN_MAX) commState = IDLE;
+        else if (data == '#') { // Restart.
             cmdIndex = 0;
             cmdCount = 0;
             cmdReceived[cmdIndex++] = data;
-        } 
-        else if (data == 'G' || data == 'M' || data == 'P')    
-        {
-            if (cmdCount >= 1)  // restart
-            {
+        } else if (data == 'G' || data == 'M' || data == 'P') {
+            if (cmdCount >= 1) { // Restart.
                 cmdIndex = 0;
                 cmdReceived[cmdIndex++] = data;
-            }
-            else
-            {
+            } else {
                 cmdCount++;
                 cmdReceived[cmdIndex++] = data;
             }
-        }
-        else if (data == '\n')
-        {
+        } else if (data == '\n') {
             cmdReceived[cmdIndex] = '\0';
-
             parseCommand((char*)cmdReceived);
             commState = IDLE;
-        }
-        else
-        {
-            cmdReceived[cmdIndex++] = data;
-        }
+        } else cmdReceived[cmdIndex++] = data;
+
         break;
-        
+
     default:
         commState = IDLE;
         break;

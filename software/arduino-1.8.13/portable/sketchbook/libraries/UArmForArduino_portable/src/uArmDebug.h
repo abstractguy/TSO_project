@@ -4,6 +4,7 @@
   * @author	David.Long	
   * @email	xiaokun.long@ufactory.cc
   * @date	2016-12-02
+  * @modified	Samuel Duclos
   ******************************************************************************
   */
 
@@ -12,8 +13,6 @@
 
 #include <Arduino.h>
 #include "uArmConfig.h"
-
-
 
 #ifdef DEBUG
 	#define debugPrint	mprint
@@ -25,9 +24,9 @@
 
 #define PRINT_BUF 	128
 
-
 void mprint(char *fmt, ...);
 
 int msprintf(char *result, char *str, ...);
 
 #endif // _UARMDEBUG_H_
+

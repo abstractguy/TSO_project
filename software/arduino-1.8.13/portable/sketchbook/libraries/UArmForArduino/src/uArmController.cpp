@@ -4,9 +4,9 @@
   * @author	David.Long	
   * @email	xiaokun.long@ufactory.cc
   * @date	2016-09-28
-  * @modified	Samuel Duclos
   * @license GNU
   * copyright(c) 2016 UFactory Team. All right reserved
+  * @modified	Samuel Duclos
   ******************************************************************************
   */
 
@@ -24,7 +24,7 @@ void uArmController::init() {
 	mServoAngleOffset[2] = SERVO_2_MANUAL;
 	mServoAngleOffset[3] = SERVO_3_MANUAL;
 
-	#ifdef ARDUINO_ESP32_DEV
+	#ifdef DEVICE_ESP32
 		ESP32PWM::allocateTimer(0);		// Allocate one timer.
 		ESP32PWM::allocateTimer(1);		// Allocate one timer.
 		ESP32PWM::allocateTimer(2);		// Allocate one timer.

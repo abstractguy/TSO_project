@@ -4,9 +4,9 @@
   * @author		David.Long	
   * @email		xiaokun.long@ufactory.cc
   * @date		2016-10-08
-  * @modified		Samuel Duclos
   * @license GNU
   * copyright(c) 2016 UFactory Team. All right reserved
+  * @modified		Samuel Duclos
   ******************************************************************************
   */
 
@@ -16,16 +16,16 @@
 #include <Arduino.h>
 #include "uArm.h"
 
-#define COM_LEN_MAX   48
+#define COM_LEN_MAX	48
 
-#define OUT_OF_RANGE      10
-#define NO_SUCH_CMD       20
-#define PARAMETER_ERROR   21
-#define ADDRESS_ERROR     22
+#define OUT_OF_RANGE	10
+#define NO_SUCH_CMD	20
+#define PARAMETER_ERROR	21
+#define ADDRESS_ERROR	22
 
 enum CommState {IDLE, START, CMD, END, STATE_COUNT};
 
-#define REPORT_POS        3
+#define REPORT_POS	3
 
 void reportPos();
 void serialCmdInit();

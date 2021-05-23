@@ -4,9 +4,9 @@
   * @author	David.Long
   * @email	xiaokun.long@ufactory.cc
   * @date	2016-09-28
-  * @modified	Samuel Duclos
   * @license GNU
   * copyright(c) 2016 UFactory Team. All right reserved
+  * @modified	Samuel Duclos
   ******************************************************************************
   */
 
@@ -15,13 +15,17 @@
 
 #include <Arduino.h>
 
-//#define DEBUG                 // uncomment if you want to print debug info
+//#define DEBUG                 // Uncomment if you want to print debug info.
 
 #define HW_VER  "2.1"
 #define SW_VER  "2.2.3"
 
 #ifdef ARDUINO_ESP32_DEV
 	#define DEVICE_NAME "ESP32Metal"
+	#define DEVICE_ESP32
+#elif defined(ARDUINO_ESP32S2_DEV)
+	#define DEVICE_NAME "ESP32Metal"
+	#define DEVICE_ESP32
 #else
 	#define DEVICE_NAME "Metal"
 #endif

@@ -4,24 +4,25 @@
   * @author	David.LonG
   * @email	xiaokun.long@ufactory.cc
   * @date	2016-11-28
+  * @modified		Samuel Duclos
   ******************************************************************************
   */
 
 #include "uArmAPI.h" 
 
 #ifdef DEBUG 
-#define STEP_MAX	30	// no enough ram for debug. so reduce the size to enable debug
+#define STEP_MAX	30		// Not enough ram for debug, so reduce the size to enable debug.
 #else
 #define STEP_MAX	60
 #endif
 
-#define INTERP_EASE_INOUT_CUBIC 0  // original cubic ease in/out
+#define INTERP_EASE_INOUT_CUBIC 0	// Original cubic ease in/out.
 #define INTERP_LINEAR           1
-#define INTERP_EASE_INOUT       2  // quadratic easing methods
+#define INTERP_EASE_INOUT       2	// Quadratic easing methods.
 #define INTERP_EASE_IN          3
 #define INTERP_EASE_OUT         4
 
-#define STEP_MAX_TIME				20	// ms
+#define STEP_MAX_TIME		20	// ms.
 
 #define PUMP_GRABBING_CURRENT 	55    
 
@@ -39,7 +40,7 @@ static void _controllerRun();
 
 void initHardware() {
 	pinMode(PUMP_EN, OUTPUT);
-	#ifndef ARDUINO_ESP32_DEV
+	#ifndef DEVICE_ESP32
 		pinMode(GRIPPER, OUTPUT);
 		pinMode(VALVE_EN, OUTPUT);
 	#endif
@@ -104,10 +105,9 @@ unsigned char moveTo(double x, double y, double z, double speed) {
    \return OUT_OF_RANGE will move to the closest pos
    \return NO_NEED_TO_MOVE if it is already there
  */
-unsigned char relativeMove(double x, double y, double z, double speed)
-{
+unsigned char relativeMove(double x, double y, double z, double speed) {
     double x1, y1, z1;
-    // get cur xyz
+    // Get current xyz.
     controller.getCurrentXYZ(x1, y1, z1);
 
     x1 += x;
@@ -128,10 +128,8 @@ unsigned char relativeMove(double x, double y, double z, double speed)
    \return OUT_OF_RANGE will move to the closest pos
    \return NO_NEED_TO_MOVE if it is already there
  */
-unsigned char moveToPol(double s, double r, double h, double speed)
-{
+unsigned char moveToPol(double s, double r, double h, double speed) {
 	double x, y, z;
-
 	polToXYZ(s, r, h, x, y, z);
 	return moveTo(x, y, z, speed);		
 }
@@ -141,10 +139,8 @@ unsigned char moveToPol(double s, double r, double h, double speed)
    \param servoNumber: SERVO_ROT_NUM, SERVO_LEFT_NUM, SERVO_RIGHT_NUM, SERVO_HAND_ROT_NUM
    \return true or false
  */
-bool attachServo(unsigned char servoNumber)
-{
-	if (servoNumber < SERVO_COUNT)
-	{
+bool attachServo(unsigned char servoNumber) {
+	if (servoNumber < SERVO_COUNT) {
 		controller.attachServo(servoNumber);
 		return true;
 	}
@@ -157,10 +153,8 @@ bool attachServo(unsigned char servoNumber)
    \param servoNumber: SERVO_ROT_NUM, SERVO_LEFT_NUM, SERVO_RIGHT_NUM, SERVO_HAND_ROT_NUM
    \return true or false
  */
-bool detachServo(unsigned char servoNumber)
-{
-	if (servoNumber < SERVO_COUNT)
-	{
+bool detachServo(unsigned char servoNumber) {
+	if (servoNumber < SERVO_COUNT) {
 		controller.detachServo(servoNumber);
 		return true;
 	}
@@ -176,8 +170,7 @@ bool detachServo(unsigned char servoNumber)
    \return ERR_SERVO_INDEX_EXCEED_LIMIT if servoNumber not in range(0~3)
    \return ERR_ANGLE_OUT_OF_RANGE if angle not in range(0~180)
  */
-unsigned char setServoAngle(unsigned char servoNumber, double angle)
-{
+unsigned char setServoAngle(unsigned char servoNumber, double angle) {
 	if (servoNumber >= SERVO_COUNT)
 		return ERR_SERVO_INDEX_EXCEED_LIMIT;
 
@@ -197,7 +190,7 @@ unsigned char setServoAngle(unsigned char servoNumber, double angle)
  */
 double getServoAngle(unsigned char servoNumber) {
 	if (servoNumber >= SERVO_COUNT)
-		return -1;	
+		return -1;
 
 	return controller.readServoAngle(servoNumber);
 }
@@ -206,7 +199,7 @@ double getServoAngle(unsigned char servoNumber) {
    \brief gripper work
  */
 void gripperCatch() {
-	#ifndef ARDUINO_ESP32_DEV
+	#ifndef DEVICE_ESP32
 		digitalWrite(GRIPPER, LOW);
 	#endif
 }
@@ -215,7 +208,7 @@ void gripperCatch() {
    \brief gripper stop
  */
 void gripperRelease() {
-	#ifndef ARDUINO_ESP32_DEV
+	#ifndef DEVICE_ESP32
 	 	digitalWrite(GRIPPER, HIGH);
 	#endif
 }
@@ -227,14 +220,14 @@ void gripperRelease() {
    \return GRABBING if gripper got sth   
  */
 unsigned char getGripperStatus() {
-	#ifndef ARDUINO_ESP32_DEV
+	#ifdef DEVICE_ESP32
+		return STOP;
+	#else
 		if (digitalRead(GRIPPER) == HIGH) return STOP;
 		else {
 			if (getAnalogPinValue(GRIPPER_FEEDBACK) > 600) return WORKING;
 			else return GRABBING;
 		}
-	#else
-		return STOP;
 	#endif
 }
 
@@ -254,7 +247,7 @@ unsigned char getPumpStatus() {
  */
 void pumpOn() {
 	digitalWrite(PUMP_EN, HIGH);
-	#ifndef ARDUINO_ESP32_DEV
+	#ifndef DEVICE_ESP32
 		digitalWrite(VALVE_EN, LOW);
 	#endif
 }
@@ -264,7 +257,7 @@ void pumpOn() {
  */
 void pumpOff() {
 	digitalWrite(PUMP_EN, LOW); 
-	#ifndef ARDUINO_ESP32_DEV
+	#ifndef DEVICE_ESP32
 		digitalWrite(VALVE_EN, HIGH);
 	#endif
 }
@@ -298,7 +291,7 @@ int getAnalogPinValue(unsigned int pin) {
 
     for (int i = 0; i < 8; i++) {
         dat[i] = analogRead(pin);
-        #ifdef ARDUINO_ESP32_DEV
+        #ifdef DEVICE_ESP32
             dat[i] = map(dat[i], 0, ADC_MAX, 0, 180);
         #endif
     }
