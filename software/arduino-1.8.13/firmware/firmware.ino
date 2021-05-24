@@ -1,4 +1,10 @@
-// Review "uArmConfig.h" and set what you want.
+// File:	software/arduino-1.8.13/firmware/firmware.ino
+// By:		Samuel Duclos
+// For:		Myself
+// Description:	Takes GCODE commands from the UART and does the associated actions.
+// Note:	Review "uArmConfig.h" and set what you want.
+
+//#define UARM_FULL
 
 #ifdef UARM_FULL
 	#include "uArmFull.h"
@@ -12,7 +18,7 @@ static void Init();
 void setup() {
 	Serial.begin(115200);
 	Init();
-	debugPrint("debug start"); // Uncomment DEBUG in uArmConfig.h to use debug function.
+	//debugPrint("debug start"); // Uncomment DEBUG in uArmConfig.h to use debug function.
 	moveTo(0, 150, 150);
 	Serial.println("@1"); // Report ready.
 }

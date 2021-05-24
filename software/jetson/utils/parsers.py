@@ -26,9 +26,9 @@ def parse_args():
 def add_uarm_args(parser):
     parser.add_argument('--uarm-speed', metavar='<uarm-speed>', type=int, required=False, default=150, help='Speed of uARM displacements.')
     parser.add_argument('--pump-delay', metavar='<pump-delay>', type=float, required=False, default=3.0, help='Delay after uARM (de-)pumps object.')
-    parser.add_argument('--servo-attach-delay', metavar='<servo-attach-delay>', type=float, required=False, default=3.0, help='Delay after uARM attaches servos.')
-    parser.add_argument('--set-position-delay', metavar='<set-position-delay>', type=float, required=False, default=3.0, help='Delay after uARM set to position.')
-    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=3.0, help='Delay after uARM detaches servos.')
+    parser.add_argument('--servo-attach-delay', metavar='<servo-attach-delay>', type=float, required=False, default=4.0, help='Delay after uARM attaches servos.')
+    parser.add_argument('--set-position-delay', metavar='<set-position-delay>', type=float, required=False, default=2.0, help='Delay after uARM set to position.')
+    parser.add_argument('--servo-detach-delay', metavar='<servo-detach-delay>', type=float, required=False, default=2.0, help='Delay after uARM detaches servos.')
     return parser
 
 def add_input_args(parser):

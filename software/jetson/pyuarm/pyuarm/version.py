@@ -1,6 +1,6 @@
 import re
-#__version__ = '2.2.5.1'
-__version__ = '2.2.3'
+__version__ = '2.2.5.1'
+#__version__ = '2.2.3'
 support_versions = ['2.2']
 
 def is_a_version(version):
