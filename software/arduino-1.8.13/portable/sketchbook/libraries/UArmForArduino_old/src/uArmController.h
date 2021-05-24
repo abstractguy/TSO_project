@@ -93,6 +93,20 @@ public:
 	unsigned char limitRange(double& angleRot, double& angleLeft, double& angleRight);
 
 	/*!
+	   \brief get pin value
+	   \param pin of arduino
+	   \return HIGH or LOW
+	 */
+	int getDigitalPinValue(unsigned int pin);
+
+	/*!
+	   \brief set pin value
+	   \param pin of arduino
+	   \param value: HIGH or LOW
+	 */
+	void setDigitalPinValue(unsigned int pin, unsigned char value);
+
+	/*!
 		\brief get analog value of pin
 		\param pin of arduino
 		\return value of analog data

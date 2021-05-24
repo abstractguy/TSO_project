@@ -121,7 +121,7 @@ public:
 	void updateAllServoAngle(boolean withOffset = true);
 
 	double getServoAngles(double& servoRotAngle, double& servoLeftAngle, double& servoRightAngle);
-	double getServeAngle(byte servoNum);
+	double getServoAngle(byte servoNum);
 
 	unsigned char getCurrentXYZ(double& x, double& y, double& z);
 	unsigned char getXYZFromAngle(double& x, double& y, double& z, double rot, double left, double right);
@@ -133,6 +133,35 @@ public:
 	unsigned char limitRange(double& angleRot, double& angleLeft, double& angleRight);
 	double analogToAngle(byte servoNum, int inputAnalog);
 
+	/*!
+	   \brief get gripper status
+	   \return STOP if gripper is not working
+	   \return WORKING if gripper is working but not catched sth
+	   \return GRABBING if gripper got sth   
+	 */
+	unsigned char getGripperStatus();
+
+	/*!
+	   \brief get pin value
+	   \param pin of arduino
+	   \return HIGH or LOW
+	 */
+	int getDigitalPinValue(unsigned int pin);
+
+	/*!
+	   \brief set pin value
+	   \param pin of arduino
+	   \param value: HIGH or LOW
+	 */
+	void setDigitalPinValue(unsigned int pin, unsigned char value);
+
+	/*!
+		\brief get analog value of pin
+		\param pin of arduino
+		\return value of analog data
+	 */
+	int getAnalogPinValue(unsigned int pin);
+
 protected:
 	Servo mServo[SERVO_COUNT];
 
@@ -140,7 +169,7 @@ protected:
 	double mCurAngle[SERVO_COUNT] = {90, 90, 0, 90};
 
 	// Offset of assembling.
-	double mServoAngleOffset[SERVO_COUNT];
+	double mServoAngleOffset[SERVO_COUNT] = {SERVO_0_MANUAL, SERVO_1_MANUAL, SERVO_2_MANUAL, SERVO_3_MANUAL};
 	
 	const byte SERVO_CONTROL_PIN[SERVO_COUNT] = {SERVO_ROT_PIN, SERVO_LEFT_PIN, SERVO_RIGHT_PIN, SERVO_HAND_ROT_PIN};
 	const byte SERVO_ANALOG_PIN[SERVO_COUNT] = {SERVO_ROT_ANALOG_PIN, SERVO_LEFT_ANALOG_PIN, SERVO_RIGHT_ANALOG_PIN, SERVO_HAND_ROT_ANALOG_PIN};

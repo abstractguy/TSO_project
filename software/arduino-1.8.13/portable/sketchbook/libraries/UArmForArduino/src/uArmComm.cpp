@@ -65,7 +65,11 @@ static void reportResult(int reportCode, String result) {
 
 static unsigned char cmdMove(int serialNum, int parameterCount, double value[4]) {
 	if (parameterCount != 4) return PARAMETER_ERROR;
-	if (moveTo(value[0], value[1], value[2], value[3]) != OUT_OF_RANGE_NO_SOLUTION) replyOK(serialNum);
+	#ifdef DISABLE_SERVO_EASING
+		if (moveTo(value[0], value[1], value[2]) != OUT_OF_RANGE_NO_SOLUTION) replyOK(serialNum);
+	#else
+		if (moveTo(value[0], value[1], value[2], value[3]) != OUT_OF_RANGE_NO_SOLUTION) replyOK(serialNum);
+	#endif
 	else return OUT_OF_RANGE;
 	return 0;
 }
@@ -245,7 +249,7 @@ static unsigned char cmdGetDigitValue(int serialNum, int parameterCount, double 
     if (parameterCount != 1)
         return PARAMETER_ERROR;
 
-    int val = getDigitalPinValue(value[0]);
+    int val = controller.getDigitalPinValue(value[0]);
  
     char result[RESULT_BUFFER_SIZE];
     msprintf(result, "V%d", val);
@@ -258,7 +262,7 @@ static unsigned char cmdSetDigitValue(int serialNum, int parameterCount, double 
     if (parameterCount != 2)
         return PARAMETER_ERROR;
 
-    setDigitalPinValue(value[0], value[1]);
+    controller.setDigitalPinValue(value[0], value[1]);
 
     replyOK(serialNum);
     return 0;
@@ -268,7 +272,7 @@ static unsigned char cmdGetAnalogValue(int serialNum, int parameterCount, double
     if (parameterCount != 1)
         return PARAMETER_ERROR;
 
-    int val = getAnalogPinValue(value[0]);
+    int val = controller.getAnalogPinValue(value[0]);
 
     char result[RESULT_BUFFER_SIZE];
     msprintf(result, "V%d", val);
@@ -281,7 +285,7 @@ static unsigned char cmdGetGripperStatus(int serialNum, int parameterCount, doub
     if (parameterCount != 0)
         return PARAMETER_ERROR;
 
-    unsigned char status = getGripperStatus();
+    unsigned char status = controller.getGripperStatus();
 
     char result[RESULT_BUFFER_SIZE];
     msprintf(result, "V%d", status);

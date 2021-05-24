@@ -34,6 +34,16 @@ void uArmInit();
 /*!
    \brief move to pos(x, y, z)
    \param x, y, z in mm
+   \return IN_RANGE if everything is OK
+   \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
+   \return OUT_OF_RANGE will move to the closest pos
+   \return NO_NEED_TO_MOVE if it is already there
+ */
+unsigned char moveTo(double x, double y, double z);
+
+/*!
+   \brief move to pos(x, y, z)
+   \param x, y, z in mm
    \param speed: 
    			[0]: move to destination directly
    			[1~99]: change the dutycycle of servo (1~99%)
@@ -43,7 +53,7 @@ void uArmInit();
    \return OUT_OF_RANGE will move to the closest pos
    \return NO_NEED_TO_MOVE if it is already there
  */
-unsigned char moveTo(double x, double y, double z, double speed = 100);
+unsigned char moveTo(double x, double y, double z, double speed);
 
 /*!
    \brief move to pos of polor coordinates(s, r, h)
@@ -110,14 +120,6 @@ void gripperCatch();
    \brief gripper stop
  */
 void gripperRelease();
-
-/*!
-   \brief get gripper status
-   \return STOP if gripper is not working
-   \return WORKING if gripper is working but not catched sth
-   \return GRABBING if gripper got sth   
- */
-unsigned char getGripperStatus();
 
 /*!
    \brief pump working
@@ -189,27 +191,6 @@ unsigned char xyzToAngle(double x, double y, double z, double& angleRot, double&
    \return OUT_OF_RANGE can move to the closest pos   
  */
 unsigned char angleToXYZ(double angleRot, double angleLeft, double angleRight, double& x, double& y, double& z);
-
-/*!
-   \brief get pin value
-   \param pin of arduino
-   \return HIGH or LOW
- */
-int getDigitalPinValue(unsigned int pin);
-
-/*!
-   \brief set pin value
-   \param pin of arduino
-   \param value: HIGH or LOW
- */
-void setDigitalPinValue(unsigned int pin, unsigned char value);
-
-/*!
-   \brief get analog value of pin
-   \param pin of arduino
-   \return value of analog data
- */
-int getAnalogPinValue(unsigned int pin);
 
 #endif // _UARMAPI_H_
 

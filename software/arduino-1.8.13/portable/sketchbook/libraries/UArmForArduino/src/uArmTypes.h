@@ -18,7 +18,6 @@
 
 // Return values.
 #define OK				0
-
 #define IN_RANGE             		1
 #define OUT_OF_RANGE_NO_SOLUTION 	2
 #define OUT_OF_RANGE         		3
@@ -32,7 +31,10 @@
 #define SERVO_LEFT_NUM          	1
 #define SERVO_RIGHT_NUM         	2
 #define SERVO_HAND_ROT_NUM      	3
-#define SERVO_COUNT			4
+
+#ifndef SERVO_COUNT
+	#define SERVO_COUNT		4
+#endif
 
 #endif // _UARMTYPES_H_
 

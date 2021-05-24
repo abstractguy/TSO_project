@@ -34,6 +34,7 @@ static double mPathX[STEP_MAX];
 static double mPathY[STEP_MAX];
 static double mPathZ[STEP_MAX];
 
+static unsigned char _moveTo(double x, double y, double z);
 static unsigned char _moveTo(double x, double y, double z, double speed);
 static void _sort(unsigned int array[], unsigned int len);
 static void _controllerRun();
@@ -55,6 +56,21 @@ void uArmInit() {
 
 	mCurStep = -1;
 	mTotalSteps = -1; 	
+}
+
+/*!
+   \brief move to pos(x, y, z)
+   \param x, y, z in mm
+   \return IN_RANGE if everything is OK
+   \return OUT_OF_RANGE_NO_SOLUTION if cannot reach
+   \return OUT_OF_RANGE will move to the closest pos
+   \return NO_NEED_TO_MOVE if it is already there
+ */
+unsigned char moveTo(double x, double y, double z) {
+	unsigned char result = IN_RANGE;
+	debugPrint("moveTo: x=%f, y=%f, z=%f, speed=%f", x, y, z, 255);
+	result = _moveTo(x, y, z);
+	return result;
 }
 
 /*!
@@ -228,24 +244,6 @@ void gripperRelease() {
 }
 
 /*!
-   \brief get gripper status
-   \return STOP if gripper is not working
-   \return WORKING if gripper is working but not catched sth
-   \return GRABBING if gripper got sth   
- */
-unsigned char getGripperStatus() {
-	#ifdef DEVICE_ESP32
-		return STOP;
-	#else
-		if (digitalRead(GRIPPER) == HIGH) return STOP;
-		else {
-			if (getAnalogPinValue(GRIPPER_FEEDBACK) > 600) return WORKING;
-			else return GRABBING;
-		}
-	#endif
-}
-
-/*!
    \brief get pump status
    \return STOP if pump is not working
    \return WORKING if pump is working but not catched sth
@@ -274,47 +272,6 @@ void pumpOff() {
 	#ifndef DEVICE_ESP32
 		digitalWrite(VALVE_EN, HIGH);
 	#endif
-}
-
-/*!
-   \brief get pin value
-   \param pin of arduino
-   \return HIGH or LOW
- */
-int getDigitalPinValue(unsigned int pin) {
-	return digitalRead(pin);
-}
-
-/*!
-   \brief set pin value
-   \param pin of arduino
-   \param value: HIGH or LOW
- */
-void setDigitalPinValue(unsigned int pin, unsigned char value) {
-	if (value) digitalWrite(pin, HIGH);
-	else digitalWrite(pin, LOW);
-}
-
-/*!
-   \brief get analog value of pin
-   \param pin of arduino
-   \return value of analog data
- */
-int getAnalogPinValue(unsigned int pin) {
-    unsigned int dat[8];
-
-    for (int i = 0; i < 8; i++) {
-        dat[i] = analogRead(pin);
-        #ifdef DEVICE_ESP32
-            dat[i] = map(dat[i], 0, ADC_MAX, 0, 180);
-        #endif
-    }
-
-    _sort(dat, 8);
-
-    unsigned int result = (dat[2] + dat[3] + dat[4] + dat[5]) / 4;
-
-    return result;    
 }
 
 /*!
@@ -395,21 +352,6 @@ unsigned char angleToXYZ(double angleRot, double angleLeft, double angleRight, d
 ////////////////////////////////////////////////////////////////////////////
 // private functions
 
-static void _sort(unsigned int array[], unsigned int len) {
-	unsigned int temp = 0;
-	unsigned char i = 0, j = 0;
-
-	for(i = 0; i < len; i++) {
-		for(j = 0; i+j < (len-1); j++) {
-			if(array[j] > array[j+1]) {
-				temp = array[j];
-				array[j] = array[j+1];
-				array[j+1] = temp;
-			}
-		}
-	}	
-}
-
 static void _interpolate(double startVal, double endVal, double *interpVals, int steps, byte easeType) {
     startVal = startVal / 10.0;
     endVal = endVal / 10.0;
@@ -417,9 +359,18 @@ static void _interpolate(double startVal, double endVal, double *interpVals, int
     double delta = endVal - startVal;
     for (byte i = 1; i <= steps; i++) {
         float t = (float)i / steps;
-        //*(interp_vals+f) = 10.0*(start_val + (3 * delta) * (t * t) + (-2 * delta) * (t * t * t));
+        //*(interp_vals + f) = 10.0 * (start_val + (3 * delta) * (t * t) + (-2 * delta) * (t * t * t));
         *(interpVals + i - 1) = 10.0 * (startVal + t * t * delta * (3 + (-2) * t));
     }
+}
+
+static unsigned char _moveTo(double x, double y, double z) {
+	double targetRot = 0, targetLeft = 0, targetRight = 0;
+	unsigned char status = 0;
+	status = controller.xyzToAngle(x, y, z, targetRot, targetLeft, targetRight);
+	if (status == OUT_OF_RANGE_NO_SOLUTION) return OUT_OF_RANGE_NO_SOLUTION;
+	controller.writeServoAngle(targetRot, targetLeft, targetRight);
+	return IN_RANGE;
 }
 
 static unsigned char _moveTo(double x, double y, double z, double speed) {	

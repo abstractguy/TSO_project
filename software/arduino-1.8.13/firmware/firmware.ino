@@ -1,5 +1,4 @@
-//#define UARM_FULL
-#define USE_SERIAL_CMD 1 // 1: use serial for control	0: just use arduino to control(release ROM and RAM space)
+// Review "uArmConfig.h" and set what you want.
 
 #ifdef UARM_FULL
 	#include "uArmFull.h"
@@ -26,9 +25,9 @@ void tickTimeOut() {}
 static void Init() {
 	uArmInit();
 
-  #ifdef UARM_FULL
-  	service.init();
-  #endif
+	#ifdef UARM_FULL
+		service.init();
+	#endif
 
 	#if USE_SERIAL_CMD == 1
 		serialCmdInit();

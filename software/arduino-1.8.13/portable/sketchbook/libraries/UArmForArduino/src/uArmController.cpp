@@ -12,42 +12,42 @@
 
 #include <assert.h>
 #include "uArmController.h"
-#include "uArmAPI.h"
 
 uArmController controller;
 
 uArmController::uArmController() {mServoSpeed = 255;}
 
 void uArmController::init() {
-	mServoAngleOffset[0] = SERVO_0_MANUAL;
-	mServoAngleOffset[1] = SERVO_1_MANUAL;
-	mServoAngleOffset[2] = SERVO_2_MANUAL;
-	mServoAngleOffset[3] = SERVO_3_MANUAL;
-
 	#ifdef DEVICE_ESP32
-		ESP32PWM::allocateTimer(0);		// Allocate one timer.
-		ESP32PWM::allocateTimer(1);		// Allocate one timer.
-		ESP32PWM::allocateTimer(2);		// Allocate one timer.
-		ESP32PWM::allocateTimer(3);		// Allocate one timer.
+		ESP32PWM::allocateTimer(0);			// Allocate one timer.
+		ESP32PWM::allocateTimer(1);			// Allocate one timer.
+		ESP32PWM::allocateTimer(2);			// Allocate one timer.
+		ESP32PWM::allocateTimer(3);			// Allocate one timer.
 
-		mServo[0].setPeriodHertz(50);		// Standard 50hz servo.
-		mServo[1].setPeriodHertz(50);		// Standard 50hz servo.
-		mServo[2].setPeriodHertz(50);		// Standard 50hz servo.
-		mServo[3].setPeriodHertz(50);		// Standard 50hz servo.
+		mServo[SERVO_ROT_NUM].setPeriodHertz(50);	// Standard 50hz servo.
+		mServo[SERVO_LEFT_NUM].setPeriodHertz(50);	// Standard 50hz servo.
+		mServo[SERVO_RIGHT_NUM].setPeriodHertz(50);	// Standard 50hz servo.
 
 		// TODO: merge <ESP32Servo.h> with <Servo.h>.
 		mServo[SERVO_ROT_NUM].attach(SERVO_ROT_NUM, 500, 2500);
 		mServo[SERVO_LEFT_NUM].attach(SERVO_LEFT_NUM, 500, 2500);
 		mServo[SERVO_RIGHT_NUM].attach(SERVO_RIGHT_NUM, 500, 2500);
-		mServo[SERVO_HAND_ROT_NUM].attach(SERVO_HAND_ROT_NUM, 600, 2400);
+
+		#ifndef SAVE_PINS
+			mServo[SERVO_HAND_ROT_NUM].setPeriodHertz(50);	// Standard 50hz servo.
+			mServo[SERVO_HAND_ROT_NUM].attach(SERVO_HAND_ROT_NUM, 600, 2400);
+		#endif
 	#else
 		mServo[SERVO_ROT_NUM].setPulseWidthRange(500, 2500);
 		mServo[SERVO_LEFT_NUM].setPulseWidthRange(500, 2500);
 		mServo[SERVO_RIGHT_NUM].setPulseWidthRange(500, 2500);
-		mServo[SERVO_HAND_ROT_NUM].setPulseWidthRange(600, 2400);
-	#endif
 
-	attachAllServo();  
+		#ifndef SAVE_PINS
+			mServo[SERVO_HAND_ROT_NUM].setPulseWidthRange(600, 2400);
+		#endif
+
+		attachAllServo();
+	#endif
 
 	bool withOffset = true;
 
@@ -135,7 +135,7 @@ double uArmController::getServoAngles(double& servoRotAngle, double& servoLeftAn
 	servoRightAngle = mCurAngle[SERVO_RIGHT_NUM];
 }
 
-double uArmController::getServeAngle(byte servoNum) {
+double uArmController::getServoAngle(byte servoNum) {
 	return mCurAngle[servoNum];
 }
 
@@ -280,6 +280,70 @@ double uArmController::analogToAngle(byte servoNum, int inputAnalog) {
 
 unsigned int uArmController::getServoAnalogData(byte servoNum) {
 	return getAnalogPinValue(SERVO_ANALOG_PIN[servoNum]);
+}
+
+static void _sort(unsigned int array[], unsigned int len) {
+	unsigned int temp = 0;
+
+	for (unsigned char i = 0; i < len; i++) {
+		for (unsigned char j = 0; i + j < (len - 1); j++) {
+			if (array[j] > array[j + 1]) {
+				temp = array[j];
+				array[j] = array[j + 1];
+				array[j + 1] = temp;
+			}
+		}
+	}	
+}
+
+/*!
+   \brief get gripper status
+   \return STOP if gripper is not working
+   \return WORKING if gripper is working but not catched sth
+   \return GRABBING if gripper got sth   
+ */
+unsigned char uArmController::getGripperStatus() {
+	#ifdef DEVICE_ESP32
+		return STOP;
+	#else
+		if (digitalRead(GRIPPER) == HIGH) return STOP;
+		else {
+			if (getAnalogPinValue(GRIPPER_FEEDBACK) > 600) return WORKING;
+			else return GRABBING;
+		}
+	#endif
+}
+
+/*!
+   \brief get pin value
+   \param pin of arduino
+   \return HIGH or LOW
+ */
+int uArmController::getDigitalPinValue(unsigned int pin) {
+	return digitalRead(pin);
+}
+
+/*!
+   \brief set pin value
+   \param pin of arduino
+   \param value: HIGH or LOW
+ */
+void uArmController::setDigitalPinValue(unsigned int pin, unsigned char value) {
+	if (value) digitalWrite(pin, HIGH);
+	else digitalWrite(pin, LOW);
+}
+
+/*!
+   \brief get analog value of pin
+   \param pin of arduino
+   \return value of analog data
+ */
+int uArmController::getAnalogPinValue(unsigned int pin) {
+	unsigned int dat[8], result;
+	for (int i = 0; i < 8; i++) dat[i] = analogRead(pin);
+	_sort(dat, 8);
+	result = (dat[2] + dat[3] + dat[4] + dat[5]) / 4;
+	return result;    
 }
 
 unsigned char uArmController::setServoSpeed(byte servoNum, unsigned char speed) {
