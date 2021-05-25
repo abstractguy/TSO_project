@@ -23,11 +23,9 @@ def set_servos(pan, tilt, uarm, height, width, flip_vertically=False, flip_horiz
 
             # Remember about depth!
             uarm.set_relative_position_from_center_in_grad(x=pan_grad, 
-                                                           y=0, 
-                                                           z=tilt_grad, 
-                                                           speed=25, 
-                                                           height=height, 
-                                                           width=width)
+                                                           y=tilt_grad, 
+                                                           z=0, 
+                                                           speed=25)
 
     except KeyboardInterrupt:
         print('User terminated servo process.')

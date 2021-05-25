@@ -161,7 +161,12 @@ unsigned char moveToPol(double s, double r, double h, double speed) {
 	#endif
 
 	polToXYZ(s, r, h, x, y, z);
-	return moveTo(x, y, z, speed);		
+
+	#ifdef DISABLE_SERVO_EASING
+		return moveTo(x, y, z);
+	#else
+		return moveTo(x, y, z, speed);
+	#endif
 }
 
 /*!

@@ -82,8 +82,7 @@ static unsigned char cmdMovePol(int serialNum, int parameterCount, double value[
 }
 
 static unsigned char cmdSetAttachServo(int serialNum, int parameterCount, double value[4]) {
-	if (parameterCount != 1)
-		return PARAMETER_ERROR;
+	if (parameterCount != 1) return PARAMETER_ERROR;
 
 	if (attachServo(value[0])) {
 		replyOK(serialNum);

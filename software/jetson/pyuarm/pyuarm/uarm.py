@@ -11,12 +11,12 @@ class UArm(object):
     hardware_version = None
     __isConnected = False
 
-    X_MIN_RELATIVE = -316
-    X_MAX_RELATIVE = 316
-    Y_MIN_RELATIVE = -212
-    Y_MAX_RELATIVE = 212
-    Z_MIN_RELATIVE = -253
-    Z_MAX_RELATIVE = 253
+    X_MIN_POLAR = 70
+    X_MAX_POLAR = 330
+    Y_MIN_POLAR = 0
+    Y_MAX_POLAR = 180
+    Z_MIN_POLAR = 20
+    Z_MAX_POLAR = 200
 
     def __init__(self, 
                  port_name=None, 
@@ -66,8 +66,6 @@ class UArm(object):
         self.__serial = serial.Serial(baudrate=115200, timeout=.1)
 
         self.connect()
-
-        self.set_servo_attach()
 
         self.get_initial_absolute_position()
 
@@ -231,6 +229,12 @@ class UArm(object):
 
         return response_dict
 
+    def constrain(self, val, min_val, max_val):
+        return max(min_val, min(val, max_val))
+
+    def normalize(self, val, min_in, max_in, min_out, max_out):
+        return (val - min_in) * (max_out - min_out) / (max_in - min_in) + min_out
+
 # -------------------------------------------------------- Commands ----------------------------------------------------
 
     def get_rom_data(self, address, data_type=protocol.EEPROM_DATA_TYPE_BYTE):
@@ -317,17 +321,19 @@ class UArm(object):
 
         command = protocol.SET_POSITION.format(x, y, z, s)
 
+        self.set_servo_attach()
         response = self.__send_and_receive(command)
 
         time.sleep(self.set_position_delay)
+        self.set_servo_detach()
 
         return response.startswith(protocol.OK.lower())
 
-    def set_polar_coordinate(self, stretch, rotation, height, speed=100):
+    def set_polar_coordinates(self, stretch, rotation, height, speed=100):
         """
         Polar Coordinate, rotation, stretch, height.
         :param stretch: min: 70, mid: 200, max: 330, (200 +/- 130)
-        :param rotation: min: 0, mid:90, max: 180, (90 +/- 90)
+        :param rotation: min: 0, mid: 90, max: 180, (90 +/- 90)
         :param height: min: 20, mid: 110, max: 200, (110 +/- 90)
         :param speed: min: 1, mid: 128, max: 255, (128 +/- 127)
         :return: response
@@ -340,48 +346,33 @@ class UArm(object):
 
         command = protocol.SET_POLAR.format(stretch, rotation, height, speed)
 
+        self.set_servo_attach()
         response = self.__send_and_receive(command)
 
         time.sleep(self.set_position_delay)
+        self.set_servo_detach()
 
         return response.startswith(protocol.OK.lower())
 
-    def set_relative_position_from_center_in_grad(self, 
-                                                  x=0, 
-                                                  y=0, 
-                                                  z=0, 
-                                                  speed=None, 
-                                                  height=200.0, 
-                                                  width=200.0):
+    def set_relative_position_from_center_in_grad(self, x=0, y=0, z=0, speed=None):
 
         """Set relative position from center in grad."""
 
         speed = self.uarm_speed if speed is None else speed
 
-        position = self.initial_position.copy()
+        x = self.constrain(x, -100, 100)
+        y = self.constrain(y, -100, 100)
+        z = self.constrain(z, -100, 100)
+        speed = self.constrain(speed, 1, 255)
 
-        x = max(-100, x)
-        y = max(-100, y)
-        z = max(-100, z)
+        rotation = self.normalize(x, -100, 100, self.X_MIN_POLAR, self.X_MAX_POLAR)
+        stretch = self.normalize(y, -100, 100, self.Y_MIN_POLAR, self.Y_MAX_POLAR)
+        height = self.normalize(z, -100, 100, self.Z_MIN_POLAR, self.Z_MAX_POLAR)
 
-        x = min(x, 100)
-        y = min(y, 100)
-        z = min(z, 100)
-
-        x /= 100.0
-        y /= 100.0
-        z /= 100.0
-
-        x *= self.X_MAX_RELATIVE
-        y *= self.Y_MAX_RELATIVE
-        z *= self.Z_MAX_RELATIVE
-
-        position['x'] += x
-        position['y'] += y
-        position['z'] += z
-
-        print('position:', position)
-        self.set_position(**position)
+        self.set_polar_coordinates(stretch=stretch, 
+                                   rotation=rotation, 
+                                   height=height, 
+                                   speed=speed)
 
     def drop(self, drop_position=None):
         self.set_position(position=drop_position)
@@ -454,7 +445,7 @@ class UArm(object):
             else:
                 return False
 
-    def get_polar_coordinate(self):
+    def get_polar_coordinates(self):
         cmd = protocol.GET_POLAR
         response = self.__send_and_receive(cmd)
         value = self.__gen_response_value(response)
