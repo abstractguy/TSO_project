@@ -2,9 +2,8 @@
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fabstractguy%2FTSO_project&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com) [![License: BSD 2-clause](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## An "Intelligent" robotic arm using a camera for pick and place.
-The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range, then picks up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using feedback from a camera. It then places and drops the object to a predefined location.
-Still a work in progress. Mid development phase.
+## An "intelligent" robotic arm using a camera for pick and place.
+A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano with an Arducam cammera array shield tiling up to 4 cameras. Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The Jetson flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it the executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
 
 ## Documentation
 Still a work in progress. Early development phase.
@@ -26,8 +25,7 @@ It is available though.
 
 ## Simulation
 The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic, all within Docker (see instructions in software/jetson/jetson-containers/README.md).
-If you add the Moveit plugins, simulation can run with the uARM in tandem.
-I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
+If you add the Moveit plugins, simulation can run with the uARM in tandem. If you then add openai-gym to the ROS container, you can plug this environment to [FERM](https://github.com/PhilipZRH/ferm), replacing the xArm by the uArm. This was plan C, which has not been completed, as focus shifted towards implementing plans A and B. I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
 
 ## Electronics
 The minimalistic Printed Circuit Board features an ESP32 as the motor-driving microcontroller.
