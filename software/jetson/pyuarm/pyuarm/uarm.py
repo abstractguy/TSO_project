@@ -23,9 +23,9 @@ class UArm(object):
                  logger=None, 
                  debug=False, 
                  uarm_speed=100, 
-                 servo_attach_delay=3, 
-                 set_position_delay=6, 
-                 servo_detach_delay=3, 
+                 servo_attach_delay=2, 
+                 set_position_delay=5, 
+                 servo_detach_delay=2, 
                  pump_delay=3):
 
         """
@@ -94,7 +94,7 @@ class UArm(object):
             printf("Connecting from port - {0}...".format(self.port.device))
             self.__serial.open()
             timeout_start = time.time()
-            timeout = 7
+            timeout = 6
             while time.time() < timeout_start + timeout:
                 if self.is_ready():
                     break
@@ -123,7 +123,7 @@ class UArm(object):
                 cmnd = "#{} {}".format(self.serial_id, protocol.GET_FIRMWARE_VERSION)
                 cmndString = bytes(cmnd + "\n", encoding='ascii')
                 self.__serial.write(cmndString)
-                response = str(self.__serial.readline(),encoding='ascii')
+                response = str(self.__serial.readline(), encoding='ascii')
             else:
                 self.__gen_serial_id()
                 cmnd = "#{} {}".format(self.serial_id, protocol.GET_FIRMWARE_VERSION)
@@ -176,7 +176,7 @@ class UArm(object):
 
         # Prepare and send the command to the robot.
         self.__gen_serial_id()
-        cmnd = "#{} {}".format(self.serial_id,cmnd)
+        cmnd = "#{} {}".format(self.serial_id, cmnd)
         # printf(cmnd, type=ERROR)
         if PY3:
             cmndString = bytes(cmnd + "\n", encoding='ascii')
@@ -193,7 +193,7 @@ class UArm(object):
 
         try:
             if PY3:
-                response = str(self.__serial.readline(),encoding='ascii')
+                response = str(self.__serial.readline(), encoding='ascii')
             else:
                 response = self.__serial.readline()
             if response.startswith("${}".format(self.serial_id)):
@@ -208,7 +208,7 @@ class UArm(object):
                 return ""
             return response.lower()
         except serial.serialutil.SerialException as e:
-            printf("while sending command {}. Disconnecting Serial! \nError: {}".format(cmnd,str(e)), type=ERROR)
+            printf("while sending command {}. Disconnecting Serial! \nError: {}".format(cmnd, str(e)), type=ERROR)
             self.__isConnected = False
             return ""
 
@@ -315,15 +315,34 @@ class UArm(object):
         z = str(round(z, 2))
         s = str(round(speed, 2))
 
-        self.set_servo_attach() # Check if needed here.
-
         command = protocol.SET_POSITION.format(x, y, z, s)
 
         response = self.__send_and_receive(command)
 
         time.sleep(self.set_position_delay)
 
-        self.set_servo_detach() # Check if needed here.
+        return response.startswith(protocol.OK.lower())
+
+    def set_polar_coordinate(self, stretch, rotation, height, speed=100):
+        """
+        Polar Coordinate, rotation, stretch, height.
+        :param stretch: min: 70, mid: 200, max: 330, (200 +/- 130)
+        :param rotation: min: 0, mid:90, max: 180, (90 +/- 90)
+        :param height: min: 20, mid: 110, max: 200, (110 +/- 90)
+        :param speed: min: 1, mid: 128, max: 255, (128 +/- 127)
+        :return: response
+        """
+
+        stretch = str(round(stretch, 2))
+        rotation = str(round(rotation, 2))
+        height = str(round(height, 2))
+        speed = str(round(speed, 2))
+
+        command = protocol.SET_POLAR.format(stretch, rotation, height, speed)
+
+        response = self.__send_and_receive(command)
+
+        time.sleep(self.set_position_delay)
 
         return response.startswith(protocol.OK.lower())
 
@@ -341,9 +360,13 @@ class UArm(object):
 
         position = self.initial_position.copy()
 
-        x = max(-100, x) if x < 0 else min(x, 100)
-        y = max(-100, y) if y < 0 else min(y, 100)
-        z = max(-100, z) if z < 0 else min(z, 100)
+        x = max(-100, x)
+        y = max(-100, y)
+        z = max(-100, z)
+
+        x = min(x, 100)
+        y = min(y, 100)
+        z = min(z, 100)
 
         x /= 100.0
         y /= 100.0
@@ -430,6 +453,17 @@ class UArm(object):
                 return True
             else:
                 return False
+
+    def get_polar_coordinate(self):
+        cmd = protocol.GET_POLAR
+        response = self.__send_and_receive(cmd)
+        value = self.__gen_response_value(response)
+        if value:
+            parse_cmd = self.__parse_cmd(response, ["s", "r", "h"])
+            polar_crd = [parse_cmd["s"], parse_cmd["r"], parse_cmd["h"]]
+            return polar_crd
+        else:
+            return False
 
     def get_position(self):
         """
