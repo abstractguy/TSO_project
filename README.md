@@ -50,8 +50,6 @@ For faster and simpler parallel handling of the whole ecosystem, the main entryp
 ## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
 A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
 
-## Installation Instructions for Linux
-
 ## Hardware instructions
 
 ##### Prerequisites for using the Arducam camera array on the Jetson Nano
@@ -66,9 +64,6 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
 
 <img src="documentation/doc/nano.png" width="640"/>
 
-##### Dependencies
-    None which aren't covered by this guide.
-
 - Insert the microSD card into the appropriate slot
 - Connect the display and USB keyboard /mouse and Ethernet cable.
 - Depending on the power supply you want to use, you may have to add or remove the jumper for power selection:
@@ -76,7 +71,11 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
     - If using USB, the jumper must be off.
 - Plug in the power supply. The green LED (D53) close to the micro USB port should turn green, and the display should show the NVIDIA logo before booting begins.
 
-## Install from scratch (skip down to "Download and install the live *.iso" if installing Linux is needed and get back here just after the install)
+## Installation From Scratch Instructions for Linux (skip down to "Download and install the live *.iso" if installing Linux is needed and get back here just after the install)
+
+##### Dependencies
+    None which aren't covered by this guide.
+
 ##### Update apt repository package references (ensure system will be up to date)
 ```
 $ sudo apt update
