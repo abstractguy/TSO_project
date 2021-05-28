@@ -52,8 +52,29 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
 
 ## Installation Instructions for Linux
 
+## Hardware instructions
+
+##### Prerequisites for using the Arducam camera array on the Jetson Nano
+    - Micro SD card with at least 16Gb of storage
+    - Ubuntu host PC* with SD card slot or USB SD card reader/writer
+    - Jetson Nano Dev Kit with micro USB power supply (at least 5V, 2A) or DC power supply (5V 4A)
+    - Full HD display with HDMI
+    - Keyboard and mouse
+    - Ethernet cable connected to the Internet, or USB Wi-Fi adapter
+
+* You can use a Windows host PC to flash the microSD card instead, however this tutorial uses Ubuntu as it’s a simpler process. See NVIDIA’s guide for a Windows option.
+
+<img src="documentation/doc/nano.png" width="640"/>
+
 ##### Dependencies
     None which aren't covered by this guide.
+
+- Insert the microSD card into the appropriate slot
+- Connect the display and USB keyboard /mouse and Ethernet cable.
+- Depending on the power supply you want to use, you may have to add or remove the jumper for power selection:
+    - If using a jack, the jumper must be set.
+    - If using USB, the jumper must be off.
+- Plug in the power supply. The green LED (D53) close to the micro USB port should turn green, and the display should show the NVIDIA logo before booting begins.
 
 ## Install from scratch (skip down to "Download and install the live *.iso" if installing Linux is needed and get back here just after the install)
 ##### Update apt repository package references (ensure system will be up to date)
@@ -113,7 +134,7 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_virtualbox.
 
 ##### You can now use the Windows 10 Enterprise Edition to run Windows 10 applications from a Linux host, like Altium for PCB developement
 
-##### Install Nvidia components for JetPack 4.4
+##### Install Nvidia components for JetPack 4.4.1
 ```
 $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_prerequisites.sh
 ```
@@ -134,7 +155,7 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_envir
 
 ### Note: if using the Jetson Nano devkit, you will want to install a jumper on J48 to power with the jack barrel
 
-## Install Nvidia JetPack 4.4 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
+## Install Nvidia JetPack 4.4.1 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
 
 ### Sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager if using the AGX Xavier
 
