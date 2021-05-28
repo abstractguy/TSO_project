@@ -1,18 +1,11 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# File:        software/jetson/fastmot/models/reid.py
-# By:          Samuel Duclos
-# For:         Myself
-# Description: This file was adapted from FastMOT for uARM feedback control.
-# Reference:   https://github.com/GeekAlexis/FastMOT.git
-
 from pathlib import Path
 import logging
 import tensorrt as trt
 
+
 EXPLICIT_BATCH = 1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH)
 LOGGER = logging.getLogger(__name__)
+
 
 class ReID:
     PLUGIN_PATH = None
@@ -53,10 +46,10 @@ class ReID:
                 engine_file.write(engine.serialize())
             return engine
 
+
 class OSNet025(ReID):
     ENGINE_PATH = Path(__file__).parent / 'osnet_x0_25_msmt17.trt'
     MODEL_PATH = Path(__file__).parent / 'osnet_x0_25_msmt17.onnx'
     INPUT_SHAPE = (3, 256, 128)
     OUTPUT_LAYOUT = 512
     METRIC = 'euclidean'
-

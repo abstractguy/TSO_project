@@ -9,7 +9,7 @@
 IS_ARDUCAM = False
 
 if IS_ARDUCAM:
-    from utils import ArducamUtils
+    from utils_arducam import ArducamUtils
 
 from utils.inference import ObjectCenter
 from copy import deepcopy

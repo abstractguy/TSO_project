@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# File:        software/jetson/fastmot/utils/visualization.py
-# By:          Samuel Duclos
-# For:         Myself
-# Description: This file was adapted from FastMOT for uARM feedback control.
-# Reference:   https://github.com/GeekAlexis/FastMOT.git
-
 import colorsys
 import numpy as np
 import cv2
@@ -24,6 +15,7 @@ def draw_tracks(frame, tracks, show_flow=False, show_cov=False):
 def draw_detections(frame, detections):
     for det in detections:
         draw_bbox(frame, det.tlbr, (255, 255, 255), 1)
+
 
 def draw_flow_bboxes(frame, tracker):
     for tlbr in tracker.flow_bboxes.values():
@@ -66,7 +58,6 @@ def draw_feature_match(frame, prev_pts, cur_pts, color):
             for pt1, pt2 in zip(prev_pts, cur_pts):
                 cv2.line(frame, tuple(pt1), tuple(pt2), color, 1, cv2.LINE_AA)
 
-
 def draw_covariance(frame, tlbr, covariance):
     tlbr = tlbr.astype(int)
     tl, br = tuple(tlbr[:2]), tuple(tlbr[2:])
@@ -74,7 +65,7 @@ def draw_covariance(frame, tlbr, covariance):
     def ellipse(cov):
         vals, vecs = np.linalg.eigh(cov)
         order = vals.argsort()[::-1]
-        # 95% confidence ellipse
+        # 95% confidence ellipse.
         vals, vecs = np.sqrt(vals[order] * 5.9915), vecs[:, order]
         axes = int(vals[0] + 0.5), int(vals[1] + 0.5)
         angle = np.degrees(np.arctan2(vecs[1, 0], vecs[0, 0]))

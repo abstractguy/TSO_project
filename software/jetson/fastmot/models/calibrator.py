@@ -1,18 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# File:        software/jetson/fastmot/models/calibrator.py
-# By:          Samuel Duclos
-# For:         Myself
-# Description: This file was adapted from FastMOT for uARM feedback control.
-# Reference:   https://github.com/GeekAlexis/FastMOT.git
-
 import os
 import numpy as np
 import pycuda.driver as cuda
 import pycuda.autoinit
 import tensorrt as trt
 import cv2
+
 
 class SSDEntropyCalibrator(trt.IInt8EntropyCalibrator2):
     def __init__(self, model_shape, data_dir, cache_file):
@@ -39,7 +31,6 @@ class SSDEntropyCalibrator(trt.IInt8EntropyCalibrator2):
     # You don't necessarily have to use them, but they can be useful to understand the order of
     # the inputs. The bindings list is expected to have the same ordering as 'names'.
     def get_batch(self, names):
-
         # if there are not enough calibration images to form a batch,
         # we have reached the end of our data set
         if self.counter == self.num_calib_imgs:
@@ -52,9 +43,9 @@ class SSDEntropyCalibrator(trt.IInt8EntropyCalibrator2):
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             # HWC -> CHW
             img = img.transpose((2, 0, 1))
-            # Normalize to [-1.0, 1.0] interval (expected by model)
+            # Normalize to [-1.0, 1.0] interval (expected by model).
             img = (2.0 / 255.0) * img - 1.0
-            # add this image to the batch array
+            # Add this image to the batch array.
             batch_imgs[i, :] = img.ravel()
 
         # increase the counter for this batch

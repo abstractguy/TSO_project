@@ -10,7 +10,7 @@
 IS_ARDUCAM = False
 
 if IS_ARDUCAM:
-    from utils import ArducamUtils
+    from utils_arducam import ArducamUtils
 
 from utils.camera.CountsPerSec import CountsPerSec
 from utils.camera.VideoGet import VideoGet

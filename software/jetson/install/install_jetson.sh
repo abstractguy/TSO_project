@@ -31,6 +31,7 @@ bash ${PWD}/install/update_cmake.sh $JETSON_PASSWORD
 bash ${PWD}/install/install_protobuf_1.8.0.sh $JETSON_PASSWORD
 
 # Install pip, numpy, pycuda, tensorflow, cython-bbox
+echo $JETSON_PASSWORD | sudo -S ln -fs /usr/include/locale.h /usr/include/xlocale.h
 echo $JETSON_PASSWORD | sudo -S apt-get update
 echo $JETSON_PASSWORD | sudo -S apt-get install python3-pip libhdf5-serial-dev hdf5-tools libcanberra-gtk-module
 echo $JETSON_PASSWORD | sudo -SH pip3 install cython
@@ -39,7 +40,7 @@ echo $JETSON_PASSWORD | sudo -SH pip3 install --global-option=build_ext --global
 echo $JETSON_PASSWORD | sudo -SH pip3 install --no-cache-dir --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v$JP_VERSION tensorflow==$TF_VERSION+nv$NV_VERSION
 
 # install scipy
-echo $JETSON_PASSWORD | sudo -S apt-get install libatlas-base-dev gfortran
+yes | echo $JETSON_PASSWORD | sudo -S apt-get install libatlas-base-dev gfortran
 echo $JETSON_PASSWORD | sudo -SH pip3 install scipy==1.5.0
 
 # install llvm (This may take a while)

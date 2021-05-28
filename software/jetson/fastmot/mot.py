@@ -17,7 +17,6 @@ from .tracker import MultiTracker
 from .utils import Profiler
 from .utils.visualization import draw_tracks, draw_detections
 from .utils.visualization import draw_flow_bboxes, draw_background_flow
-from .utils.sot import ObjectCenter
 
 LOGGER = logging.getLogger(__name__)
 
@@ -109,9 +108,9 @@ class MOT:
                     with Profiler('track', aggregate=True):
                         self.tracker.apply_kalman()
                     embeddings = self.extractor.postprocess()
-                #
-                #with Profiler('assoc'):
-                #    self.tracker.update(self.frame_count, detections, embeddings)
+
+                with Profiler('assoc'):
+                    self.tracker.update(self.frame_count, detections, embeddings)
 
             else:
                 with Profiler('track'):
@@ -144,3 +143,4 @@ class MOT:
             draw_background_flow(frame, self.tracker)
         cv2.putText(frame, f'visible: {len(self.visible_tracks)}', (30, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, 0, 2, cv2.LINE_AA)
+

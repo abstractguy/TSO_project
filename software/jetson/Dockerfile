@@ -68,4 +68,3 @@ COPY . .
 RUN dpkg -i ${SCRIPT_DIR}/*-tf_*.deb && \
     pip install --no-cache-dir cython && \
     pip install --no-cache-dir -r requirements.txt
-

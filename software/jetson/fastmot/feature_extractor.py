@@ -43,7 +43,7 @@ class FeatureExtractor:
         """
         imgs = multi_crop(frame, detections.tlbr)
         self.embeddings, cur_imgs = [], []
-        # pipeline inference and preprocessing the next batch in parallel
+        # Pipeline inference and preprocessing the next batch in parallel.
         for offset in range(0, len(imgs), self.batch_size):
             cur_imgs = imgs[offset:offset + self.batch_size]
             self.pool.starmap(self._preprocess, enumerate(cur_imgs))
@@ -60,15 +60,15 @@ class FeatureExtractor:
         This function should be called after `extract_async`.
         """
         # Disable DeepSORT.
-        #if self.num_features == 0:
-        #    return np.empty((0, self.feature_dim))
-        #
-        #embedding_out = self.backend.synchronize()[0][:self.num_features * self.feature_dim]
-        #self.embeddings.append(embedding_out)
-        #embeddings = np.concatenate(self.embeddings).reshape(-1, self.feature_dim)
-        #embeddings /= np.linalg.norm(embeddings, axis=1, keepdims=True)
-        #return embeddings
-        return np.empty((0, self.feature_dim))
+        #return np.empty((0, self.feature_dim))
+        if self.num_features == 0:
+            return np.empty((0, self.feature_dim))
+
+        embedding_out = self.backend.synchronize()[0][:self.num_features * self.feature_dim]
+        self.embeddings.append(embedding_out)
+        embeddings = np.concatenate(self.embeddings).reshape(-1, self.feature_dim)
+        embeddings /= np.linalg.norm(embeddings, axis=1, keepdims=True)
+        return embeddings
 
     def _preprocess(self, idx, img):
         img = cv2.resize(img, self.model.INPUT_SHAPE[:0:-1])

@@ -125,24 +125,30 @@ class Flow:
                                                 all_prev_pts)) if all_prev_pts else [0]
         target_begins = itertools.chain([0], target_ends[:-1])
 
-        # detect background feature points
-        prev_frame_small_bg = cv2.resize(self.prev_frame_gray, None,
-                                         fx=self.bg_feat_scale_factor[0],
-                                         fy=self.bg_feat_scale_factor[1])
-        bg_mask_small = cv2.resize(self.fg_mask, None, fx=self.bg_feat_scale_factor[0],
-                                   fy=self.bg_feat_scale_factor[1], interpolation=cv2.INTER_NEAREST)
-        keypoints = self.bg_feat_detector.detect(prev_frame_small_bg, mask=bg_mask_small)
-        if len(keypoints) == 0:
-            self.bg_keypoints = np.empty((0, 2), np.float32)
-            LOGGER.warning('Camera motion estimation failed')
-            return {}, None
-        keypoints = np.float32([kp.pt for kp in keypoints])
-        keypoints = self._unscale_pts(keypoints, self.bg_feat_scale_factor)
-        bg_begin = target_ends[-1]
-        all_prev_pts.append(keypoints)
+        # Disable camera motion estimation.
+        ## Detect background feature points.
+        #prev_frame_small_bg = cv2.resize(self.prev_frame_gray, None,
+        #                                 fx=self.bg_feat_scale_factor[0],
+        #                                 fy=self.bg_feat_scale_factor[1])
+        #bg_mask_small = cv2.resize(self.fg_mask, None, fx=self.bg_feat_scale_factor[0],
+        #                           fy=self.bg_feat_scale_factor[1], interpolation=cv2.INTER_NEAREST)
+        #keypoints = self.bg_feat_detector.detect(prev_frame_small_bg, mask=bg_mask_small)
+        #if len(keypoints) == 0:
+        #    self.bg_keypoints = np.empty((0, 2), np.float32)
+        #    LOGGER.warning('Camera motion estimation failed')
+        #    return {}, None
+        #keypoints = np.float32([kp.pt for kp in keypoints])
+        #keypoints = self._unscale_pts(keypoints, self.bg_feat_scale_factor)
+        #bg_begin = target_ends[-1]
+        #all_prev_pts.append(keypoints)
 
-        # match features using optical flow
+        # Match features using optical flow.
         all_prev_pts = np.concatenate(all_prev_pts)
+
+        # Necessary for disabling camera motion estimation.
+        if len(all_prev_pts) == 0:
+            return {}, None
+
         scaled_prev_pts = self._scale_pts(all_prev_pts, self.opt_flow_scale_factor)
         all_cur_pts, status, err = cv2.calcOpticalFlowPyrLK(self.prev_frame_small, frame_small,
                                                             scaled_prev_pts, None,
@@ -150,30 +156,32 @@ class Flow:
         status = self._get_status(status, err, self.max_error)
         all_cur_pts = self._unscale_pts(all_cur_pts, self.opt_flow_scale_factor, status)
 
-        # reuse preprocessed frame for next prediction
+        # Reuse preprocessed frame for next prediction.
         self.prev_frame_gray = frame_gray
         self.prev_frame_small = frame_small
 
-        # estimate camera motion
+        ## Estimate camera motion.
         homography = None
-        prev_bg_pts, matched_bg_pts = self._get_good_match(all_prev_pts, all_cur_pts,
-                                                           status, bg_begin, -1)
-        if len(matched_bg_pts) < 4:
-            self.bg_keypoints = np.empty((0, 2), np.float32)
-            LOGGER.warning('Camera motion estimation failed')
-            return {}, None
-        homography, inlier_mask = cv2.findHomography(prev_bg_pts, matched_bg_pts,
-                                                     method=cv2.RANSAC,
-                                                     maxIters=self.ransac_max_iter,
-                                                     confidence=self.ransac_conf)
-        self.prev_bg_keypoints, self.bg_keypoints = self._get_inliers(prev_bg_pts, matched_bg_pts,
-                                                                      inlier_mask)
-        if homography is None or len(self.bg_keypoints) < self.inlier_thresh:
-            self.bg_keypoints = np.empty((0, 2), np.float32)
-            LOGGER.warning('Camera motion estimation failed')
-            return {}, None
 
-        # estimate target bounding boxes
+        # Disable camera motion estimation.
+        #prev_bg_pts, matched_bg_pts = self._get_good_match(all_prev_pts, all_cur_pts,
+        #                                                   status, bg_begin, -1)
+        #if len(matched_bg_pts) < 4:
+        #    self.bg_keypoints = np.empty((0, 2), np.float32)
+        #    LOGGER.warning('Camera motion estimation failed')
+        #    return {}, None
+        #homography, inlier_mask = cv2.findHomography(prev_bg_pts, matched_bg_pts,
+        #                                             method=cv2.RANSAC,
+        #                                             maxIters=self.ransac_max_iter,
+        #                                             confidence=self.ransac_conf)
+        #self.prev_bg_keypoints, self.bg_keypoints = self._get_inliers(prev_bg_pts, matched_bg_pts,
+        #                                                              inlier_mask)
+        #if homography is None or len(self.bg_keypoints) < self.inlier_thresh:
+        #    self.bg_keypoints = np.empty((0, 2), np.float32)
+        #    LOGGER.warning('Camera motion estimation failed')
+        #    return {}, None
+        #
+        # Estimate target bounding boxes.
         next_bboxes = {}
         np.copyto(self.fg_mask, self.ones)
         for begin, end, track in zip(target_begins, target_ends, tracks):
@@ -183,7 +191,7 @@ class Flow:
             if len(matched_pts) < 3:
                 track.keypoints = np.empty((0, 2), np.float32)
                 continue
-            # model motion as partial affine
+            # Model motion as partial affine.
             affine_mat, inlier_mask = cv2.estimateAffinePartial2D(prev_pts, matched_pts,
                                                                   method=cv2.RANSAC,
                                                                   maxIters=self.ransac_max_iter,

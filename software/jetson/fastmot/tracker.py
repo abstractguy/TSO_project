@@ -22,11 +22,9 @@ from .flow import Flow
 from .kalman_filter import MeasType, KalmanFilter
 from .utils.rect import as_rect, to_tlbr, iom
 
-
 LOGGER = logging.getLogger(__name__)
 CHI_SQ_INV_95 = 9.4877 # 0.95 quantile of chi-square distribution
 INF_COST = 1e5
-
 
 class MultiTracker:
     """
@@ -99,6 +97,8 @@ class MultiTracker:
         self.compute_flow(frame)
         self.apply_kalman()
 
+    # Disable camera motion estimation.
+    '''
     def compute_flow(self, frame):
         """
         Computes optical flow to estimate tracklet positions and camera motion.
@@ -109,9 +109,22 @@ class MultiTracker:
         """
         active_tracks = [track for track in self.tracks.values() if track.active]
         self.flow_bboxes, self.homography = self.flow.predict(frame, active_tracks)
+
         if self.homography is None:
             # clear tracks when camera motion cannot be estimated
             self.tracks.clear()
+    '''
+
+    def compute_flow(self, frame):
+        """
+        Computes optical flow to estimate tracklet positions and camera motion.
+        Parameters
+        ----------
+        frame : ndarray
+            The next frame.
+        """
+        active_tracks = [track for track in self.tracks.values() if track.active]
+        self.flow_bboxes, self.homography = self.flow.predict(frame, active_tracks)
 
     def apply_kalman(self):
         """
@@ -120,7 +133,8 @@ class MultiTracker:
         """
         for trk_id, track in list(self.tracks.items()):
             mean, cov = track.state
-            mean, cov = self.kf.warp(mean, cov, self.homography)
+            # Disable camera motion estimation.
+            #mean, cov = self.kf.warp(mean, cov, self.homography)
             mean, cov = self.kf.predict(mean, cov)
             if trk_id in self.flow_bboxes:
                 flow_tlbr = self.flow_bboxes[trk_id]
@@ -342,3 +356,4 @@ class MultiTracker:
                 gate = (cost[i] > thresh) | (trk_labels[i] != det_labels)
                 cost[i][gate] = INF_COST
         return cost
+

@@ -1,17 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# File:        software/jetson/fastmot/models/ssd.py
-# By:          Samuel Duclos
-# For:         Myself
-# Description: This file was adapted from FastMOT for uARM feedback control.
-# Reference:   https://github.com/GeekAlexis/FastMOT.git
-
 from pathlib import Path
 import logging
 import tensorrt as trt
 
+
 LOGGER = logging.getLogger(__name__)
+
 
 class SSD:
     PLUGIN_PATH = None
@@ -62,6 +55,7 @@ class SSD:
             with open(cls.ENGINE_PATH, 'wb') as engine_file:
                 engine_file.write(engine.serialize())
             return engine
+
 
 class SSDMobileNetV1(SSD):
     ENGINE_PATH = Path(__file__).parent / 'ssd_mobilenet_v1_coco.trt'
@@ -159,6 +153,7 @@ class SSDMobileNetV1(SSD):
 
         return graph
 
+
 class SSDMobileNetV2(SSD):
     ENGINE_PATH = Path(__file__).parent / 'ssd_mobilenet_v2_coco.trt'
     MODEL_PATH = Path(__file__).parent / 'ssd_mobilenet_v2_coco.pb'
@@ -254,6 +249,7 @@ class SSDMobileNetV2(SSD):
 
         return graph
 
+
 class SSDInceptionV2(SSD):
     ENGINE_PATH = Path(__file__).parent / 'ssd_inception_v2_coco.trt'
     MODEL_PATH = Path(__file__).parent / 'ssd_inception_v2_coco.pb'
@@ -272,7 +268,7 @@ class SSDInceptionV2(SSD):
         all_identity_nodes = graph.find_nodes_by_op("Identity")
         graph.forward_inputs(all_identity_nodes)
 
-        # Create TRT plugin nodes to replace unsupported ops in Tensorflow graph.
+        # Create TRT plugin nodes to replace unsupported ops in Tensorflow graph
         Input = gs.create_plugin_node(
             name="Input",
             op="Placeholder",
@@ -348,4 +344,3 @@ class SSDInceptionV2(SSD):
         # If remove_exclusive_dependencies is True, the whole graph will be removed!
         graph.remove(graph.graph_outputs, remove_exclusive_dependencies=False)
         return graph
-

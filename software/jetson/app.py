@@ -19,7 +19,7 @@ IS_ARDUCAM = False
 WITH_GSTREAMER = True
 
 if IS_ARDUCAM:
-    from utils import ArducamUtils
+    from utils_arducam import ArducamUtils
 
 def main():
     args = parse_args()

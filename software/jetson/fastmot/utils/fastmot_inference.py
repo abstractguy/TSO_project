@@ -24,7 +24,7 @@ class HostDeviceMem:
         return self.__str__()
 
 class InferenceBackend:
-    # initialize TensorRT
+    # Initialize TensorRT.
     TRT_LOGGER = trt.Logger(trt.Logger.VERBOSE)
     trt.init_libnvinfer_plugins(TRT_LOGGER, '')
 
@@ -32,14 +32,14 @@ class InferenceBackend:
         self.model = model
         self.batch_size = batch_size
 
-        # load plugin if the model requires one
+        # Load plugin if the model requires one.
         if self.model.PLUGIN_PATH is not None:
             try:
                 ctypes.cdll.LoadLibrary(self.model.PLUGIN_PATH)
             except OSError as err:
                 raise RuntimeError('Plugin not found') from err
 
-        # load trt engine or build one if not found
+        # Load trt engine or build one if not found.
         if not self.model.ENGINE_PATH.exists():
             self.engine = self.model.build_engine(InferenceBackend.TRT_LOGGER, self.batch_size)
         else:
@@ -52,7 +52,7 @@ class InferenceBackend:
         if self.engine.has_implicit_batch_dimension:
             assert self.batch_size <= self.engine.max_batch_size
 
-        # allocate buffers
+        # Allocate buffers.
         self.bindings = []
         self.outputs = []
         for binding in self.engine:
@@ -61,10 +61,10 @@ class InferenceBackend:
             if self.engine.has_implicit_batch_dimension:
                 size *= self.batch_size
             dtype = trt.nptype(self.engine.get_binding_dtype(binding))
-            # allocate host and device buffers
+            # Allocate host and device buffers.
             host_mem = cuda.pagelocked_empty(size, dtype)
             device_mem = cuda.mem_alloc(host_mem.nbytes)
-            # append the device buffer to device bindings
+            # Append the device buffer to device bindings.
             self.bindings.append(int(device_mem))
             if self.engine.binding_is_input(binding):
                 if not self.engine.has_implicit_batch_dimension:
@@ -75,7 +75,7 @@ class InferenceBackend:
         self.context = self.engine.create_execution_context()
         self.stream = cuda.Stream()
 
-        # timing events
+        # Timing events.
         self.start = cuda.Event()
         self.end = cuda.Event()
 

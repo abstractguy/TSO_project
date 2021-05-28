@@ -9,7 +9,7 @@
 IS_ARDUCAM = False
 
 if IS_ARDUCAM:
-    from utils import ArducamUtils
+    from utils_arducam import ArducamUtils
 
 WITH_GSTREAMER = True
 

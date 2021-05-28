@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# File:        software/jetson/fastmot/models/label.py
-# By:          Samuel Duclos
-# For:         Myself
-# Description: This file was adapted from FastMOT for uARM feedback control.
-# Reference:   https://github.com/GeekAlexis/FastMOT.git
-
 """
 90-class COCO labels
 `unlabled` (id = 0) is replaced with `head` to work with CrowdHuman
@@ -105,3 +96,93 @@ LABEL_MAP = (
     'hair drier',
     'toothbrush',
 )
+
+"""
+80-class COCO labels
+`unlabled` (id = 0) is replaced with `head` to work with CrowdHuman
+"""
+'''
+LABEL_MAP = (
+    'person',
+    'bicycle',
+    'car',
+    'motorcycle',
+    'airplane',
+    'bus',
+    'train',
+    'truck',
+    'boat',
+    'traffic light',
+    'fire hydrant',
+    'stop sign',
+    'parking meter',
+    'bench',
+    'bird',
+    'cat',
+    'dog',
+    'horse',
+    'sheep',
+    'cow',
+    'elephant',
+    'bear',
+    'zebra',
+    'giraffe',
+    'backpack',
+    'umbrella',
+    'handbag',
+    'tie',
+    'suitcase',
+    'frisbee',
+    'skis',
+    'snowboard',
+    'sports ball',
+    'kite',
+    'baseball bat',
+    'baseball glove',
+    'skateboard',
+    'surfboard',
+    'tennis racket',
+    'bottle',
+    'wine glass',
+    'cup',
+    'fork',
+    'knife',
+    'spoon',
+    'bowl',
+    'banana',
+    'apple',
+    'sandwich',
+    'orange',
+    'broccoli',
+    'carrot',
+    'hot dog',
+    'pizza',
+    'donut'
+    'cake',
+    'chair',
+    'couch',
+    'potted plant',
+    'bed',
+    'dining table',
+    'toilet',
+    'tv',
+    'laptop',
+    'mouse',
+    'remote',
+    'keyboard',
+    'cell phone',
+    'microwave',
+    'oven',
+    'toaster',
+    'sink',
+    'refrigerator',
+    'book',
+    'clock',
+    'vase',
+    'scissors',
+    'teddy bear',
+    'hair drier',
+    'toothbrush'
+)
+'''
+

@@ -23,7 +23,7 @@
 
         "yolo_detector": {
             "model": "YOLOv4",
-            "class_ids": [41],
+            "class_ids": [1],
             "conf_thresh": 0.25,
             "max_area": 800000,
             "nms_thresh": 0.5

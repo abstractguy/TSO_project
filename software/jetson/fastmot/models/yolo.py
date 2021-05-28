@@ -106,7 +106,6 @@ class YOLO:
                 engine_file.write(engine.serialize())
             return engine
 
-'''
 class YOLOv4(YOLO):
     ENGINE_PATH = Path(__file__).parent / 'yolov4_crowdhuman.trt'
     MODEL_PATH = Path(__file__).parent /  'yolov4_crowdhuman.onnx'
@@ -117,8 +116,8 @@ class YOLOv4(YOLO):
     ANCHORS = [[11, 22, 24, 60, 37, 116],
                [54, 186, 69, 268, 89, 369],
                [126, 491, 194, 314, 278, 520]]
-'''
 
+'''
 class YOLOv4(YOLO):
     ENGINE_PATH = Path(__file__).parent / 'yolov4x-mish-640.trt'
     MODEL_PATH = Path(__file__).parent /  'yolov4x-mish-640.onnx'
@@ -129,3 +128,5 @@ class YOLOv4(YOLO):
     ANCHORS = [[12, 16, 19, 36, 40, 28], 
                [36, 75, 76, 55, 72, 146], 
                [142, 110, 192, 243, 459, 401]]
+'''
+

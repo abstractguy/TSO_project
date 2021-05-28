@@ -252,3 +252,4 @@ class ArducamUtils(object):
 
     def __getattr__(self, key):
         return self.config.get(key)
+

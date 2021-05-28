@@ -3,14 +3,14 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fabstractguy%2FTSO_project&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com) [![License: BSD 2-clause](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## An "intelligent" robotic arm using a camera for pick and place.
-A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The Jetson flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
+A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
 
 ## Documentation
 Still a work in progress. Early development phase.
 
 ## Compile code and documentation to website
 To compile and deploy parts of previously commented code as a website on readthedocs or locally, click the link below.
-Note: Since the impact of this on my notes was minimal, not all documentation will be displayed to the website.
+Note: Since the impact of this on my notes was minimal and the code commenting required was time-consuming, not all documentation will be displayed to the website.
 
 [Install documentation as website](https://docs.readthedocs.io/en/stable/development/install.html "Permalink to ")
 
@@ -29,20 +29,20 @@ If you add the Moveit plugins, simulation can run with the uARM in tandem. If yo
 
 ## Electronics
 The minimalistic Printed Circuit Board features an ESP32 as the motor-driving microcontroller.
-Altium design files are provided in the electronics/ folder.
+Altium design files are provided in the electronics/ folder. A standard ESP32-WROOM-32 module is the microcontroller. A CP2109 USB to serial chip is used to program it and transfer data from a Micro-USB connector. An unused SD card slot is available if more external memory is required. A MCP16311T-E/M step-down regulator taps 12 volts from the jack barrel connector to provide the 5 volts servomotors need to function. A fixed output Complementary Metal Oxide Semiconductor Low-Dropout regulator (TC1264) taps 5 volts from the USB connector to provide 3.3 volts for the other circuits. One Light Emitting Diode confirms that regulator provides the 3.3 volts. There is one GPIO-controllable LED and one push button plugged on another GPIO. Another push button is plugged to the EN pin for enabling the ESP32-WROOM-32 module.
 
 ## Software
-There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software to program and deploy the environment, firmware for the PCB is in software/arduino-1.8.13/, theres is software, drivers, etc. for commanding everything from the Jetson (or computer).
+There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software with drivers to program and deploy the environment for commanding everything from the Jetson (or computer). Firmware for the PCB (compatible with a number of architectures) is located in software/arduino-1.8.13/.
 The main code was tested on PC and Jetson for easier modular tests while integrating.
 
 ## Firmware
-The firmware is portable across Arduino boards (it runs AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h need to be redefined. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process (only tested on AVR for now). See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
+The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h need to be redefined. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
 
 ## ArduCAM Camarray
 An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
 
 ## Custom uARM GCODE-based serial port controller in Python-3.7
-A custom controller communicating with the uARM firmware using a GCODE protocol through a USB connection to the serial port provides grad-based absolute coordinate with optional scaling with image frame dimensions for easy control. Bicubic easing, movement throttling, calibration, movement recording and replay, etc. are only available while using AVR and SAMD boards.
+A custom controller communicating with the uARM firmware using a GCODE protocol through a USB connection to the serial port provides grad-scaled absolute polar coordinate positioning for easy control. There is bicubic easing, a slowmove extension, calibration, movement recording and replay, etc.
 
 ## Multi-threading and multi-process management
 For faster and simpler parallel handling of the whole ecosystem, the main entrypoint process loop runs with parallel programs excluding the manager loop: the main camera/inference loop, a PID controller for the X axis, a PID controller for the Y axis and the uARM control process. Camera input is optionally threaded in 4 ways (no threading, video get, video show and both).
@@ -136,9 +136,18 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_envir
 
 ## Install Nvidia JetPack 4.4 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
 
-### Sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager
+### Sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager if using the AGX Xavier
+
+### Else if using the Nano, follow instructions in software/jetson/install/nano_install_notes.sh
 
 ### Follow the instructions and when it can't SSH into the Jetson, plug a screen, keyboard and mouse to the Nvidia Jetson Nano (or AGX Xavier) devkit to configure the rest; the install will resume after
+
+### On a Jetson Nano, this would be necessary before using SSH; on the Jetson AGX Xavier, you would follow the instructions on the monitor instead
+```
+$ sudo apt-get update
+$ sudo apt-get install -y screen
+$ screen /dev/ttyACM0
+```
 
 ##### Create workspace directory on the Jetson (from x86_64)
 ```
@@ -152,7 +161,7 @@ $ scp -r ~/workspace/TSO_project/software/jetson sam@192.168.55.1:/home/sam/work
 
 ##### Install Jetson prerequisites (replace <JETSON_PASSWORD> with your Jetson user's password)
 ```
-$ ssh -t sam@192.168.55.1 'bash ~/workspace/jetson/install/install_jetson.sh <JETSON_PASSWORD>'
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.sh <JETSON_PASSWORD>'
 ```
 
 ##### If you have the Jetson Nano devkit and the dual ArduCAM camera array HAT style with OV9281 sensors (1MP Global Shutter Camera), install the camera drivers
@@ -243,7 +252,6 @@ In terms of Wiki, indicators Precision and Recall have a slightly different mean
 
 ![precision_recall_iou](https://hsto.org/files/ca8/866/d76/ca8866d76fb840228940dbf442a7f06a.jpg)
 
-
 ## Requirements
 - CUDA>=10
 - cuDNN>=7
@@ -319,6 +327,96 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 </details>
 
 
+### Download VOC dataset for INT8 calibration
+Only required if you want to use SSD
+  ```
+  $ install/download_data.sh
+  ```
+
+## Usage
+- USB webcam:
+  ```
+  $ python3 app.py --input_uri /dev/video0 --mot
+  ```
+- MIPI CSI camera:
+  ```
+  $ python3 app.py --input_uri csi://0 --mot
+  ```
+- RTSP stream:
+  ```
+  $ python3 app.py --input_uri rtsp://<user>:<password>@<ip>:<port>/<path> --mot
+  ```
+- HTTP stream:
+  ```
+  $ python3 app.py --input_uri http://<user>:<password>@<ip>:<port>/<path> --mot
+  ```
+- Image sequence:
+  ```
+  $ python3 app.py --input_uri img_%06d.jpg --mot
+  ```
+- Video file:
+  ```
+  $ python3 app.py --input_uri video.mp4 --mot
+  ```
+- Use `--gui` to visualize and `--output_uri` to save output
+- To disable the GStreamer backend, set `WITH_GSTREAMER = False` [here](https://github.com/GeekAlexis/FastMOT/blob/3a4cad87743c226cf603a70b3f15961b9baf6873/fastmot/videoio.py#L11)
+- Note that the first run will be slow due to Numba compilation
+<details>
+<summary> More options can be configured in cfg/mot.json </summary>
+
+  - Set `resolution` and `frame_rate` that corresponds to the source data or camera configuration (optional). They are required for image sequence, camera sources, and MOT Challenge evaluation. List all configurations for your USB/CSI camera:
+    ```
+    $ v4l2-ctl -d /dev/video0 --list-formats-ext
+    ```
+  - To change detector, modify `detector_type`. This can be either `YOLO` or `SSD`
+  - To change classes, set `class_ids` under the correct detector. Default class is `1`, which corresponds to person
+  - To swap model, modify `model` under a detector. For SSD, you can choose from `SSDInceptionV2`, `SSDMobileNetV1`, or `SSDMobileNetV2`
+  - Note that with SSD, the detector splits a frame into tiles and processes them in batches for the best accuracy. Change `tiling_grid` to `[2, 2]`, `[2, 1]`, or `[1, 1]` if a smaller batch size is preferred
+  - If more accuracy is desired and processing power is not an issue, reduce `detector_frame_skip`. Similarly, increase `detector_frame_skip` to speed up tracking at the cost of accuracy. You may also want to change `max_age` such that `max_age × detector_frame_skip ≈ 30`
+
+</details>
+
+ ## Track custom classes
+FastMOT supports multi-class tracking and can be easily extended to custom classes (e.g. vehicle). You need to train both YOLO and a ReID model on your object classes. Check [Darknet](https://github.com/AlexeyAB/darknet) for training YOLO and [fast-reid](https://github.com/JDAI-CV/fast-reid) for training ReID. After training, convert the model to ONNX format and place it in fastmot/models. To convert YOLO to ONNX, use [tensorrt_demos](https://github.com/jkjung-avt/tensorrt_demos/blob/master/yolo/yolo_to_onnx.py) to be compatible with the TensorRT YOLO plugins.
+### Add custom YOLOv3/v4
+1. Subclass `YOLO` like here: https://github.com/GeekAlexis/FastMOT/blob/4e946b85381ad807d5456f2ad57d1274d0e72f3d/fastmot/models/yolo.py#L94
+    ```
+    ENGINE_PATH: path to TensorRT engine (converted at runtime)
+    MODEL_PATH: path to ONNX model
+    NUM_CLASSES: total number of classes
+    LETTERBOX: keep aspect ratio when resizing
+               For YOLOv4-csp/YOLOv4x-mish, set to True
+    NEW_COORDS: new_coords parameter for each yolo layer
+                For YOLOv4-csp/YOLOv4x-mish, set to True
+    INPUT_SHAPE: input size in the format "(channel, height, width)"
+    LAYER_FACTORS: scale factors with respect to the input size for each yolo layer
+                   For YOLOv4/YOLOv4-csp/YOLOv4x-mish, set to [8, 16, 32]
+                   For YOLOv3, set to [32, 16, 8]
+                   For YOLOv4-tiny/YOLOv3-tiny, set to [32, 16]
+    SCALES: scale_x_y parameter for each yolo layer
+            For YOLOv4-csp/YOLOv4x-mish, set to [2.0, 2.0, 2.0]
+            For YOLOv4, set to [1.2, 1.1, 1.05]
+            For YOLOv4-tiny, set to [1.05, 1.05]
+            For YOLOv3, set to [1., 1., 1.]
+            For YOLOv3-tiny, set to [1., 1.]
+    ANCHORS: anchors grouped by each yolo layer
+    ```
+    Note that anchors may not follow the same order in the Darknet cfg file. You need to mask out the anchors for each yolo layer using the indices in `mask` in Darknet cfg.
+    Unlike YOLOv4, the anchors are usually in reverse for YOLOv3 and tiny
+2. Change class labels [here](https://github.com/GeekAlexis/FastMOT/blob/master/fastmot/models/label.py) to your object classes
+3. Modify cfg/mot.json: set `model` in `yolo_detector` to the added Python class and set `class_ids` you want to detect. You may want to play with `conf_thresh` based on the accuracy of your model
+### Add custom ReID
+1. Subclass `ReID` like here: https://github.com/GeekAlexis/FastMOT/blob/aa707888e39d59540bb70799c7b97c58851662ee/fastmot/models/reid.py#L51
+    ```
+    ENGINE_PATH: path to TensorRT engine (converted at runtime)
+    MODEL_PATH: path to ONNX model
+    INPUT_SHAPE: input size in the format "(channel, height, width)"
+    OUTPUT_LAYOUT: feature dimension output by the model (e.g. 512)
+    METRIC: distance metric used to match features ('euclidean' or 'cosine')
+    ```
+2. Modify cfg/mot.json: set `model` in `feature_extractor` to the added Python class. You may want to play with `max_feat_cost` and `max_reid_cost` - float values from `0` to `2`, based on the accuracy of your model
+
+
 ##### Download models
 This includes both pretrained OSNet, SSD, and custom YOLOv4 WEIGHTS/ONNX models
 ```
@@ -354,7 +452,6 @@ $ tensorboard --logdir=runs
 
 ## Other README.md in other directories
 - software/arduino-1.8.13/README.md
-- software/jetson/README.md
 - software/jetson/jetson-containers/README.md
 - software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md
 - software/arduino-1.8.13/portable/sketchbook/libraries/Servo/docs/readme.md

@@ -18,7 +18,6 @@ ifeq ($(cpu_arch), aarch64)  # Jetson
   endif
 else ifeq ($(cpu_arch), x86_64)  # x86_64 PC
   $(warning "compute=75" is for GeForce RTX-2080 Ti.  Please make sure CUDA compute is set correctly for your system in the Makefile.)
-  #compute=50
   compute=75
 else
   $(error Unkown CPU architecture: neither "aarch" nor "x86_64")
