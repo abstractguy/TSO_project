@@ -71,3 +71,6 @@ wget https://nvidia.box.com/shared/static/ukszbm1iklzymrt54mgxbzjfzunq7i9t.whl -
 # Install pip wheel.
 pip3 install onnxruntime_gpu-1.7.0-cp36-cp36m-linux_aarch64.whl
 
+# Install cvlib.
+pip3 install cvlib
+

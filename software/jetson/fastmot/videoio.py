@@ -18,9 +18,9 @@ import cv2
 
 LOGGER = logging.getLogger(__name__)
 
-IS_ARDUCAM = False
+IS_ARDUCAM = True
 
-WITH_GSTREAMER = True
+WITH_GSTREAMER = False
 
 class Protocol(Enum):
     IMAGE = 0

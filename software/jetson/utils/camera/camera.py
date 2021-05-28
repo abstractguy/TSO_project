@@ -7,7 +7,7 @@
 # Description: This file implements a multi-threaded camera I/O streamer for the camera program.
 # Reference:   https://github.com/nrsyed/computer-vision.git
 
-IS_ARDUCAM = False
+IS_ARDUCAM = True
 
 if IS_ARDUCAM:
     from utils_arducam import ArducamUtils

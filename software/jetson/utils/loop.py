@@ -6,7 +6,7 @@
 # For:         Myself
 # Description: This file implements the main loop for object detection with OpenCV.
 
-IS_ARDUCAM = False
+IS_ARDUCAM = True
 
 if IS_ARDUCAM:
     from utils_arducam import ArducamUtils

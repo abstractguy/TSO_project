@@ -85,7 +85,8 @@ def process_manager(args):
         args.no_uarm = True
 
     elif args.test_type == 'nano':
-        args.inference_type = 'fastmot'
+        #args.inference_type = 'fastmot'
+        args.inference_type = 'cvlib'
         args.input_type = 'arducam'
         args.thread = 'show'
         args.no_mot = False
@@ -164,3 +165,4 @@ def process_manager(args):
 
     finally: # Release resources.
         print('Manager process done.')
+

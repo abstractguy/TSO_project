@@ -135,7 +135,7 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_virtualbox.
 
 ##### You can now use the Windows 10 Enterprise Edition to run Windows 10 applications from a Linux host, like Altium for PCB developement
 
-##### Install Nvidia components for JetPack 4.4.1
+##### Install Nvidia components for JetPack 4.4
 ```
 $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_prerequisites.sh
 ```
@@ -156,18 +156,19 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_envir
 
 ### Note: if using the Jetson Nano devkit, you will want to install a jumper on J48 to power with the jack barrel
 
-## Install Nvidia JetPack 4.4.1 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
+## Install Nvidia JetPack 4.4 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
 
 ### Sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager if using the AGX Xavier
 
-### Else if using the Nano, follow instructions in software/jetson/install/nano_install_notes.sh
+### Else if using the Nano, do this
+```
+$ cd software/jetson && bash install/install_jetson_nano_sd_card.sh
+```
 
 ### Follow the instructions and when it can't SSH into the Jetson, plug a screen, keyboard and mouse to the Nvidia Jetson Nano (or AGX Xavier) devkit to configure the rest; the install will resume after
 
 ### On a Jetson Nano, this would be necessary before using SSH; on the Jetson AGX Xavier, you would follow the instructions on the monitor instead
 ```
-$ sudo apt-get update
-$ sudo apt-get install -y screen
 $ screen /dev/ttyACM0
 ```
 
@@ -188,7 +189,7 @@ $ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.
 
 ##### If you have the Jetson Nano devkit and the dual ArduCAM camera array HAT style with OV9281 sensors (1MP Global Shutter Camera), install the camera drivers
 ```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && sudo chmod +x ArduCAM/install.sh && ./ArduCAM/install.sh'
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson/ArduCAM && sudo chmod +x install.sh && ./install.sh'
 ```
 
 ##### Make the TensorRT YOLO plugins

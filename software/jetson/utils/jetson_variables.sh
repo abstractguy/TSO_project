@@ -20,20 +20,16 @@
 # - UID -> https://devtalk.nvidia.com/default/topic/996988/jetson-tk1/chip-uid/post/5100481/#5100481
 # - GCID, BOARD, EABI
 
-## Uninstall
-#sudo dpkg -r arducam-nvidia-l4t-kernel
-#reboot
-
 ###########################
 #### JETPACK DETECTION ####
 ###########################
 # Write version of jetpack installed
 # https://developer.nvidia.com/embedded/jetpack-archive
-jetson_jetpack() {
+jetson_jetpack()
+{
     local JETSON_L4T=$1
     local JETSON_JETPACK=""
     case $JETSON_L4T in
-        "32.4.4") JETSON_JETPACK="4.4.1" ;;
         "32.4.3") JETSON_JETPACK="4.4" ;;
         "32.4.2") JETSON_JETPACK="4.4 DP" ;;
         "32.3.1") JETSON_JETPACK="4.3" ;;
@@ -240,125 +236,3 @@ JETSON_JETPACK=$(jetson_jetpack $JETSON_L4T)
 # Export Jetson Jetpack installed
 export JETSON_JETPACK
 # EOF
-
-
-# echo $JETSON_TYPE
-
-content=$(dpkg-query --showformat='${Version}' --show nvidia-l4t-kernel)
-
-declare -A nano_names
-declare -A nano_download_links 
-nano_names["4.9.140-tegra-32.4.3-20200625213809"]="arducam-nvidia-l4t-kernel_4.9.140-32.4.3-20200716095813_arm64.deb"
-nano_download_links["4.9.140-tegra-32.4.3-20200625213809"]="https://raw.githubusercontent.com/ArduCAM/MIPI_Camera/master/Jetson/Jetvariety/driver/Nano/arducam-nvidia-l4t-kernel_4.9.140-32.4.3-20200716095813_arm64.deb"
-
-nano_names["4.9.140-tegra-32.4.4-20201016124427"]="arducam-nvidia-l4t-kernel_4.9.140-32.4.4-20201026143033_arm64.deb"
-nano_download_links["4.9.140-tegra-32.4.4-20201016124427"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.0.1/arducam-nvidia-l4t-kernel_4.9.140-32.4.4-20201026143033_arm64.deb"
-
-nano_names["4.9.140-tegra-32.4.3-20200924161919"]="20200924161919.zip"
-nano_download_links["4.9.140-tegra-32.4.3-20200924161919"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.1/20200924161919.zip"
-
-nano_names["4.9.140-tegra-32.4.4-20201027211359"]="arducam-nvidia-l4t-kernel_4.9.140-32.4.4-20201027211359_arm64.deb"
-nano_download_links["4.9.140-tegra-32.4.4-20201027211359"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.0.1/arducam-nvidia-l4t-kernel_4.9.140-32.4.4-20201027211359_arm64.deb"
-
-nano_names["4.9.201-tegra-32.5.0-20210115145440"]="arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.0-20210126142035_arm64.deb"
-nano_download_links["4.9.201-tegra-32.5.0-20210115145440"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.0.1/arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.0-20210126142035_arm64.deb"
-
-nano_names["4.9.201-tegra-32.5.1-20210219084526"]="arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.1-20210302195021_arm64.deb"
-nano_download_links["4.9.201-tegra-32.5.1-20210219084526"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.0.1/arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.1-20210302195021_arm64.deb"
-
-declare -A nx_download_links 
-declare -A nx_names
-nx_names["4.9.140-tegra-32.4.3-20200625213407"]="arducam-nvidia-l4t-kernel_4.9.140-32.4.3-20201009160531_arm64.deb"
-nx_download_links["4.9.140-tegra-32.4.3-20200625213407"]="https://raw.githubusercontent.com/ArduCAM/MIPI_Camera/master/Jetson/Jetvariety/driver/XavierNx/arducam-nvidia-l4t-kernel_4.9.140-32.4.3-20201009160531_arm64.deb"
-
-nx_names["4.9.140-tegra-32.4.4-20201016123640"]="arducam-nvidia-l4t-kernel_4.9.140-32.4.4-20201026143033_arm64.deb"
-nx_download_links["4.9.140-tegra-32.4.4-20201016123640"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.0.1-nx/arducam-nvidia-l4t-kernel_4.9.140-32.4.4-20201026143033_arm64.deb"
-
-nx_names["4.9.140-tegra-32.4.3-20200924161919"]="20200924161919.zip"
-nx_download_links["4.9.140-tegra-32.4.3-20200924161919"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.1/20200924161919.zip"
-
-nx_names["4.9.140-tegra-32.4.4-20201027211332"]="arducam-nvidia-l4t-kernel_4.9.140-32.4.4-20201027211332_arm64.deb"
-nx_download_links["4.9.140-tegra-32.4.4-20201027211332"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.0.1-nx/arducam-nvidia-l4t-kernel_4.9.140-32.4.4-20201027211332_arm64.deb"
-
-nx_names["4.9.201-tegra-32.5.0-20210115151051"]="arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.0-20210126142035_arm64.deb"
-nx_download_links["4.9.201-tegra-32.5.0-20210115151051"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.0.1-nx/arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.0-20210126142035_arm64.deb"
-
-nx_names["4.9.201-tegra-32.5.1-20210219084708"]="arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.1-20210302195021_arm64.deb"
-nx_download_links["4.9.201-tegra-32.5.1-20210219084708"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.0.1-nx/arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.1-20210302195021_arm64.deb"
-
-nx_names["4.9.201-tegra-32.5.1-20210302195856"]="arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.1-20210302195021_arm64.deb"
-nx_download_links["4.9.201-tegra-32.5.1-20210302195856"]="https://github.com/ArduCAM/MIPI_Camera/releases/download/v0.0.1-nx/arducam-nvidia-l4t-kernel_4.9.201-tegra-32.5.1-20210302195021_arm64.deb"
-
-
-download_link=
-pkg_name=
-if [[ $JETSON_TYPE == *"Xavier NX"* ]]; then
-	download_link=${nx_download_links[$content]}
-	pkg_name=${nx_names[$content]}
-fi
-
-if [[ $JETSON_TYPE == *"Nano"* ]]; then
-	download_link=${nano_download_links[$content]}
-	pkg_name=${nano_names[$content]}
-fi
-
-if [[ (-z $pkg_name) || (-z $download_link) ]]; then
-	echo "Cannot find the corresponding deb package, please send the following information to support@arducam.com"
-	echo "Kernel version: " $content
-	echo "Jetson type: " $JETSON_TYPE
-	exit -1
-fi
-
-rm -rf $pkg_name
-
-sudo apt-get update
-sudo apt-get install -y wget
-
-wget $download_link
-
-if [[ ( $? -ne 0) || (! -f "${pkg_name}") ]]; then
-	echo "download failed"
-	exit -1
-fi
-
-if [ $content == "4.9.140-tegra-32.4.3-20200924161919" ]; then
-	if [[ $JETSON_TYPE == *"Xavier NX"* ]]; then
-		unzip 20200924161919.zip && sudo dpkg -i 20200924161919/XavierNx/arducam-nvidia-l4t-kernel_4.9.140-32.4.3-20201021145043_arm64.deb
-	fi
-
-	if [[ $JETSON_TYPE == *"Nano"* ]]; then
-		unzip 20200924161919.zip && sudo dpkg -i 20200924161919/Nano/arducam-nvidia-l4t-kernel_4.9.140-32.4.3-20201021145043_arm64.deb
-	fi
-else
-	sudo dpkg -i $pkg_name
-fi
-
-echo ""
-
-if [ $? -ne 0 ]; then
-	echo "Unknown error, please send the error message to support@arducam.com"
-	exit -1
-fi
-
-sudo apt-get update
-sudo apt-get install -y v4l-utils
-
-CURDIR="${PWD}"
-cd ArduCAM
-#sudo pip3 install v4l2
-sudo -H pip3 install -e python-v4l2
-
-cd ${CURDIR}
-
-echo "reboot now?(y/n):"
-read USER_INPUT
-case $USER_INPUT in
-'y'|'Y')
-    echo "reboot"
-    sudo reboot
-;;
-*)
-    echo "cancel"
-;;
-esac
-

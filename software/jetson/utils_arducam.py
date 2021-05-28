@@ -127,7 +127,7 @@ class ArducamUtils(object):
 
     def __init__(self, device_num):
         import subprocess
-        command = ['bash', '-c', 'source scripts/jetson_variables.sh && env']
+        command = ['bash', '-c', 'source utils/jetson_variables.sh && env']
 
         proc = subprocess.Popen(command, stdout = subprocess.PIPE)
         environment_vars = {}

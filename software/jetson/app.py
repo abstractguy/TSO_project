@@ -14,9 +14,9 @@ from pathlib import Path
 
 import argparse, cv2, fastmot, json, logging
 
-IS_ARDUCAM = False
+IS_ARDUCAM = True
 
-WITH_GSTREAMER = True
+WITH_GSTREAMER = False
 
 if IS_ARDUCAM:
     from utils_arducam import ArducamUtils
