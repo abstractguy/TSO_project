@@ -19,6 +19,7 @@ Note: Since the impact of this on my notes was minimal and the code commenting r
 [HTML-to-Markdown](http://heckyesmarkdown.com/ "Permalink to ")
 
 ## Mechanics
+<img src="documentation/doc/assembly.gif" width="640"/>
 The *.STL files can be 3D-printed.
 This has not been attempted as I would lack the time to assemble the parts.
 It is available though.
@@ -28,6 +29,7 @@ The *.STL files can be converted to *.URDF for simulation using a physics engine
 If you add the Moveit plugins, simulation can run with the uARM in tandem. If you then add openai-gym to the ROS container, you can plug this environment to [FERM](https://github.com/PhilipZRH/ferm), replacing the xArm by the uArm. This was plan C, which has not been completed, as focus shifted towards implementing plans A and B. I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
 
 ## Electronics
+<img src="electronics/Project Outputs for uARM/OSHPARK/top_layer.png" width="640"/>
 The minimalistic Printed Circuit Board features an ESP32 as the motor-driving microcontroller.
 Altium design files are provided in the electronics/ folder. A standard ESP32-WROOM-32 module is the microcontroller. A CP2109 USB to serial chip is used to program it and transfer data from a Micro-USB connector. An unused SD card slot is available if more external memory is required. A MCP16311T-E/M step-down regulator taps 12 volts from the jack barrel connector to provide the 5 volts servomotors need to function. A fixed output Complementary Metal Oxide Semiconductor Low-Dropout regulator (TC1264) taps 5 volts from the USB connector to provide 3.3 volts for the other circuits. One Light Emitting Diode confirms that regulator provides the 3.3 volts. There is one GPIO-controllable LED and one push button plugged on another GPIO. Another push button is plugged to the EN pin for enabling the ESP32-WROOM-32 module.
 
@@ -500,6 +502,9 @@ YOLOv4-608
 
 ### Camera Demonstration
 [[Camera Demonstration]](https://www.arducam.com/docs/camera-for-jetson-nano/mipi-camera-modules-for-jetson-nano/camera-demonstration/#0--1hardware-connection-)
+
+### STL to GIF
+[[STL to GIF]](https://github.com/DAguirreAg/STL-to-gif)
 
 ## Reference papers
 
