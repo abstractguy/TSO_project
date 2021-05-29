@@ -27,11 +27,11 @@ echo 'export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}' >> ~/.bashrc
 echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.bashrc 
 source ~/.bashrc
 
-bash ${PWD}/install/update_cmake.sh $JETSON_PASSWORD
-bash ${PWD}/install/install_protobuf_1.8.0.sh $JETSON_PASSWORD
+#bash ${PWD}/install/update_cmake.sh $JETSON_PASSWORD
+#bash ${PWD}/install/install_protobuf_1.8.0.sh $JETSON_PASSWORD
 
 # Install pip, numpy, pycuda, tensorflow, cython-bbox
-echo $JETSON_PASSWORD | sudo -S ln -fs /usr/include/locale.h /usr/include/xlocale.h
+#echo $JETSON_PASSWORD | sudo -S ln -fs /usr/include/locale.h /usr/include/xlocale.h
 echo $JETSON_PASSWORD | sudo -S apt-get update
 echo $JETSON_PASSWORD | sudo -S apt-get install python3-pip libhdf5-serial-dev hdf5-tools libcanberra-gtk-module
 echo $JETSON_PASSWORD | sudo -SH pip3 install cython
@@ -63,13 +63,13 @@ echo $JETSON_PASSWORD | sudo -SH pip3 install llvmlite==0.31.0
 echo $JETSON_PASSWORD | sudo -SH pip3 install numba==0.48
 
 # Install onnx==1.4.1.
-pip3 install onnx==1.4.1
+#pip3 install onnx==1.4.1
 
 # Install onnxruntime-gpu==1.7.0.
-wget https://nvidia.box.com/shared/static/ukszbm1iklzymrt54mgxbzjfzunq7i9t.whl -O onnxruntime_gpu-1.7.0-cp36-cp36m-linux_aarch64.whl
+#wget https://nvidia.box.com/shared/static/ukszbm1iklzymrt54mgxbzjfzunq7i9t.whl -O onnxruntime_gpu-1.7.0-cp36-cp36m-linux_aarch64.whl
 
 # Install pip wheel.
-pip3 install onnxruntime_gpu-1.7.0-cp36-cp36m-linux_aarch64.whl
+#pip3 install onnxruntime_gpu-1.7.0-cp36-cp36m-linux_aarch64.whl
 
 # Install cvlib.
 pip3 install cvlib
