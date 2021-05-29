@@ -33,14 +33,14 @@ source ~/.bashrc
 # Install pip, numpy, pycuda, tensorflow, cython-bbox
 echo $JETSON_PASSWORD | sudo -S ln -fs /usr/include/locale.h /usr/include/xlocale.h
 echo $JETSON_PASSWORD | sudo -S apt-get update
-echo $JETSON_PASSWORD | sudo -S apt-get install python3-pip libhdf5-serial-dev hdf5-tools libcanberra-gtk-module
+echo $JETSON_PASSWORD | sudo -S apt-get install python3-pip libhdf5-serial-dev hdf5-tools libcanberra-gtk-module nano
 echo $JETSON_PASSWORD | sudo -SH pip3 install cython
 echo $JETSON_PASSWORD | sudo -SH pip3 install numpy cython-bbox
 echo $JETSON_PASSWORD | sudo -SH pip3 install --global-option=build_ext --global-option="-I/usr/local/cuda/include" --global-option="-L/usr/local/cuda/lib64" pycuda
 echo $JETSON_PASSWORD | sudo -SH pip3 install --no-cache-dir --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v$JP_VERSION tensorflow==$TF_VERSION+nv$NV_VERSION
 
 # install scipy
-yes | echo $JETSON_PASSWORD | sudo -S apt-get install libatlas-base-dev gfortran
+echo $JETSON_PASSWORD | sudo -S apt-get install -y libatlas-base-dev gfortran
 echo $JETSON_PASSWORD | sudo -SH pip3 install scipy==1.5.0
 
 # install llvm (This may take a while)

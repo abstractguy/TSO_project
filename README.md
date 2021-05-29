@@ -48,7 +48,7 @@ For faster and simpler parallel handling of the whole ecosystem, the main entryp
 ## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
 A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
 
-<details><summary><b>CLICK ME</b> - Hardware instructions</summary>
+<details><summary><b>CLICK ME</b> - Hardware prerequisites</summary>
 
 ##### Prerequisites for using the Arducam camera array on the Jetson Nano
     - Micro SD card with at least 16Gb of storage
@@ -59,6 +59,23 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
     - Ethernet cable connected to the Internet, or USB Wi-Fi adapter
 
 * You can use a Windows host PC to flash the microSD card instead, however this tutorial uses Ubuntu as it’s a simpler process. See NVIDIA’s guide for a Windows option.
+</details>
+
+<details><summary><b>CLICK ME</b> - Software prerequisites</summary>
+  - CUDA >= 10
+  - cuDNN >= 7
+  - TensorRT >= 7
+  - OpenCV >= 3.3
+  - PyCuda
+  - Numpy >= 1.15
+  - Scipy >= 1.5
+  - TensorFlow < 2.0 (for SSD support)
+  - Numba == 0.48
+  - cython-bbox
+  - pyserial
+</details>
+
+<details><summary><b>CLICK ME</b> - Hardware instructions</summary>
 
 <img src="documentation/doc/nano.png" width="640"/>
 
@@ -218,6 +235,14 @@ $ sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.calibration.calibrate 
 ```
 </details>
 
+<details><summary><b>CLICK ME</b> - Install for Ubuntu 18.04</summary>
+Make sure to have [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) installed. The image requires an NVIDIA Driver version >= 450. Build and run the docker image:
+  ```
+  $ docker build -t fastmot:latest .
+  $ docker run --rm --gpus all -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY fastmot:latest
+  ```
+</details>
+
 <details><summary><b>CLICK ME</b> - Inference</summary>
 
 <img src="software/jetson/fastmot/assets/dense_demo.gif" width="400"/> <img src="software/jetson/fastmot/assets/aerial_demo.gif" width="400"/>
@@ -275,28 +300,6 @@ In terms of Wiki, indicators Precision and Recall have a slightly different mean
 ![precision_recall_iou](https://hsto.org/files/ca8/866/d76/ca8866d76fb840228940dbf442a7f06a.jpg)
 </details>
 
-<details><summary><b>CLICK ME</b> - Software requirements</summary>
-- CUDA>=10
-- cuDNN>=7
-- TensorRT>=7
-- OpenCV>=3.3
-- PyCuda
-- Numpy>=1.15
-- Scipy>=1.5
-- TensorFlow<2.0 (for SSD support)
-- Numba==0.48
-- cython-bbox
-- pyserial
-</details>
-
-<details><summary><b>CLICK ME</b> - Install for Ubuntu 18.04</summary>
-Make sure to have [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) installed. The image requires an NVIDIA Driver version >= 450. Build and run the docker image:
-  ```
-  $ docker build -t fastmot:latest .
-  $ docker run --rm --gpus all -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY fastmot:latest
-  ```
-</details>
-
 <details><summary><b>CLICK ME</b> - Pre-trained models</summary>
 
 There are weights-file for different cfg-files (trained for MS COCO dataset):
@@ -326,8 +329,7 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 
 * [yolov3-openimages.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov3-openimages.cfg) - 247 MB - 18(R) FPS - OpenImages dataset: [yolov3-openimages.weights](https://pjreddie.com/media/files/yolov3-openimages.weights)
 
-<details><summary><b>CLICK ME</b> - Yolo v3 models</summary>
-
+### Yolo v3 models
 * [csresnext50-panet-spp-original-optimal.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/csresnext50-panet-spp-original-optimal.cfg) - **65.4% mAP@0.5 (43.2% AP@0.5:0.95) - 32(R) FPS** - 100.5 BFlops - 217 MB: [csresnext50-panet-spp-original-optimal_final.weights](https://drive.google.com/open?id=1_NnfVgj0EDtb_WLNoXV8Mo7WKgwdYZCc)
 
 * [yolov3-spp.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov3-spp.cfg) - **60.6% mAP@0.5 - 38(R) FPS** - 141.5 BFlops - 240 MB: [yolov3-spp.weights](https://pjreddie.com/media/files/yolov3-spp.weights)
@@ -340,25 +342,14 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 
 * [yolov3-tiny-prn.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov3-tiny-prn.cfg) - **33.1% mAP@0.5 - 370(R) FPS** - 3.5 BFlops - 18.8 MB: [yolov3-tiny-prn.weights](https://drive.google.com/file/d/18yYZWyKbo4XSDVyztmsEcF9B_6bxrhUY/view?usp=sharing)
 
-</details>
-
-<details><summary><b>CLICK ME</b> - Yolo v2 models</summary>
-
+### Yolo v2 models
 * `yolov2.cfg` (194 MB COCO Yolo v2) - requires 4 GB GPU-RAM: https://pjreddie.com/media/files/yolov2.weights
 * `yolo-voc.cfg` (194 MB VOC Yolo v2) - requires 4 GB GPU-RAM: http://pjreddie.com/media/files/yolo-voc.weights
 * `yolov2-tiny.cfg` (43 MB COCO Yolo v2) - requires 1 GB GPU-RAM: https://pjreddie.com/media/files/yolov2-tiny.weights
 * `yolov2-tiny-voc.cfg` (60 MB VOC Yolo v2) - requires 1 GB GPU-RAM: http://pjreddie.com/media/files/yolov2-tiny-voc.weights
 * `yolo9000.cfg` (186 MB Yolo9000-model) - requires 4 GB GPU-RAM: http://pjreddie.com/media/files/yolo9000.weights
 
-</details>
-
-## Download VOC dataset for INT8 calibration
-Only required if you want to use SSD
-  ```
-  $ install/download_data.sh
-  ```
-
-<details><summary><b>CLICK ME</b> - Multimedia testing usage</summary>
+### Multimedia testing usage
 - USB webcam:
   ```
   $ python3 app.py --input_uri /dev/video0 --mot
@@ -386,9 +377,8 @@ Only required if you want to use SSD
 - Use `--gui` to visualize and `--output_uri` to save output
 - To disable the GStreamer backend, set `WITH_GSTREAMER = False` [here](https://github.com/GeekAlexis/FastMOT/blob/3a4cad87743c226cf603a70b3f15961b9baf6873/fastmot/videoio.py#L11)
 - Note that the first run will be slow due to Numba compilation
-<details>
-<summary> More options can be configured in cfg/mot.json </summary>
 
+### More options can be configured in cfg/mot.json
   - Set `resolution` and `frame_rate` that corresponds to the source data or camera configuration (optional). They are required for image sequence, camera sources, and MOT Challenge evaluation. List all configurations for your USB/CSI camera:
     ```
     $ v4l2-ctl -d /dev/video0 --list-formats-ext
@@ -399,7 +389,6 @@ Only required if you want to use SSD
   - Note that with SSD, the detector splits a frame into tiles and processes them in batches for the best accuracy. Change `tiling_grid` to `[2, 2]`, `[2, 1]`, or `[1, 1]` if a smaller batch size is preferred
   - If more accuracy is desired and processing power is not an issue, reduce `detector_frame_skip`. Similarly, increase `detector_frame_skip` to speed up tracking at the cost of accuracy. You may also want to change `max_age` such that `max_age × detector_frame_skip ≈ 30`
 
-</details>
 </details>
 
 <details><summary><b>CLICK ME</b> - Track custom classes</summary>
@@ -444,6 +433,12 @@ FastMOT supports multi-class tracking and can be easily extended to custom class
 </details>
 
 <details><summary><b>CLICK ME</b> - Last steps</summary>
+
+##### Download VOC dataset for INT8 calibration
+Only required if you want to use SSD (not in this case)
+```
+$ install/download_data.sh
+```
 
 ##### Download models
 This includes both pretrained OSNet, SSD, and custom YOLOv4 WEIGHTS/ONNX models
