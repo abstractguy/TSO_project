@@ -165,10 +165,12 @@ VOCdevkit/
 # vscode stuff
 .vscode/
 
-
+*.img
+.fdisk_temp_1.txt
+.fdisk_temp_2.txt
+jetson-nano-developer-kit-sd-card-image.zip
 !tensorboard_example.png
 !valid_test.jpg
 !valid_tested.png
 !valid_test.mp4
 !results.png
-

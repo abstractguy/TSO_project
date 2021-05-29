@@ -5,54 +5,58 @@
 ## An "intelligent" robotic arm using a camera for pick and place.
 A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
 
-## Documentation
+<details><summary><b>CLICK ME</b> - Documentation</summary>
 Still a work in progress. Early development phase.
+</details>
 
-## Compile code and documentation to website
+<details><summary><b>CLICK ME</b> - Compile code and documentation to website</summary>
 To compile and deploy parts of previously commented code as a website on readthedocs or locally, click the link below.
 Note: Since the impact of this on my notes was minimal and the code commenting required was time-consuming, not all documentation will be displayed to the website.
 
 [Install documentation as website](https://docs.readthedocs.io/en/stable/development/install.html "Permalink to ")
+</details>
 
-## Convert webpages to markdown for viewing on Github
-
-[HTML-to-Markdown](http://heckyesmarkdown.com/ "Permalink to ")
-
-## Mechanics
+<details><summary><b>CLICK ME</b> - Mechanics</summary>
 <img src="documentation/doc/assembly.gif" width="640"/>
 The *.STL files can be 3D-printed.
 This has not been attempted as I would lack the time to assemble the parts.
 It is available though.
 
-## Simulation
+<details><summary><b>CLICK ME</b> - Simulation</summary>
 The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic, all within Docker (see instructions in software/jetson/jetson-containers/README.md).
 If you add the Moveit plugins, simulation can run with the uARM in tandem. If you then add openai-gym to the ROS container, you can plug this environment to [FERM](https://github.com/PhilipZRH/ferm), replacing the xArm by the uArm. This was plan C, which has not been completed, as focus shifted towards implementing plans A and B. I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
 
-## Electronics
+<details><summary><b>CLICK ME</b> - Electronics</summary>
 <img src="electronics/Project Outputs for uARM/OSHPARK/top_layer.png" width="640"/>
 The minimalistic Printed Circuit Board features an ESP32 as the motor-driving microcontroller.
 Altium design files are provided in the electronics/ folder. A standard ESP32-WROOM-32 module is the microcontroller. A CP2109 USB to serial chip is used to program it and transfer data from a Micro-USB connector. An unused SD card slot is available if more external memory is required. A MCP16311T-E/M step-down regulator taps 12 volts from the jack barrel connector to provide the 5 volts servomotors need to function. A fixed output Complementary Metal Oxide Semiconductor Low-Dropout regulator (TC1264) taps 5 volts from the USB connector to provide 3.3 volts for the other circuits. One Light Emitting Diode confirms that regulator provides the 3.3 volts. There is one GPIO-controllable LED and one push button plugged on another GPIO. Another push button is plugged to the EN pin for enabling the ESP32-WROOM-32 module.
 
-## Software
+<details><summary><b>CLICK ME</b> - Software</summary>
 There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software with drivers to program and deploy the environment for commanding everything from the Jetson (or computer). Firmware for the PCB (compatible with a number of architectures) is located in software/arduino-1.8.13/.
 The main code was tested on PC and Jetson for easier modular tests while integrating.
+</details>
 
-## Firmware
+<details><summary><b>CLICK ME</b> - Firmware</summary>
 The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h need to be redefined. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
+</details>
 
-## ArduCAM Camarray
+<details><summary><b>CLICK ME</b> - ArduCAM Camarray</summary>
 An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
+</details>
 
-## Custom uARM GCODE-based serial port controller in Python-3.7
+<details><summary><b>CLICK ME</b> - Custom uARM GCODE-based serial port controller in Python-3.7</summary>
 A custom controller communicating with the uARM firmware using a GCODE protocol through a USB connection to the serial port provides grad-scaled absolute polar coordinate positioning for easy control. There is bicubic easing, a slowmove extension, calibration, movement recording and replay, etc.
+</details>
 
-## Multi-threading and multi-process management
+<details><summary><b>CLICK ME</b> - Multi-threading and multi-process management</summary>
 For faster and simpler parallel handling of the whole ecosystem, the main entrypoint process loop runs with parallel programs excluding the manager loop: the main camera/inference loop, a PID controller for the X axis, a PID controller for the Y axis and the uARM control process. Camera input is optionally threaded in 4 ways (no threading, video get, video show and both).
+</details>
 
-## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
+<details><summary><b>CLICK ME</b> - Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms</summary>
 A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
+</details>
 
-## Hardware instructions
+<details><summary><b>CLICK ME</b> - Hardware instructions</summary>
 
 ##### Prerequisites for using the Arducam camera array on the Jetson Nano
     - Micro SD card with at least 16Gb of storage
@@ -72,8 +76,9 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
     - If using a jack, the jumper must be set.
     - If using USB, the jumper must be off.
 - Plug in the power supply. The green LED (D53) close to the micro USB port should turn green, and the display should show the NVIDIA logo before booting begins.
+</details>
 
-## Installation From Scratch Instructions for Linux (skip down to "Download and install the live *.iso" if installing Linux is needed and get back here just after the install)
+<details><summary><b>CLICK ME</b> - Installation From Scratch Instructions for Linux (skip down to "Download and install the live *.iso" if installing Linux is needed and get back here just after the install)</summary>
 
 ##### Dependencies
     None which aren't covered by this guide.
@@ -107,8 +112,9 @@ $ git clone https://github.com/abstractguy/TSO_project.git
 ```
 $ cd TSO_project/software/jetson
 ```
+</details>
 
-#### Download and install the live *.iso of Ubuntu 18.04.5 LTS for x86_64 (from here https://unetbootin.github.io)
+<details><summary><b>CLICK ME</b> - Download and install the live *.iso of Ubuntu 18.04.5 LTS for x86_64 (from here https://unetbootin.github.io)</summary>
 
 ##### If running Linux already:
 ```
@@ -218,8 +224,9 @@ $ cd ~/workspace/jetson && bash install/flash_uarm.sh
 ```
 $ sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.calibration.calibrate --port /dev/ttyUSB0
 ```
+</details>
 
-## Inference
+<details><summary><b>CLICK ME</b> - Inference</summary>
 
 <img src="software/jetson/fastmot/assets/dense_demo.gif" width="400"/> <img src="software/jetson/fastmot/assets/aerial_demo.gif" width="400"/>
 
@@ -274,8 +281,9 @@ The table below displays the inference times when using images scaled to 608x608
 In terms of Wiki, indicators Precision and Recall have a slightly different meaning than in the PascalVOC competition, but **IoU always has the same meaning**.
 
 ![precision_recall_iou](https://hsto.org/files/ca8/866/d76/ca8866d76fb840228940dbf442a7f06a.jpg)
+</details>
 
-## Requirements
+<details><summary><b>CLICK ME</b> - Software requirements</summary>
 - CUDA>=10
 - cuDNN>=7
 - TensorRT>=7
@@ -286,15 +294,18 @@ In terms of Wiki, indicators Precision and Recall have a slightly different mean
 - TensorFlow<2.0 (for SSD support)
 - Numba==0.48
 - cython-bbox
+- pyserial
+</details>
 
-### Install for Ubuntu 18.04
+<details><summary><b>CLICK ME</b> - Install for Ubuntu 18.04</summary>
 Make sure to have [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) installed. The image requires an NVIDIA Driver version >= 450. Build and run the docker image:
   ```
   $ docker build -t fastmot:latest .
   $ docker run --rm --gpus all -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY fastmot:latest
   ```
+</details>
 
-#### Pre-trained models
+<details><summary><b>CLICK ME</b> - Pre-trained models</summary>
 
 There are weights-file for different cfg-files (trained for MS COCO dataset):
 
@@ -349,14 +360,13 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 
 </details>
 
-
-### Download VOC dataset for INT8 calibration
+## Download VOC dataset for INT8 calibration
 Only required if you want to use SSD
   ```
   $ install/download_data.sh
   ```
 
-## Usage
+<details><summary><b>CLICK ME</b> - Multimedia testing usage</summary>
 - USB webcam:
   ```
   $ python3 app.py --input_uri /dev/video0 --mot
@@ -398,8 +408,9 @@ Only required if you want to use SSD
   - If more accuracy is desired and processing power is not an issue, reduce `detector_frame_skip`. Similarly, increase `detector_frame_skip` to speed up tracking at the cost of accuracy. You may also want to change `max_age` such that `max_age × detector_frame_skip ≈ 30`
 
 </details>
+</details>
 
- ## Track custom classes
+<details><summary><b>CLICK ME</b> - Track custom classes</summary>
 FastMOT supports multi-class tracking and can be easily extended to custom classes (e.g. vehicle). You need to train both YOLO and a ReID model on your object classes. Check [Darknet](https://github.com/AlexeyAB/darknet) for training YOLO and [fast-reid](https://github.com/JDAI-CV/fast-reid) for training ReID. After training, convert the model to ONNX format and place it in fastmot/models. To convert YOLO to ONNX, use [tensorrt_demos](https://github.com/jkjung-avt/tensorrt_demos/blob/master/yolo/yolo_to_onnx.py) to be compatible with the TensorRT YOLO plugins.
 ### Add custom YOLOv3/v4
 1. Subclass `YOLO` like here: https://github.com/GeekAlexis/FastMOT/blob/4e946b85381ad807d5456f2ad57d1274d0e72f3d/fastmot/models/yolo.py#L94
@@ -438,7 +449,9 @@ FastMOT supports multi-class tracking and can be easily extended to custom class
     METRIC: distance metric used to match features ('euclidean' or 'cosine')
     ```
 2. Modify cfg/mot.json: set `model` in `feature_extractor` to the added Python class. You may want to play with `max_feat_cost` and `max_reid_cost` - float values from `0` to `2`, based on the accuracy of your model
+</details>
 
+<details><summary><b>CLICK ME</b> - Last steps</summary>
 
 ##### Download models
 This includes both pretrained OSNet, SSD, and custom YOLOv4 WEIGHTS/ONNX models
@@ -458,6 +471,7 @@ $ cd ~/workspace/jetson && sudo python3 main.py --test-type nano
 $ cd ~/workspace/jetson && sudo python3 main.py --test-type xavier
 $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/python3 main.py --test-type x86_64
 ```
+</details>
 
 <p align="center"><img src="software/jetson/doc/valid_test.jpg" width="480"\></p>
 <p align="center"><img src="software/jetson/doc/valid_tested.png" width="512"\></p>
@@ -503,6 +517,9 @@ YOLOv4-608
 
 ### Camera Demonstration
 [[Camera Demonstration]](https://www.arducam.com/docs/camera-for-jetson-nano/mipi-camera-modules-for-jetson-nano/camera-demonstration/#0--1hardware-connection-)
+
+### Convert webpages to markdown for viewing on Github
+[[HTML-to-Markdown]](http://heckyesmarkdown.com/)
 
 ### STL to GIF
 [[STL to GIF]](https://github.com/DAguirreAg/STL-to-gif)
