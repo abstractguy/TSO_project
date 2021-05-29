@@ -54,15 +54,24 @@ def main():
     mot = None
     log = None
 
-    stream = fastmot.VideoIO(config['resize_to'], config['video_io'], args.input_uri, args.output_uri, flip_vertically=args.flip_vertically, flip_horizontally=args.flip_horizontally, args.is_rpi_cam)
+    stream = fastmot.VideoIO(config['resize_to'], 
+                             config['video_io'], 
+                             args.input_uri, 
+                             args.output_uri, 
+                             flip_vertically=args.flip_vertically, 
+                             flip_horizontally=args.flip_horizontally, 
+                             is_rpi_cam=args.is_rpi_cam)
 
     if not args.no_mot:
         object_x = None
         object_y = None
         center_x = None
         center_y = None
+
         draw = (not args.no_gui) or args.output_uri is not None
+
         obj = ObjectCenter(args)
+
         mot = fastmot.MOT(config['resize_to'], 
                           stream.cap_dt, 
                           config['mot'], 
