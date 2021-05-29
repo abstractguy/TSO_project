@@ -63,6 +63,7 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
 </details>
 
 <details><summary><b>CLICK ME</b> - Software prerequisites</summary>
+
 - CUDA >= 10
 - cuDNN >= 7
 - TensorRT >= 7
@@ -173,6 +174,7 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_envir
 </details>
 
 <details><summary><b>CLICK ME!</b> - Flash uArm firmware</summary>
+
 ##### Flash the uARM with the custom firmware
 ```
 $ cd ~/workspace/jetson && bash install/flash_uarm_custom.sh
@@ -194,6 +196,7 @@ $ sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.calibration.calibrate 
 </details>
 
 <details><summary><b>CLICK ME!</b> - Jetson Nano or AGX Xavier Devkit install instructions (JetPack-4.4)</summary>
+
 ### If using the Nvidia Jetson AGX Xavier Devkit, sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager
 
 ### Else if using the Nvidia Jetson Nano Devkit, flash the Micro-SD card and then plug the Micro-SD card in the device's slot
@@ -225,6 +228,7 @@ $ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.
 </details>
 
 <details><summary><b>CLICK ME</b> - Docker install for Ubuntu 18.04 on Jetson (not necessary)</summary>
+
 Make sure to have [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) installed. The image requires an NVIDIA Driver version >= 450. Build and run the docker image:
   ```
   $ cd ~/workspace/jetson
@@ -382,6 +386,7 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 </details>
 
 <details><summary><b>CLICK ME</b> - Track custom classes</summary>
+
 FastMOT supports multi-class tracking and can be easily extended to custom classes (e.g. vehicle). You need to train both YOLO and a ReID model on your object classes. Check [Darknet](https://github.com/AlexeyAB/darknet) for training YOLO and [fast-reid](https://github.com/JDAI-CV/fast-reid) for training ReID. After training, convert the model to ONNX format and place it in fastmot/models. To convert YOLO to ONNX, use [tensorrt_demos](https://github.com/jkjung-avt/tensorrt_demos/blob/master/yolo/yolo_to_onnx.py) to be compatible with the TensorRT YOLO plugins.
 ### Add custom YOLOv3/v4
 1. Subclass `YOLO` like here: https://github.com/GeekAlexis/FastMOT/blob/4e946b85381ad807d5456f2ad57d1274d0e72f3d/fastmot/models/yolo.py#L94
