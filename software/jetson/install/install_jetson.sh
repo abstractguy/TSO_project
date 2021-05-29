@@ -71,6 +71,19 @@ echo $JETSON_PASSWORD | sudo -SH pip3 install numba==0.48
 # Install pip wheel.
 #pip3 install onnxruntime_gpu-1.7.0-cp36-cp36m-linux_aarch64.whl
 
-# Install cvlib.
+# Install cvlib for inference.
 pip3 install cvlib
+
+# Install custom pyuarm.
+cd ~/workspace/jetson && \
+pip3 install -e pyuarm
+
+# Install ArduCAM Camera Array Hat drivers
+#cd ~/workspace/jetson/ArduCAM && \
+#sudo chmod +x install.sh && \
+#./install.sh
+
+# Make TensorRT plugins for Yolo.
+cd ~/workspace/jetson/fastmot/utils/plugins && \
+make
 

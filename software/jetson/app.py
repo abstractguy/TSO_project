@@ -23,10 +23,23 @@ if IS_ARDUCAM:
 
 def main():
     args = parse_args()
+
+    '''
     args.test_type = 'xavier'
     args.inference_type = 'fastmot'
     args.input_type = 'video'
     args.input_uri = 'doc/valid_test.mp4'
+    args.no_uarm = True
+    '''
+
+    args.test_type = 'nano'
+    #args.inference_type = 'fastmot'
+    args.inference_type = 'cvlib'
+    #args.input_type = 'video'
+    args.input_type = 'camera'
+    args.is_rpi_cam = True
+    #args.input_uri = 'doc/valid_test.mp4'
+    args.input_uri = '/dev/video0'
     args.no_uarm = True
 
     # Set up logging.

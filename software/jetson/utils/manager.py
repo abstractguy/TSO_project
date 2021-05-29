@@ -87,7 +87,8 @@ def process_manager(args):
     elif args.test_type == 'nano':
         #args.inference_type = 'fastmot'
         args.inference_type = 'cvlib'
-        args.input_type = 'arducam'
+        args.input_type = 'camera'
+        args.is_rpi_cam = True
         args.thread = 'show'
         args.no_mot = False
         args.no_gui = False

@@ -76,7 +76,7 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
 - pyserial
 </details>
 
-<details><summary><b>CLICK ME</b> - Hardware instructions</summary>
+<details><summary><b>CLICK ME</b> - Hardware instructions for the Jetson Nano Devkit B01 (previous board revision also shown)</summary>
 
 <img src="documentation/doc/nano.png" width="640"/>
 
@@ -86,6 +86,7 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
 - If using a jack, the jumper must be set.
 - If using USB, the jumper must be off.
 - Plug in the power supply. The green LED (D53) close to the micro USB port should turn green, and the display should show the NVIDIA logo before booting begins.
+- You will want to install a jumper on J48 to power with the jack barrel
 </details>
 
 <details><summary><b>CLICK ME</b> - Installation From Scratch Instructions for Linux (skip down to "Download and install the live *.iso" if installing Linux is needed and get back here just after the install)</summary>
@@ -169,57 +170,9 @@ $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda.sh
 ```
 $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_environment.sh
 ```
+</details>
 
-### Note: if using the Jetson Nano devkit, you will want to install a jumper on J48 to power with the jack barrel
-
-## Install Nvidia JetPack 4.4 dependencies after installing TSO_project on Ubuntu 18.04.5 LTS on a x86_64
-
-### Sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager if using the AGX Xavier
-
-### Else if using the Nano, do this
-```
-$ cd software/jetson && bash install/install_jetson_nano_sd_card.sh
-```
-
-### Follow the instructions and when it can't SSH into the Jetson, plug a screen, keyboard and mouse to the Nvidia Jetson Nano (or AGX Xavier) devkit to configure the rest; the install will resume after
-
-### On a Jetson Nano, this would be necessary before using SSH; on the Jetson AGX Xavier, you would follow the instructions on the monitor instead
-```
-$ screen /dev/ttyACM0
-```
-
-##### Create workspace directory on the Jetson (from x86_64)
-```
-$ ssh sam@192.168.55.1 'mkdir -p ~/workspace'
-```
-
-##### Prepare directories on the Jetson (tested using an Nvidia Jetson AGX Xavier) (from x86_64)
-```
-$ scp -r ~/workspace/TSO_project/software/jetson sam@192.168.55.1:/home/sam/workspace
-```
-
-##### Install Jetson prerequisites (replace <JETSON_PASSWORD> with your Jetson user's password)
-```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.sh <JETSON_PASSWORD>'
-```
-
-##### If you have the Jetson Nano devkit and the dual ArduCAM camera array HAT style with OV9281 sensors (1MP Global Shutter Camera), install the camera drivers (deprecated in favour of the Raspberry Pi v2.1 camera)
-```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson/ArduCAM && sudo chmod +x install.sh && ./install.sh'
-```
-
-##### If you have the Jetson Nano devkit B01 and the Raspberry Pi v2.1 camera, you have nothing to do as the drivers are already installed
-
-##### Make the TensorRT YOLO plugins
-```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson/fastmot/utils/plugins && make'
-```
-
-##### Install the custom uARM serial port GCODE spammer
-```
-$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && pip3 install -e pyuarm'
-```
-
+<details><summary><b>CLICK ME!</b> - Flash uArm firmware</summary>
 ##### Flash the uARM with the custom firmware
 ```
 $ cd ~/workspace/jetson && bash install/flash_uarm_custom.sh
@@ -231,18 +184,52 @@ $ cd ~/workspace/jetson && bash install/flash_uarm.sh
 ```
 
 ##### If flashing the uARM with the old firmware, you must recalibrate (verify the correct tty port!)
+
 ##### When awaiting a D7 button press, place the pump directly on the table, the uARM facing the center of its X axis
+
 ##### When awaiting a D4 button press, place the pump directly on the table, the uARM aligned by 45 degrees (pi/4 rad) from the clockwise extremum
 ```
 $ sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.calibration.calibrate --port /dev/ttyUSB0
 ```
 </details>
 
-<details><summary><b>CLICK ME</b> - Install for Ubuntu 18.04</summary>
+<details><summary><b>CLICK ME!</b> - Jetson Nano or AGX Xavier Devkit install instructions (JetPack-4.4)</summary>
+### If using the Nvidia Jetson AGX Xavier Devkit, sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager
+
+### Else if using the Nvidia Jetson Nano Devkit, flash the Micro-SD card and then plug the Micro-SD card in the device's slot
+```
+$ cd software/jetson && bash install/install_jetson_nano_sd_card.sh
+```
+
+### Either follow the instructions on the monitor or type this below, after plugging in a mouse, a keyboard, a HDMI screen and the network connector type you have chosen
+```
+$ screen /dev/ttyACM0
+```
+
+#### If it can't SSH into the Jetson, you have skipped the above step; redo it and the install will resume after
+
+##### Create workspace directory on the Jetson (from the x86_64)
+```
+$ ssh sam@192.168.55.1 'mkdir -p ~/workspace'
+```
+
+##### Prepare directories on the Jetson (from the x86_64)
+```
+$ scp -r ~/workspace/TSO_project/software/jetson sam@192.168.55.1:/home/sam/workspace
+```
+
+##### Install Jetson prerequisites (replace <JETSON_PASSWORD> with your Jetson user's password)
+```
+$ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.sh <JETSON_PASSWORD>'
+```
+</details>
+
+<details><summary><b>CLICK ME</b> - Docker install for Ubuntu 18.04 on Jetson (not necessary)</summary>
 Make sure to have [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) installed. The image requires an NVIDIA Driver version >= 450. Build and run the docker image:
   ```
-  $ docker build -t fastmot:latest .
-  $ docker run --rm --gpus all -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY fastmot:latest
+  $ cd ~/workspace/jetson
+  $ docker build -t project:latest .
+  $ docker run --rm --gpus all -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY project:latest
   ```
 </details>
 
