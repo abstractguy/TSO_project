@@ -20,5 +20,6 @@ SD_CARD=$(echo $LAPTOP_PASSWORD | sudo -S diff ./.fdisk_temp_1.txt ./.fdisk_temp
 echo "\nMicro-SD card is: ${SD_CARD}" && \
 echo $LAPTOP_PASSWORD | sudo -S dd if=sd-blob-b01.img of=${SD_CARD} bs=1M oflag=direct status=progress
 echo $LAPTOP_PASSWORD | sudo -S rm ./.fdisk_temp_1.txt ./.fdisk_temp_2.txt
+sync
 #echo $LAPTOP_PASSWORD | sudo -S screen /dev/ttyACM0
 

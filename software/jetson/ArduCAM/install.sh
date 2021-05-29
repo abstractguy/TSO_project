@@ -346,10 +346,9 @@ sudo apt-get install -y v4l-utils
 CURDIR="${PWD}"
 cd ArduCAM
 #sudo pip3 install v4l2
-sudo -H pip3 install -e python-v4l2
+sudo -H pip3 install -e v4l2
 
 cd ${CURDIR}
-
 echo "reboot now?(y/n):"
 read USER_INPUT
 case $USER_INPUT in

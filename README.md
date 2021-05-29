@@ -5,56 +5,48 @@
 ## An "intelligent" robotic arm using a camera for pick and place.
 A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
 
-<details><summary><b>CLICK ME</b> - Documentation</summary>
+## Documentation
 Still a work in progress. Early development phase.
-</details>
 
-<details><summary><b>CLICK ME</b> - Compile code and documentation to website</summary>
+## Compile code and documentation to website
 To compile and deploy parts of previously commented code as a website on readthedocs or locally, click the link below.
 Note: Since the impact of this on my notes was minimal and the code commenting required was time-consuming, not all documentation will be displayed to the website.
 
-[Install documentation as website](https://docs.readthedocs.io/en/stable/development/install.html "Permalink to ")
-</details>
+[Install documentation as website](https://docs.readthedocs.io/en/stable/development/install.html)
 
-<details><summary><b>CLICK ME</b> - Mechanics</summary>
+## Mechanics
 <img src="documentation/doc/assembly.gif" width="640"/>
 The *.STL files can be 3D-printed.
 This has not been attempted as I would lack the time to assemble the parts.
 It is available though.
 
-<details><summary><b>CLICK ME</b> - Simulation</summary>
+## Simulation
 The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic, all within Docker (see instructions in software/jetson/jetson-containers/README.md).
 If you add the Moveit plugins, simulation can run with the uARM in tandem. If you then add openai-gym to the ROS container, you can plug this environment to [FERM](https://github.com/PhilipZRH/ferm), replacing the xArm by the uArm. This was plan C, which has not been completed, as focus shifted towards implementing plans A and B. I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
 
-<details><summary><b>CLICK ME</b> - Electronics</summary>
+## Electronics
 <img src="electronics/Project Outputs for uARM/OSHPARK/top_layer.png" width="640"/>
 The minimalistic Printed Circuit Board features an ESP32 as the motor-driving microcontroller.
 Altium design files are provided in the electronics/ folder. A standard ESP32-WROOM-32 module is the microcontroller. A CP2109 USB to serial chip is used to program it and transfer data from a Micro-USB connector. An unused SD card slot is available if more external memory is required. A MCP16311T-E/M step-down regulator taps 12 volts from the jack barrel connector to provide the 5 volts servomotors need to function. A fixed output Complementary Metal Oxide Semiconductor Low-Dropout regulator (TC1264) taps 5 volts from the USB connector to provide 3.3 volts for the other circuits. One Light Emitting Diode confirms that regulator provides the 3.3 volts. There is one GPIO-controllable LED and one push button plugged on another GPIO. Another push button is plugged to the EN pin for enabling the ESP32-WROOM-32 module.
 
-<details><summary><b>CLICK ME</b> - Software</summary>
+## Software
 There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software with drivers to program and deploy the environment for commanding everything from the Jetson (or computer). Firmware for the PCB (compatible with a number of architectures) is located in software/arduino-1.8.13/.
 The main code was tested on PC and Jetson for easier modular tests while integrating.
-</details>
 
-<details><summary><b>CLICK ME</b> - Firmware</summary>
+## Firmware
 The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h need to be redefined. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
-</details>
 
-<details><summary><b>CLICK ME</b> - ArduCAM Camarray</summary>
+## ArduCAM Camarray
 An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
-</details>
 
-<details><summary><b>CLICK ME</b> - Custom uARM GCODE-based serial port controller in Python-3.7</summary>
+## Custom uARM GCODE-based serial port controller in Python-3.7
 A custom controller communicating with the uARM firmware using a GCODE protocol through a USB connection to the serial port provides grad-scaled absolute polar coordinate positioning for easy control. There is bicubic easing, a slowmove extension, calibration, movement recording and replay, etc.
-</details>
 
-<details><summary><b>CLICK ME</b> - Multi-threading and multi-process management</summary>
+## Multi-threading and multi-process management
 For faster and simpler parallel handling of the whole ecosystem, the main entrypoint process loop runs with parallel programs excluding the manager loop: the main camera/inference loop, a PID controller for the X axis, a PID controller for the Y axis and the uARM control process. Camera input is optionally threaded in 4 ways (no threading, video get, video show and both).
-</details>
 
-<details><summary><b>CLICK ME</b> - Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms</summary>
+## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
 A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
-</details>
 
 <details><summary><b>CLICK ME</b> - Hardware instructions</summary>
 
