@@ -14,9 +14,9 @@ from pathlib import Path
 
 import argparse, cv2, fastmot, json, logging
 
-IS_ARDUCAM = True
+IS_ARDUCAM = False
 
-WITH_GSTREAMER = False
+WITH_GSTREAMER = True
 
 if IS_ARDUCAM:
     from utils_arducam import ArducamUtils
@@ -41,7 +41,7 @@ def main():
     mot = None
     log = None
 
-    stream = fastmot.VideoIO(config['resize_to'], config['video_io'], args.input_uri, args.output_uri, flip_vertically=args.flip_vertically, flip_horizontally=args.flip_horizontally)
+    stream = fastmot.VideoIO(config['resize_to'], config['video_io'], args.input_uri, args.output_uri, flip_vertically=args.flip_vertically, flip_horizontally=args.flip_horizontally, args.is_rpi_cam)
 
     if not args.no_mot:
         object_x = None
@@ -74,7 +74,7 @@ def main():
 
     try:
         with Profiler('app') as prof:
-            while not (not args.no_gui) or cv2.getWindowProperty('uARM', 0) >= 0:
+            while args.no_gui or cv2.getWindowProperty('uARM', 0) >= 0:
                 frame = stream.read()
 
                 if frame is None:

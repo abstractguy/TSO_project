@@ -40,6 +40,7 @@ def add_input_args(parser):
     parser.add_argument('--thread', metavar='<thread>', type=str, required=False, choices=['both', 'get', 'show', 'none', 'old'], default='show', help='Threading type ["both", "get", "show", "none", "old"].')
     parser.add_argument('--width', type=int, default=640, help='Image width [640].')
     parser.add_argument('--height', type=int, default=480, help='Image height [480].')
+    parser.add_argument('--is-rpi-cam', action='store_true', help='Is Raspberry Pi camera v2.')
     parser.add_argument('--flip-vertically', action='store_true', help='Flip image vertically.')
     parser.add_argument('--flip-horizontally', action='store_true', help='Flip image horizontally.')
     return parser

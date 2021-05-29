@@ -14,8 +14,15 @@ class VideoGet:
     """Class that continuously gets frames from a VideoCapture object
        with a dedicated thread."""
 
-    def __init__(self, src=0):
-        self.stream = cv2.VideoCapture(src)
+    def __init__(self, src=0, is_rpi_cam=False):
+        if is_rpi_cam:
+            # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
+            print(gstreamer_pipeline(flip_method=0))
+            self.stream = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+
+        else:
+            self.stream = cv2.VideoCapture(src)
+
         (self.grabbed, self.frame) = self.stream.read()
         self.stopped = False
 

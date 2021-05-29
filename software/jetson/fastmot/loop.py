@@ -6,12 +6,12 @@
 # For:         Myself
 # Description: This file implements the main loop for object detection with OpenCV.
 
-IS_ARDUCAM = True
+IS_ARDUCAM = False
 
 if IS_ARDUCAM:
     from utils_arducam import ArducamUtils
 
-WITH_GSTREAMER = False
+WITH_GSTREAMER = True
 
 from fastmot.utils import ConfigDecoder, ObjectCenter, Profiler
 from pathlib import Path

@@ -6,7 +6,7 @@
 # For:         Myself
 # Description: This file implements the main loop for object detection with OpenCV.
 
-IS_ARDUCAM = True
+IS_ARDUCAM = False
 
 if IS_ARDUCAM:
     from utils_arducam import ArducamUtils
@@ -15,6 +15,37 @@ from utils.inference import ObjectCenter
 from copy import deepcopy
 
 import cv2, time
+
+# gstreamer_pipeline returns a GStreamer pipeline for capturing from the CSI camera
+# Defaults to 1280x720 @ 60fps
+# Flip the image by setting the flip_method (most common values: 0 and 2)
+# display_width and display_height determine the size of the window on the screen
+def gstreamer_pipeline(
+    capture_width=1280,
+    capture_height=720,
+    display_width=1280,
+    display_height=720,
+    framerate=60,
+    flip_method=0,
+):
+    return (
+        "nvarguscamerasrc ! "
+        "video/x-raw(memory:NVMM), "
+        "width=(int)%d, height=(int)%d, "
+        "format=(string)NV12, framerate=(fraction)%d/1 ! "
+        "nvvidconv flip-method=%d ! "
+        "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
+        "videoconvert ! "
+        "video/x-raw, format=(string)BGR ! appsink"
+        % (
+            capture_width,
+            capture_height,
+            framerate,
+            flip_method,
+            display_width,
+            display_height,
+        )
+    )
 
 def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     """Detection loop."""
@@ -29,30 +60,35 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     elif args.input_type == 'video':
         cap = cv2.VideoCapture(args.video)
 
+    elif args.input_type == 'arducam':
+        # Open camera.
+        cap = cv2.VideoCapture(source, cv2.CAP_V4L2)
+
+        # Set pixel format.
+        if not cap.set(cv2.CAP_PROP_FOURCC, pixelformat):
+            print('Failed to set pixel format.')
+
+        arducam_utils = ArducamUtils(source)
+
+        show_info(arducam_utils)
+
+        # Turn off RGB conversion.
+        if arducam_utils.convert2rgb == 0:
+            cap.set(cv2.CAP_PROP_CONVERT_RGB, arducam_utils.convert2rgb)
+
+        # Set width.
+        if args.width != None:
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.width)
+
+        # Set height.
+        if args.height != None:
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.height)
+
     elif args.input_type == 'camera':
-        if args.input_type == 'arducam':
-            # Open camera.
-            cap = cv2.VideoCapture(source, cv2.CAP_V4L2)
-
-            # Set pixel format.
-            if not cap.set(cv2.CAP_PROP_FOURCC, pixelformat):
-                print('Failed to set pixel format.')
-
-            arducam_utils = ArducamUtils(source)
-
-            show_info(arducam_utils)
-
-            # Turn off RGB conversion.
-            if arducam_utils.convert2rgb == 0:
-                cap.set(cv2.CAP_PROP_CONVERT_RGB, arducam_utils.convert2rgb)
-
-            # Set width.
-            if args.width != None:
-                cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.width)
-
-            # Set height.
-            if args.height != None:
-                cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.height)
+        if args.is_rpi_cam:
+            # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
+            print(gstreamer_pipeline(flip_method=0))
+            cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
         else:
             cap = cv2.VideoCapture(0)

@@ -36,7 +36,7 @@ The main code was tested on PC and Jetson for easier modular tests while integra
 ## Firmware
 The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h need to be redefined. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
 
-## ArduCAM Camarray
+## ArduCAM Camarray or Raspberry Pi camera v2.1 (your choice, but the RPi cam is less expansive and requires less installs)
 An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
 
 ## Custom uARM GCODE-based serial port controller in Python-3.7
@@ -50,29 +50,30 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
 
 <details><summary><b>CLICK ME</b> - Hardware prerequisites</summary>
 
-##### Prerequisites for using the Arducam camera array on the Jetson Nano
+##### Prerequisites for the Jetson Nano
     - Micro SD card with at least 16Gb of storage
     - Ubuntu host PC* with SD card slot or USB SD card reader/writer
     - Jetson Nano Dev Kit with micro USB power supply (at least 5V, 2A) or DC power supply (5V 4A)
     - Full HD display with HDMI
     - Keyboard and mouse
     - Ethernet cable connected to the Internet, or USB Wi-Fi adapter
+    - Either an Arducam camera array hat, or the Raspberry Pi camera v2.1 (recommended)
 
 * You can use a Windows host PC to flash the microSD card instead, however this tutorial uses Ubuntu as it’s a simpler process. See NVIDIA’s guide for a Windows option.
 </details>
 
 <details><summary><b>CLICK ME</b> - Software prerequisites</summary>
-  - CUDA >= 10
-  - cuDNN >= 7
-  - TensorRT >= 7
-  - OpenCV >= 3.3
-  - PyCuda
-  - Numpy >= 1.15
-  - Scipy >= 1.5
-  - TensorFlow < 2.0 (for SSD support)
-  - Numba == 0.48
-  - cython-bbox
-  - pyserial
+- CUDA >= 10
+- cuDNN >= 7
+- TensorRT >= 7
+- OpenCV >= 3.3
+- PyCuda
+- Numpy >= 1.15
+- Scipy >= 1.5
+- TensorFlow < 2.0 (for SSD support)
+- Numba == 0.48
+- cython-bbox
+- pyserial
 </details>
 
 <details><summary><b>CLICK ME</b> - Hardware instructions</summary>
@@ -82,8 +83,8 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
 - Insert the microSD card into the appropriate slot
 - Connect the display and USB keyboard /mouse and Ethernet cable.
 - Depending on the power supply you want to use, you may have to add or remove the jumper for power selection:
-    - If using a jack, the jumper must be set.
-    - If using USB, the jumper must be off.
+- If using a jack, the jumper must be set.
+- If using USB, the jumper must be off.
 - Plug in the power supply. The green LED (D53) close to the micro USB port should turn green, and the display should show the NVIDIA logo before booting begins.
 </details>
 
@@ -202,10 +203,12 @@ $ scp -r ~/workspace/TSO_project/software/jetson sam@192.168.55.1:/home/sam/work
 $ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.sh <JETSON_PASSWORD>'
 ```
 
-##### If you have the Jetson Nano devkit and the dual ArduCAM camera array HAT style with OV9281 sensors (1MP Global Shutter Camera), install the camera drivers
+##### If you have the Jetson Nano devkit and the dual ArduCAM camera array HAT style with OV9281 sensors (1MP Global Shutter Camera), install the camera drivers (deprecated in favour of the Raspberry Pi v2.1 camera)
 ```
 $ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson/ArduCAM && sudo chmod +x install.sh && ./install.sh'
 ```
+
+##### If you have the Jetson Nano devkit B01 and the Raspberry Pi v2.1 camera, you have nothing to do as the drivers are already installed
 
 ##### Make the TensorRT YOLO plugins
 ```
