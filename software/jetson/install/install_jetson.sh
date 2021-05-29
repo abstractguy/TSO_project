@@ -31,7 +31,7 @@ source ~/.bashrc
 #bash ${PWD}/install/install_protobuf_1.8.0.sh $JETSON_PASSWORD
 
 # Install pip, numpy, pycuda, tensorflow, cython-bbox
-#echo $JETSON_PASSWORD | sudo -S ln -fs /usr/include/locale.h /usr/include/xlocale.h
+echo $JETSON_PASSWORD | sudo -S ln -fs /usr/include/locale.h /usr/include/xlocale.h
 echo $JETSON_PASSWORD | sudo -S apt-get update
 echo $JETSON_PASSWORD | sudo -S apt-get install python3-pip libhdf5-serial-dev hdf5-tools libcanberra-gtk-module
 echo $JETSON_PASSWORD | sudo -SH pip3 install cython
