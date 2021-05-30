@@ -96,32 +96,32 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
     None which aren't covered by this guide.
 
 ##### Update apt repository package references (ensure system will be up to date)
-```
+```Bash
 $ sudo apt update
 ```
 
 ##### Install git
-```
+```Bash
 $ sudo apt install -y git
 ```
 
 ##### Create base workspace directory
-```
+```Bash
 $ mkdir -p ~/workspace
 ```
 
 ##### Go to base workspace directory
-```
+```Bash
 $ cd ~/workspace
 ```
 
 ##### Download repository code
-```
+```Bash
 $ git clone https://github.com/abstractguy/TSO_project.git
 ```
 
 ##### Go to TSO_project's path
-```
+```Bash
 $ cd TSO_project/software/jetson
 ```
 </details>
@@ -129,7 +129,7 @@ $ cd TSO_project/software/jetson
 <details><summary><b>CLICK ME</b> - Download and install the live *.iso of Ubuntu 18.04.5 LTS for x86_64 (from here https://unetbootin.github.io)</summary>
 
 ##### If running Linux already:
-```
+```Bash
 $ sudo -H bash install/install_unetbootin.sh
 ```
 
@@ -145,7 +145,7 @@ $ sudo -H bash install/install_unetbootin.sh
 ##### Download Windows 10 Enterprise Edition for VirtualBox (https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/)
 
 ##### Install VirtualBox 6.1.22 for running Windows 10 programs
-```
+```Bash
 $ cd ~/workspace/TSO_project/software/jetson && bash install/install_virtualbox.sh
 ```
 
@@ -154,7 +154,7 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_virtualbox.
 ##### You can now use the Windows 10 Enterprise Edition to run Windows 10 applications from a Linux host, like Altium for PCB developement
 
 ##### Install Nvidia components for JetPack 4.4
-```
+```Bash
 $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_prerequisites.sh
 ```
 
@@ -163,12 +163,12 @@ $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_p
 ## Install Python3 development prerequisites
 
 ##### Install miniconda3
-```
+```Bash
 $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda.sh
 ```
 
 ##### Install conda environment
-```
+```Bash
 $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_environment.sh
 ```
 </details>
@@ -176,12 +176,12 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_envir
 <details><summary><b>CLICK ME!</b> - Flash uArm firmware</summary>
 
 ##### Flash the uARM with the custom firmware
-```
+```Bash
 $ cd ~/workspace/jetson && bash install/flash_uarm_custom.sh
 ```
 
 ##### Or flash the uARM with the old firmware
-```
+```Bash
 $ cd ~/workspace/jetson && bash install/flash_uarm.sh
 ```
 
@@ -190,7 +190,7 @@ $ cd ~/workspace/jetson && bash install/flash_uarm.sh
 ##### When awaiting a D7 button press, place the pump directly on the table, the uARM facing the center of its X axis
 
 ##### When awaiting a D4 button press, place the pump directly on the table, the uARM aligned by 45 degrees (pi/4 rad) from the clockwise extremum
-```
+```Bash
 $ sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.calibration.calibrate --port /dev/ttyUSB0
 ```
 </details>
@@ -200,29 +200,29 @@ $ sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.calibration.calibrate 
 ### If using the Nvidia Jetson AGX Xavier Devkit, sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager
 
 ### Else if using the Nvidia Jetson Nano Devkit, flash the Micro-SD card and then plug the Micro-SD card in the device's slot
-```
+```Bash
 $ cd software/jetson && bash install/install_jetson_nano_sd_card.sh
 ```
 
 ### Either follow the instructions on the monitor or type this below, after plugging in a mouse, a keyboard, a HDMI screen and the network connector type you have chosen
-```
+```Bash
 $ screen /dev/ttyACM0
 ```
 
 #### If it can't SSH into the Jetson, you have skipped the above step; redo it and the install will resume after
 
 ##### Create workspace directory on the Jetson (from the x86_64)
-```
+```Bash
 $ ssh sam@192.168.55.1 'mkdir -p ~/workspace'
 ```
 
 ##### Prepare directories on the Jetson (from the x86_64)
-```
+```Bash
 $ scp -r ~/workspace/TSO_project/software/jetson sam@192.168.55.1:/home/sam/workspace
 ```
 
 ##### Install Jetson prerequisites (replace <JETSON_PASSWORD> with your Jetson user's password)
-```
+```Bash
 $ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.sh <JETSON_PASSWORD>'
 ```
 </details>
@@ -230,7 +230,7 @@ $ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.
 <details><summary><b>CLICK ME</b> - Docker install for Ubuntu 18.04 on Jetson (not necessary)</summary>
 
 Make sure to have [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) installed. The image requires an NVIDIA Driver version >= 450. Build and run the docker image:
-  ```
+  ```Bash
   $ cd ~/workspace/jetson
   $ docker build -t project:latest .
   $ docker run --rm --gpus all -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY project:latest
@@ -303,7 +303,7 @@ YOLOv4-608
 <p align="center"><img src="software/jetson/doc/results.png" width="512"\></p>
 
 #### Visualize with tensorboard.
-```
+```Bash
 $ tensorboard --logdir=runs
 ```
 <p align="center"><img src="software/jetson/doc/tensorboard_example.png" width="512"\></p>
@@ -363,28 +363,35 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 
 ### Multimedia testing usage
 - USB webcam:
-  ```
-  $ python3 main.py --input_uri /dev/video0
+  ```Bash
+  $ sudo python3 main.py --input_uri /dev/video0 --test-type nano
   ```
 - MIPI CSI camera:
-  ```
-  $ python3 main.py --input_uri csi://0
+  ```Bash
+  $ sudo python3 main.py --input_uri csi://0 --test-type nano
   ```
 - RTSP stream:
+  On host:
+  ```Bash
+  $ #ffmpeg -re -loop -1 -i /dev/video0 -c copy -f rtsp -rtsp_transport tcp rtsp://localhost:1337/live.sdp
+  $ vlc v4l2:///dev/video0 --sout '#transcode {vcodec=h264,acodec=mp3,samplerate=44100}:std{access=http,mux=ffmpeg{mux=h264},dst=127.0.0.1:1337/live.sdp}'
   ```
-  $ python3 main.py --input_uri rtsp://<user>:<password>@<ip>:<port>/<path>
+  On device:
+  ```Bash
+  $ #sudo python3 main.py --input_uri rtsp://<user>:<password>@<ip>:<port>/<path> --test-type nano
+  $ sudo python3 main.py --input_uri rtsp://samuel@192.168.55.100:1337/live.sdp --test-type nano
   ```
 - HTTP stream:
-  ```
-  $ python3 main.py --input_uri http://<user>:<password>@<ip>:<port>/<path>
+  ```Bash
+  $ sudo python3 main.py --input_uri http://<user>:<password>@<ip>:<port>/<path> --test-type nano
   ```
 - Image sequence:
-  ```
-  $ python3 main.py --input_uri img_%06d.jpg
+  ```Bash
+  $ sudo python3 main.py --input_uri img_%06d.jpg --test-type nano
   ```
 - Video file:
-  ```
-  $ python3 main.py --input_uri video.mp4
+  ```Bash
+  $ sudo python3 main.py --input_uri video.mp4 --test-type nano
   ```
 - Use `--help` for help and `--output_uri` to save output
 - To disable the GStreamer backend, set `WITH_GSTREAMER = False` [here](https://github.com/GeekAlexis/FastMOT/blob/3a4cad87743c226cf603a70b3f15961b9baf6873/fastmot/videoio.py#L11)
@@ -392,7 +399,7 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 
 ### More options can be configured in cfg/mot.json
   - Set `resolution` and `frame_rate` that corresponds to the source data or camera configuration (optional). They are required for image sequence, camera sources, and MOT Challenge evaluation. List all configurations for your USB/CSI camera:
-    ```
+    ```Bash
     $ v4l2-ctl -d /dev/video0 --list-formats-ext
     ```
   - To change detector, modify `detector_type`. This can be either `YOLO` or `SSD`
@@ -449,13 +456,13 @@ FastMOT supports multi-class tracking and can be easily extended to custom class
 
 ##### Download VOC dataset for INT8 calibration
 Only required if you want to use SSD (not in this case)
-```
+```Bash
 $ install/download_data.sh
 ```
 
 ##### Download models
 This includes both pretrained OSNet, SSD, and custom YOLOv4 WEIGHTS/ONNX models
-```
+```Bash
 $ cd ~/workspace/jetson && bash install/download_models.sh
 ```
 
@@ -466,7 +473,7 @@ $ cd ~/workspace/jetson && python3 utils/yolo_to_onnx.py --model fastmot/models/
 ```
 
 ##### On your TV, open a terminal and run everything to convert yolov4x-mish-640 from ONNX *.onnx to TensorRT *.trt and run inference
-```
+```Bash
 $ cd ~/workspace/jetson && sudo python3 main.py --test-type nano
 $ cd ~/workspace/jetson && sudo python3 main.py --test-type xavier
 $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/python3 main.py --test-type x86_64
