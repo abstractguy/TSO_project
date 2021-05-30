@@ -40,7 +40,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                              is_rpi_cam=args.is_rpi_cam)
 
     if not args.no_mot:
-        draw = (not args.no_gui) or args.output_uri is not None
+        draw = not args.no_gui or args.output_uri is not None
 
         obj = ObjectCenter(args)
 

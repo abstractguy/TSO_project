@@ -74,10 +74,11 @@ class VideoIO(object):
         self.is_live = self.protocol != Protocol.IMAGE and self.protocol != Protocol.VIDEO
 
         if is_rpi_cam:
-            WITH_GSTREAMER = True
+            #WITH_GSTREAMER = True
             # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
             print(self.gstreamer_pipeline(flip_method=0))
-            self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+            #self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+            self.source = cv2.VideoCapture(0, cv2.V4L2)
 
         elif WITH_GSTREAMER:
             self.source = cv2.VideoCapture(self._gst_cap_pipeline(), cv2.CAP_GSTREAMER)

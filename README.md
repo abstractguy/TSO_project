@@ -292,6 +292,24 @@ The table below displays the inference times when using images scaled to 608x608
 In terms of Wiki, indicators Precision and Recall have a slightly different meaning than in the PascalVOC competition, but **IoU always has the same meaning**.
 
 ![precision_recall_iou](https://hsto.org/files/ca8/866/d76/ca8866d76fb840228940dbf442a7f06a.jpg)
+
+YOLOv4x-mish-640
+<img src="documentation/doc/yolov4x-mish-640.onnx.png" width="767" height="24000"/>
+
+YOLOv4-608
+<img src="documentation/doc/yolov4.onnx.png" width="697" height="24000"/>
+
+#### The training results look like this
+<p align="center"><img src="software/jetson/doc/results.png" width="512"\></p>
+
+#### Visualize with tensorboard.
+```
+$ tensorboard --logdir=runs
+```
+<p align="center"><img src="software/jetson/doc/tensorboard_example.png" width="512"\></p>
+
+<p align="center"><img src="software/jetson/doc/valid_test.jpg" width="480"\></p>
+<p align="center"><img src="software/jetson/doc/valid_tested.png" width="512"\></p>
 </details>
 
 <details><summary><b>CLICK ME</b> - Pre-trained models</summary>
@@ -346,29 +364,29 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 ### Multimedia testing usage
 - USB webcam:
   ```
-  $ python3 app.py --input_uri /dev/video0 --mot
+  $ python3 main.py --input_uri /dev/video0
   ```
 - MIPI CSI camera:
   ```
-  $ python3 app.py --input_uri csi://0 --mot
+  $ python3 main.py --input_uri csi://0
   ```
 - RTSP stream:
   ```
-  $ python3 app.py --input_uri rtsp://<user>:<password>@<ip>:<port>/<path> --mot
+  $ python3 main.py --input_uri rtsp://<user>:<password>@<ip>:<port>/<path>
   ```
 - HTTP stream:
   ```
-  $ python3 app.py --input_uri http://<user>:<password>@<ip>:<port>/<path> --mot
+  $ python3 main.py --input_uri http://<user>:<password>@<ip>:<port>/<path>
   ```
 - Image sequence:
   ```
-  $ python3 app.py --input_uri img_%06d.jpg --mot
+  $ python3 main.py --input_uri img_%06d.jpg
   ```
 - Video file:
   ```
-  $ python3 app.py --input_uri video.mp4 --mot
+  $ python3 main.py --input_uri video.mp4
   ```
-- Use `--gui` to visualize and `--output_uri` to save output
+- Use `--help` for help and `--output_uri` to save output
 - To disable the GStreamer backend, set `WITH_GSTREAMER = False` [here](https://github.com/GeekAlexis/FastMOT/blob/3a4cad87743c226cf603a70b3f15961b9baf6873/fastmot/videoio.py#L11)
 - Note that the first run will be slow due to Numba compilation
 
@@ -455,20 +473,6 @@ $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/
 ```
 </details>
 
-<p align="center"><img src="software/jetson/doc/valid_test.jpg" width="480"\></p>
-<p align="center"><img src="software/jetson/doc/valid_tested.png" width="512"\></p>
-
-## Training and fine-tuning of this neural network is beyond the scope of this project, but please refer to [AlexeyAB's Darknet](https://github.com/AlexeyAB/darknet)
-
-#### The training results look like this
-<p align="center"><img src="software/jetson/doc/results.png" width="512"\></p>
-
-#### Visualize with tensorboard.
-```
-$ tensorboard --logdir=runs
-```
-<p align="center"><img src="software/jetson/doc/tensorboard_example.png" width="512"\></p>
-
 ## Other README.md in other directories
 - software/arduino-1.8.13/README.md
 - software/jetson/jetson-containers/README.md
@@ -476,12 +480,6 @@ $ tensorboard --logdir=runs
 - software/arduino-1.8.13/portable/sketchbook/libraries/Servo/docs/readme.md
 - software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md
 - and others... (in development)
-
-YOLOv4x-mish-640
-<img src="documentation/doc/yolov4x-mish-640.onnx.png" width="767" height="24000"/>
-
-YOLOv4-608
-<img src="documentation/doc/yolov4.onnx.png" width="697" height="24000"/>
 
 ## Credit
 

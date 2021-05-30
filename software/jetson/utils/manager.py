@@ -89,7 +89,8 @@ def process_manager(args):
         args.inference_type = 'cvlib'
         args.input_type = 'camera'
         args.is_rpi_cam = True
-        args.thread = 'show'
+        args.input_uri = 'csi://0'
+        args.thread = 'old'
         args.no_mot = False
         args.no_gui = False
 

@@ -74,6 +74,10 @@ echo $JETSON_PASSWORD | sudo -SH pip3 install numba==0.48
 # Install cvlib for inference.
 pip3 install cvlib
 
+# Install v4l2.
+sudo apt-get install -y v4l-utils
+sudo -H pip3 install v4l2 --user
+
 # Install custom pyuarm.
 cd ~/workspace/jetson && \
 pip3 install -e pyuarm
