@@ -121,4 +121,3 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
         avg_fps = round(mot.frame_count / prof.duration)
         logger.info('Average FPS: %d', avg_fps)
         mot.print_timing_info()
-

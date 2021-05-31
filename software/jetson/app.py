@@ -32,23 +32,31 @@ def main():
     args.no_uarm = True
     '''
 
-    args.test_type = 'nano'
-    #args.inference_type = 'fastmot'
-    args.inference_type = 'cvlib'
-    #args.input_type = 'video'
-    args.input_type = 'camera'
-    args.is_rpi_cam = True
-    #args.input_uri = 'doc/valid_test.mp4'
-    #args.input_uri = '/dev/video0'
-    #args.input_uri = 'rtsp://samuel@192.168.55.100:1337/live.sdp'
-    args.input_uri = 'csi://0'
-    #args.udp = True
-    #args.udp_port = 1337
+    #args.test_type = 'nano'
+    ##args.inference_type = 'fastmot'
+    #args.inference_type = 'cvlib'
+    ##args.input_type = 'video'
+    #args.input_type = 'camera'
+    #args.is_rpi_cam = True
+    ##args.input_uri = 'doc/valid_test.mp4'
+    ##args.input_uri = '/dev/video0'
+    ##args.input_uri = 'rtsp://samuel@192.168.55.100:1337/live.sdp'
+    #args.input_uri = 'csi://0'
+    ##args.udp = True
+    ##args.udp_port = 1337
     #args.thread = 'old'
+    ##args.thread = 'show'
+    #args.no_mot = False
+    #args.no_gui = False
+    #args.no_uarm = True
+
+    #args.inference_type = 'cvlib'
+    args.inference_type = 'fastmot'
+    args.input_type = 'camera'
+    args.input_uri = 'csi://0'
+    #args.input_uri = '/dev/video0'
     args.thread = 'show'
-    args.no_mot = False
-    args.no_gui = False
-    args.no_uarm = True
+    is_rpi_cam = True
 
     # Set up logging.
     logging.basicConfig(format='%(asctime)s [%(levelname)8s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -160,4 +168,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

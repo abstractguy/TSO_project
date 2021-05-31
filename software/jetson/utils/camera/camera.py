@@ -67,24 +67,28 @@ def gstreamer_pipeline(
     framerate=21,
     flip_method=0,
 ):
-    return (
-        "nvarguscamerasrc ! "
-        "video/x-raw(memory:NVMM), "
-        "width=(int)%d, height=(int)%d, "
-        "format=(string)NV12, framerate=(fraction)%d/1 ! "
-        "nvvidconv flip-method=%d ! "
-        "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
-        "videoconvert ! "
-        "video/x-raw, format=(string)BGR ! appsink"
-        % (
-            capture_width,
-            capture_height,
-            framerate,
-            flip_method,
-            display_width,
-            display_height,
-        )
-    )
+    #return (
+    #    "nvarguscamerasrc ! "
+    #    "video/x-raw(memory:NVMM), "
+    #    "width=(int)%d, height=(int)%d, "
+    #    "format=(string)NV12, framerate=(fraction)%d/1 ! "
+    #    "nvvidconv flip-method=%d ! "
+    #    "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
+    #    "videoconvert ! "
+    #    "video/x-raw, format=(string)BGR ! appsink"
+    #    % (
+    #        capture_width,
+    #        capture_height,
+    #        framerate,
+    #        flip_method,
+    #        display_width,
+    #        display_height,
+    #    )
+    #return (
+    #    #'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3280, height=2464, format=(string)NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width=960, height=616, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink wait-on-eos=false max-buffers=1 drop=True'
+    #    'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3820, height=2464, format=(string)NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width=960, height=616, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink wait-on-eos=false max-buffers=1 drop=True'
+    #)
+    return 'nvarguscamerasrc wbmode=3 tnr-mode=2 tnr-strength=1 ee-mode=2 ee-strength=1 ! video/x-raw(memory:NVMM), width=3264, height=2464, format=NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width=960, height=616, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! videobalance contrast=1.5 brightness=-.2 saturation=1.2 ! appsink'
 
 def noThreading(args, source=0, object_x=None, object_y=None, center_x=None, center_y=None):
     """Grab and show video frames without multithreading."""
@@ -387,4 +391,3 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     finally:
         # Release resources.
         print('Stream process done.')
-

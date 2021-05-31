@@ -35,7 +35,7 @@ def add_input_args(parser):
     """Add parser arguments for input options."""
     parser.add_argument('--image', metavar='<image>', type=str, required=False, default='./doc/valid_test.png', help='Path of input image.')
     parser.add_argument('--video', metavar='<video>', type=str, required=False, default='./doc/valid_test.mp4', help='Path of input video.')
-    parser.add_argument('--test-type', metavar='<test-type>', type=str, required=False, choices=['x86_64', 'xavier', 'nano'], default='x86_64', help='Input type for inference ["x86_64", "xavier", "nano"].')
+    parser.add_argument('--test-type', metavar='<test-type>', type=str, required=False, choices=['x86_64', 'xavier', 'nano', None], default=None, help='Input type for inference ["x86_64", "xavier", "nano"].')
     parser.add_argument('--input-type', metavar='<input-type>', type=str, required=False, choices=['image', 'video', 'camera', 'arducam'], default='camera', help='Input type for inference ["image", "video", "camera", "arducam"].')
     parser.add_argument('--thread', metavar='<thread>', type=str, required=False, choices=['both', 'get', 'show', 'none', 'old'], default='show', help='Threading type ["both", "get", "show", "none", "old"].')
     parser.add_argument('--width', type=int, default=640, help='Image width [640].')

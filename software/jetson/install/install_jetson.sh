@@ -82,7 +82,7 @@ sudo -H pip3 install v4l2 --user
 cd ~/workspace/jetson && \
 pip3 install -e pyuarm
 
-# Install ArduCAM Camera Array Hat drivers
+# Install ArduCAM Camera Array Hat drivers.
 #cd ~/workspace/jetson/ArduCAM && \
 #sudo chmod +x install.sh && \
 #./install.sh
@@ -90,4 +90,18 @@ pip3 install -e pyuarm
 # Make TensorRT plugins for Yolo.
 cd ~/workspace/jetson/fastmot/utils/plugins && \
 make
+
+# Install jetson-inference.
+cd
+mkdir -p installs
+cd installs
+echo $JETSON_PASSWORD | sudo -S apt-get install -y git cmake
+git clone --recursive https://github.com/dusty-nv/jetson-inference
+cd jetson-inference
+mkdir build
+cd build
+cmake ../
+make -j$(nproc)
+echo $JETSON_PASSWORD | sudo -S make install
+echo $JETSON_PASSWORD | sudo -S ldconfig
 

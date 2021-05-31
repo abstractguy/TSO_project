@@ -1,9 +1,9 @@
 {
-    "resize_to": [1280, 720],
+    "resize_to": [960, 616],
 
     "video_io": {
-        "resolution": [1920, 1080],
-        "frame_rate": 30,
+        "resolution": [3264, 2464],
+        "frame_rate": 21,
         "buffer_size": 10
     },
 
@@ -90,4 +90,3 @@
         }
     }
 }
-

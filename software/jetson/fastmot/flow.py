@@ -126,29 +126,29 @@ class Flow:
         target_begins = itertools.chain([0], target_ends[:-1])
 
         # Disable camera motion estimation.
-        ## Detect background feature points.
-        #prev_frame_small_bg = cv2.resize(self.prev_frame_gray, None,
-        #                                 fx=self.bg_feat_scale_factor[0],
-        #                                 fy=self.bg_feat_scale_factor[1])
-        #bg_mask_small = cv2.resize(self.fg_mask, None, fx=self.bg_feat_scale_factor[0],
-        #                           fy=self.bg_feat_scale_factor[1], interpolation=cv2.INTER_NEAREST)
-        #keypoints = self.bg_feat_detector.detect(prev_frame_small_bg, mask=bg_mask_small)
-        #if len(keypoints) == 0:
-        #    self.bg_keypoints = np.empty((0, 2), np.float32)
-        #    LOGGER.warning('Camera motion estimation failed')
-        #    return {}, None
-        #keypoints = np.float32([kp.pt for kp in keypoints])
-        #keypoints = self._unscale_pts(keypoints, self.bg_feat_scale_factor)
-        #bg_begin = target_ends[-1]
-        #all_prev_pts.append(keypoints)
+        # Detect background feature points.
+        prev_frame_small_bg = cv2.resize(self.prev_frame_gray, None,
+                                         fx=self.bg_feat_scale_factor[0],
+                                         fy=self.bg_feat_scale_factor[1])
+        bg_mask_small = cv2.resize(self.fg_mask, None, fx=self.bg_feat_scale_factor[0],
+                                   fy=self.bg_feat_scale_factor[1], interpolation=cv2.INTER_NEAREST)
+        keypoints = self.bg_feat_detector.detect(prev_frame_small_bg, mask=bg_mask_small)
+        if len(keypoints) == 0:
+            self.bg_keypoints = np.empty((0, 2), np.float32)
+            LOGGER.warning('Camera motion estimation failed')
+            return {}, None
+        keypoints = np.float32([kp.pt for kp in keypoints])
+        keypoints = self._unscale_pts(keypoints, self.bg_feat_scale_factor)
+        bg_begin = target_ends[-1]
+        all_prev_pts.append(keypoints)
 
         # Match features using optical flow.
         all_prev_pts = np.concatenate(all_prev_pts)
 
-        # Necessary for disabling camera motion estimation.
-        if len(all_prev_pts) == 0:
-            return {}, None
-
+        ## Necessary for disabling camera motion estimation.
+        #if len(all_prev_pts) == 0:
+        #    return {}, None
+        #
         scaled_prev_pts = self._scale_pts(all_prev_pts, self.opt_flow_scale_factor)
         all_cur_pts, status, err = cv2.calcOpticalFlowPyrLK(self.prev_frame_small, frame_small,
                                                             scaled_prev_pts, None,

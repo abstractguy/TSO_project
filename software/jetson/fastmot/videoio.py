@@ -57,7 +57,7 @@ class VideoIO(object):
                  udp_port=1337, 
                  flip_vertically=False, 
                  flip_horizontally=False, 
-                 is_rpi_cam=False,
+                 is_rpi_cam=False, 
                  udp=False):
 
         self.size = size
@@ -76,14 +76,12 @@ class VideoIO(object):
         self.is_live = self.protocol != Protocol.IMAGE and self.protocol != Protocol.VIDEO
 
         if is_rpi_cam:
-            WITH_GSTREAMER = True
             # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
-            print(self.gstreamer_pipeline(flip_method=0, framerate=30))
-            self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0, framerate=30), cv2.CAP_GSTREAMER)
-        elif args.udp:
-            self.source = cv2.VideoCapture('udp://@:%s?overrun_nonfatal=1&fifo_size=50000000' % udp_port, cv2.CAP_FFMPEG)
-        elif WITH_GSTREAMER:
             #self.source = cv2.VideoCapture('/dev/video0', cv2.V4L2)
+            print(self.gstreamer_pipeline(flip_method=0))
+            self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+
+        elif WITH_GSTREAMER:
             self.source = cv2.VideoCapture(self._gst_cap_pipeline(), cv2.CAP_GSTREAMER)
 
         else:
@@ -122,7 +120,7 @@ class VideoIO(object):
     # Flip the image by setting the flip_method (most common values: 0 and 2)
     # display_width and display_height determine the size of the window on the screen
     def gstreamer_pipeline(
-        self, 
+        self,
         capture_width=3820,
         capture_height=2464,
         display_width=960,
@@ -130,25 +128,26 @@ class VideoIO(object):
         framerate=21,
         flip_method=0,
     ):
-        return (
-            "nvarguscamerasrc ! "
-            "video/x-raw(memory:NVMM), "
-            "width=(int)%d, height=(int)%d, "
-            "format=(string)NV12, framerate=(fraction)%d/1 ! "
-            "nvvidconv flip-method=%d ! "
-            "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
-            "videoconvert ! "
-            "video/x-raw, format=(string)BGR ! appsink"
-            % (
-                capture_width,
-                capture_height,
-                framerate,
-                flip_method,
-                display_width,
-                display_height,
-            )
-        )
-
+        #return (
+        #    "nvarguscamerasrc ! "
+        #    "video/x-raw(memory:NVMM), "
+        #    "width=(int)%d, height=(int)%d, "
+        #    "format=(string)NV12, framerate=(fraction)%d/1 ! "
+        #    "nvvidconv flip-method=%d ! "
+        #    "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
+        #    "videoconvert ! "
+        #    "video/x-raw, format=(string)BGR ! appsink"
+        #    % (
+        #        capture_width,
+        #        capture_height,
+        #        framerate,
+        #        flip_method,
+        #        display_width,
+        #        display_height,
+        #    )
+        #return 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3280, height=2464, format=(string)NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width=960, height=616, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink wait-on-eos=false max-buffers=1 drop=True'
+        #return 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=3820, height=2464, format=(string)NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width=960, height=616, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink max-buffers=1 drop=True'
+        return 'nvarguscamerasrc wbmode=3 tnr-mode=2 tnr-strength=1 ee-mode=2 ee-strength=1 ! video/x-raw(memory:NVMM), width=3264, height=2464, format=NV12, framerate=21/1 ! nvvidconv flip-method=0 ! video/x-raw, width=960, height=616, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! videobalance contrast=1.5 brightness=-.2 saturation=1.2 ! appsink'
     @property
     def cap_dt(self):
         # limit capture interval at processing latency for live sources
@@ -159,7 +158,7 @@ class VideoIO(object):
         Start capturing from file or device.
         """
         if not self.source.isOpened():
-            self.source.open(self.gstreamer_pipeline(framerate=30) if self.is_rpi_cam else self._gst_cap_pipeline(), cv2.CAP_GSTREAMER)
+            self.source.open(self.gstreamer_pipeline() if self.is_rpi_cam else self._gst_cap_pipeline(), cv2.CAP_GSTREAMER)
         if not self.cap_thread.is_alive():
             self.cap_thread.start()
 
@@ -347,4 +346,3 @@ class VideoIO(object):
     def _img_format(uri):
         img_format = Path(uri).suffix[1:]
         return 'jpeg' if img_format == 'jpg' else img_format
-
