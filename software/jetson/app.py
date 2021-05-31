@@ -39,7 +39,15 @@ def main():
     args.input_type = 'camera'
     args.is_rpi_cam = True
     #args.input_uri = 'doc/valid_test.mp4'
-    args.input_uri = '/dev/video0'
+    #args.input_uri = '/dev/video0'
+    #args.input_uri = 'rtsp://samuel@192.168.55.100:1337/live.sdp'
+    args.input_uri = 'csi://0'
+    #args.udp = True
+    #args.udp_port = 1337
+    #args.thread = 'old'
+    args.thread = 'show'
+    args.no_mot = False
+    args.no_gui = False
     args.no_uarm = True
 
     # Set up logging.
@@ -58,9 +66,11 @@ def main():
                              config['video_io'], 
                              args.input_uri, 
                              args.output_uri, 
+                             udp_port=args.udp_port, 
                              flip_vertically=args.flip_vertically, 
                              flip_horizontally=args.flip_horizontally, 
-                             is_rpi_cam=args.is_rpi_cam)
+                             is_rpi_cam=args.is_rpi_cam, 
+                             udp=args.udp)
 
     if not args.no_mot:
         object_x = None

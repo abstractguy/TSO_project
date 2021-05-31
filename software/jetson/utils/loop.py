@@ -21,11 +21,11 @@ import cv2, time
 # Flip the image by setting the flip_method (most common values: 0 and 2)
 # display_width and display_height determine the size of the window on the screen
 def gstreamer_pipeline(
-    capture_width=1280,
-    capture_height=720,
-    display_width=1280,
-    display_height=720,
-    framerate=60,
+    capture_width=3820,
+    capture_height=2464,
+    display_width=960,
+    display_height=616,
+    framerate=21,
     flip_method=0,
 ):
     return (

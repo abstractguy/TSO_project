@@ -54,9 +54,11 @@ class VideoIO(object):
                  input_uri, 
                  output_uri=None, 
                  proc_fps=30, 
+                 udp_port=1337, 
                  flip_vertically=False, 
                  flip_horizontally=False, 
-                 is_rpi_cam=False):
+                 is_rpi_cam=False,
+                 udp=False):
 
         self.size = size
         self.input_uri = input_uri
@@ -74,13 +76,14 @@ class VideoIO(object):
         self.is_live = self.protocol != Protocol.IMAGE and self.protocol != Protocol.VIDEO
 
         if is_rpi_cam:
-            #WITH_GSTREAMER = True
+            WITH_GSTREAMER = True
             # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
-            print(self.gstreamer_pipeline(flip_method=0))
-            #self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-            self.source = cv2.VideoCapture(0, cv2.V4L2)
-
+            print(self.gstreamer_pipeline(flip_method=0, framerate=30))
+            self.source = cv2.VideoCapture(self.gstreamer_pipeline(flip_method=0, framerate=30), cv2.CAP_GSTREAMER)
+        elif args.udp:
+            self.source = cv2.VideoCapture('udp://@:%s?overrun_nonfatal=1&fifo_size=50000000' % udp_port, cv2.CAP_FFMPEG)
         elif WITH_GSTREAMER:
+            #self.source = cv2.VideoCapture('/dev/video0', cv2.V4L2)
             self.source = cv2.VideoCapture(self._gst_cap_pipeline(), cv2.CAP_GSTREAMER)
 
         else:
@@ -119,12 +122,12 @@ class VideoIO(object):
     # Flip the image by setting the flip_method (most common values: 0 and 2)
     # display_width and display_height determine the size of the window on the screen
     def gstreamer_pipeline(
-        self,
-        capture_width=1280,
-        capture_height=720,
-        display_width=1280,
-        display_height=720,
-        framerate=60,
+        self, 
+        capture_width=3820,
+        capture_height=2464,
+        display_width=960,
+        display_height=616,
+        framerate=21,
         flip_method=0,
     ):
         return (
@@ -156,7 +159,7 @@ class VideoIO(object):
         Start capturing from file or device.
         """
         if not self.source.isOpened():
-            self.source.open(self.gstreamer_pipeline() if self.is_rpi_cam else self._gst_cap_pipeline(), cv2.CAP_GSTREAMER)
+            self.source.open(self.gstreamer_pipeline(framerate=30) if self.is_rpi_cam else self._gst_cap_pipeline(), cv2.CAP_GSTREAMER)
         if not self.cap_thread.is_alive():
             self.cap_thread.start()
 

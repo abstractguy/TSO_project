@@ -35,9 +35,11 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                              config['video_io'], 
                              args.input_uri, 
                              args.output_uri, 
+                             udp_port=args.udp, 
                              flip_vertically=args.flip_vertically, 
                              flip_horizontally=args.flip_horizontally, 
-                             is_rpi_cam=args.is_rpi_cam)
+                             is_rpi_cam=args.is_rpi_cam, 
+                             udp=False)
 
     if not args.no_mot:
         draw = not args.no_gui or args.output_uri is not None
