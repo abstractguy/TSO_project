@@ -98,8 +98,8 @@ def process_manager(args):
         #args.no_mot = False
         #args.no_gui = False
 
-        args.inference_type = 'cvlib'
-        #args.inference_type = 'fastmot'
+        #args.inference_type = 'cvlib'
+        args.inference_type = 'fastmot'
         args.input_type = 'camera'
         args.input_uri = 'csi://0'
         #args.input_uri = '/dev/video0'
@@ -179,3 +179,4 @@ def process_manager(args):
 
     finally: # Release resources.
         print('Manager process done.')
+

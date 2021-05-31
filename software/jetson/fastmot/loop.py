@@ -6,17 +6,17 @@
 # For:         Myself
 # Description: This file implements the main loop for object detection with OpenCV.
 
-IS_ARDUCAM = False
-
-if IS_ARDUCAM:
-    from utils_arducam import ArducamUtils
-
-WITH_GSTREAMER = True
-
 from fastmot.utils import ConfigDecoder, ObjectCenter, Profiler
 from pathlib import Path
 
 import cv2, fastmot, json, logging, time
+
+IS_ARDUCAM = False
+
+WITH_GSTREAMER = True
+
+if IS_ARDUCAM:
+    from utils_arducam import ArducamUtils
 
 def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
     # Set up logging.
@@ -35,13 +35,18 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
                              config['video_io'], 
                              args.input_uri, 
                              args.output_uri, 
-                             udp_port=args.udp, 
+                             udp_port=args.udp_port, 
                              flip_vertically=args.flip_vertically, 
                              flip_horizontally=args.flip_horizontally, 
                              is_rpi_cam=args.is_rpi_cam, 
-                             udp=False)
+                             udp=args.udp)
 
     if not args.no_mot:
+        object_x = None
+        object_y = None
+        center_x = None
+        center_y = None
+
         draw = not args.no_gui or args.output_uri is not None
 
         obj = ObjectCenter(args)
@@ -70,7 +75,7 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
 
     try:
         with Profiler('app') as prof:
-            while not (not args.no_gui) or cv2.getWindowProperty('uARM', 0) >= 0:
+            while args.no_gui or cv2.getWindowProperty('uARM', 0) >= 0:
                 frame = stream.read()
 
                 if frame is None:
@@ -121,3 +126,4 @@ def loop(args, object_x=None, object_y=None, center_x=None, center_y=None):
         avg_fps = round(mot.frame_count / prof.duration)
         logger.info('Average FPS: %d', avg_fps)
         mot.print_timing_info()
+
