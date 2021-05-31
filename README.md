@@ -6,7 +6,7 @@
 A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
 
 ## Documentation
-Still a work in progress. Early development phase.
+Still a work in progress.
 
 ## Compile code and documentation to website
 To compile and deploy parts of previously commented code as a website on readthedocs or locally, click the link below.
@@ -34,6 +34,7 @@ There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc
 The main code was tested on PC and Jetson for easier modular tests while integrating.
 
 ## Firmware
+<img src="documentation/doc/uArm_firmware_full.png" width="640"/>
 The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h need to be redefined. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
 
 ## ArduCAM Camarray or Raspberry Pi camera v2.1 (your choice, but the RPi cam is less expansive and requires less installs)
@@ -181,6 +182,7 @@ $ cd ~/workspace/jetson && bash install/flash_uarm_custom.sh
 ```
 
 ##### Or flash the uARM with the old firmware
+<img src="documentation/doc/uArm_firmware_portable.png" width="640"/>
 ```Bash
 $ cd ~/workspace/jetson && bash install/flash_uarm.sh
 ```
@@ -486,7 +488,6 @@ $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/
 - software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md
 - software/arduino-1.8.13/portable/sketchbook/libraries/Servo/docs/readme.md
 - software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md
-- and others... (in development)
 
 ## Credit
 
