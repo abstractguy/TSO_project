@@ -31,11 +31,15 @@ Altium design files are provided in the electronics/ folder. A standard ESP32-WR
 
 ## Software
 There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software with drivers to program and deploy the environment for commanding everything from the Jetson (or computer). Firmware for the PCB (compatible with a number of architectures) is located in software/arduino-1.8.13/.
-The main code was tested on PC and Jetson for easier modular tests while integrating.
+The main code was tested on PC and Jetson for easier modular tests while programming.
 
-## Firmware
+## uArm GCode-based Firmware
 <img src="documentation/doc/uArm_firmware_full.png" width="640"/>
-The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h need to be redefined. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
+The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h need to be redefined in order to support your custom microcontroller. Some presets have been defined for AVR, ESP32 and ESP32-S2. The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md for more explanations.
+
+## Portable and enhanced servomotor libraries for Arduino
+<img src="documentation/doc/bicubic_interpolation.gif" width="640"/>
+The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). This is because it has been stripped of hardware-dependent features; then those features were put back as options. The servomotors have been made portable for the original Arduino Servo library. In addition, the ESP32Servo library is automatically selected with the board manager; the above-named architectures will be automatically selected during this step. A slowmove extension was added to AVR, enabling movement easing and bicubic interpolation (shown by the *.gif above). The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/Servo/readme.md and software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md for more explanations.
 
 ## ArduCAM Camarray or Raspberry Pi camera v2.1 (your choice, but the RPi cam is less expansive and requires less installs)
 An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
@@ -79,6 +83,8 @@ A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion c
 </details>
 
 <details><summary><b>CLICK ME</b> - Hardware instructions for the Jetson Nano Devkit B01 (previous board revision also shown)</summary>
+
+<img src="documentation/doc/jetson_nano_revisions.png" width="640"/>
 
 <img src="documentation/doc/nano.png" width="640"/>
 
@@ -182,10 +188,11 @@ $ cd ~/workspace/jetson && bash install/flash_uarm_custom.sh
 ```
 
 ##### Or flash the uARM with the old firmware
-<img src="documentation/doc/uArm_firmware_portable.png" width="640"/>
 ```Bash
 $ cd ~/workspace/jetson && bash install/flash_uarm.sh
 ```
+
+<img src="documentation/doc/uArm_firmware_portable.png" width="640"/>
 
 ##### If flashing the uARM with the old firmware, you must recalibrate (verify the correct tty port!)
 
