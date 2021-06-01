@@ -5,8 +5,10 @@
 ## An "intelligent" robotic arm using a camera for pick and place.
 A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
 
+# Don't forget to review the documentation in the CLICK ME's below!
+
 ## Documentation
-Still a work in progress.
+Reports in progress.
 
 ## Compile code and documentation to website
 To compile and deploy parts of previously commented code as a website on readthedocs or locally, click the link below.
@@ -39,7 +41,7 @@ The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52
 
 ## Portable and enhanced servomotor libraries for Arduino
 <img src="documentation/doc/bicubic_interpolation.gif" width="640"/>
-The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). This is because it has been stripped of hardware-dependent features; then those features were put back as options. The servomotors have been made portable for the original Arduino Servo library. In addition, the ESP32Servo library is automatically selected with the board manager; the above-named architectures will be automatically selected during this step. A slowmove extension was added to AVR, enabling movement easing and bicubic interpolation (shown by the *.gif above). The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/Servo/readme.md and software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md for more explanations.
+The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). This is because the servomotors have been made portable for the original Arduino Servo library. In addition, the ESP32Servo library is automatically selected with the board manager; the above-named architectures will be automatically selected during this step. A slowmove extension was added to AVR, enabling movement easing and bicubic interpolation (shown by the *.gif above). The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/Servo/readme.md and software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md for more explanations.
 
 ## ArduCAM Camarray or Raspberry Pi camera v2.1 (your choice, but the RPi cam is less expansive and requires less installs)
 An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
@@ -52,6 +54,8 @@ For faster and simpler parallel handling of the whole ecosystem, the main entryp
 
 ## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
 A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
+
+# Additional documentation and instructions
 
 <details><summary><b>CLICK ME</b> - Hardware prerequisites</summary>
 
@@ -180,7 +184,7 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_envir
 ```
 </details>
 
-<details><summary><b>CLICK ME!</b> - Flash uArm firmware</summary>
+<details><summary><b>CLICK ME</b> - Flash uArm firmware</summary>
 
 ##### Flash the uARM with the custom firmware
 ```Bash
@@ -204,7 +208,7 @@ $ sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.calibration.calibrate 
 ```
 </details>
 
-<details><summary><b>CLICK ME!</b> - Jetson Nano or AGX Xavier Devkit install instructions (JetPack-4.4)</summary>
+<details><summary><b>CLICK ME</b> - Jetson Nano or AGX Xavier Devkit install instructions (JetPack-4.4)</summary>
 
 ### If using the Nvidia Jetson AGX Xavier Devkit, sign in to install Nvidia's sdkmanager from https://developer.nvidia.com/nvsdk-manager
 
