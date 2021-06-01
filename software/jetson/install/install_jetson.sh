@@ -91,17 +91,17 @@ pip3 install -e pyuarm
 cd ~/workspace/jetson/fastmot/utils/plugins && \
 make
 
-# Install jetson-inference.
-cd
-mkdir -p installs
-cd installs
-echo $JETSON_PASSWORD | sudo -S apt-get install -y git cmake
-git clone --recursive https://github.com/dusty-nv/jetson-inference
-cd jetson-inference
-mkdir build
-cd build
-cmake ../
-make -j$(nproc)
-echo $JETSON_PASSWORD | sudo -S make install
-echo $JETSON_PASSWORD | sudo -S ldconfig
+## Install jetson-inference.
+#cd
+#mkdir -p installs
+#cd installs
+#echo $JETSON_PASSWORD | sudo -S apt-get install -y git cmake
+#git clone --recursive https://github.com/dusty-nv/jetson-inference
+#cd jetson-inference
+#mkdir build
+#cd build
+#cmake ../
+#make -j$(nproc)
+#echo $JETSON_PASSWORD | sudo -S make install
+#echo $JETSON_PASSWORD | sudo -S ldconfig
 
