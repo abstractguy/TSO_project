@@ -37,6 +37,8 @@ Altium design files are provided in the electronics/ folder. A standard ESP32-WR
 
 ## Software
 <img src="documentation/doc/fastreid_pipeline.png" width="640"/>
+<img src="documentation/doc/kalman_filtering.png" width="640"/>
+<img src="documentation/doc/klt_tracking.png" width="640"/>
 There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software with drivers to program and deploy the environment for commanding everything from the Jetson (or computer). Firmware for the PCB (compatible with a number of architectures) is located in software/arduino-1.8.13/.
 The main code was tested on PC and Jetson for easier modular tests while programming.
 
@@ -518,6 +520,9 @@ $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/
 ### GeekAlexis/FastMOT
 [[FastMOT inference]](https://github.com/GeekAlexis/FastMOT)
 
+### FastReID
+[[FastReID]](https://github.com/JDAI-CV/fast-reid)
+
 ### AlexeyAB/darknet
 [[Training YOLOv4 and stats]](https://github.com/AlexeyAB/darknet)
 
@@ -539,9 +544,24 @@ $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/
 ## Reference papers
 
 [[Yolov3 paper]](https://arxiv.org/abs/1804.02767)
+
 [[Yolov4 paper]](https://arxiv.org/abs/2004.10934)
+
 [[SPP paper]](https://arxiv.org/abs/1406.4729)
+
 [[CSPNet paper]](https://arxiv.org/abs/1911.11929)
-[[Deep SORT with deep association paper]](https://arxiv.org/abs/1703.07402)
+
+[[Deep SORT with Deep Association paper]](https://arxiv.org/abs/1703.07402)
+
 [[FastReID]](https://arxiv.org/abs/2006.02631)
+
+[[Omni-Scale Feature Learning for Person Re-Identification]](https://arxiv.org/abs/1905.00953)
+
+[[Learning Generalisable Omni-Scale Representations for Person Re-Identification]](https://arxiv.org/abs/1910.06827)
+
+[[TorchReID]](https://arxiv.org/abs/1910.10093)
+
+[[KLT Tracking]](http://cseweb.ucsd.edu/classes/sp02/cse252/lucaskanade81.pdf)
+
+[[Kalman Filtering]](https://www.cs.unc.edu/~welch/kalman/media/pdf/Kalman1960.pdf)
 
