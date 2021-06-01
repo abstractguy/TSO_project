@@ -5,12 +5,13 @@
 ## An "intelligent" robotic arm using a camera for pick and place.
 A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies (see software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
 
-# Don't forget to review the documentation in the CLICK ME's below!
+## Don't forget to review the documentation in the CLICK ME's below!
 
 ## Documentation
 Reports in progress.
 
 ## Compile code and documentation to website
+<img src="documentation/doc/website_screenshot.png" width="640"/>
 To compile and deploy parts of previously commented code as a website on readthedocs or locally, click the link below.
 Note: Since the impact of this on my notes was minimal and the code commenting required was time-consuming, not all documentation will be displayed to the website.
 
@@ -23,6 +24,9 @@ This has not been attempted as I would lack the time to assemble the parts.
 It is available though.
 
 ## Simulation
+<img src="documentation/doc/ros_control.png" width="640"/>
+<img src="documentation/doc/ros_urdf.png" width="640"/>
+<img src="documentation/doc/ros_arm.png" width="640"/>
 The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic, all within Docker (see instructions in software/jetson/jetson-containers/README.md).
 If you add the Moveit plugins, simulation can run with the uARM in tandem. If you then add openai-gym to the ROS container, you can plug this environment to [FERM](https://github.com/PhilipZRH/ferm), replacing the xArm by the uArm. This was plan C, which has not been completed, as focus shifted towards implementing plans A and B. I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
 
@@ -32,6 +36,7 @@ The minimalistic Printed Circuit Board features an ESP32 as the motor-driving mi
 Altium design files are provided in the electronics/ folder. A standard ESP32-WROOM-32 module is the microcontroller. A CP2109 USB to serial chip is used to program it and transfer data from a Micro-USB connector. An unused SD card slot is available if more external memory is required. A MCP16311T-E/M step-down regulator taps 12 volts from the jack barrel connector to provide the 5 volts servomotors need to function. A fixed output Complementary Metal Oxide Semiconductor Low-Dropout regulator (TC1264) taps 5 volts from the USB connector to provide 3.3 volts for the other circuits. One Light Emitting Diode confirms that regulator provides the 3.3 volts. There is one GPIO-controllable LED and one push button plugged on another GPIO. Another push button is plugged to the EN pin for enabling the ESP32-WROOM-32 module.
 
 ## Software
+<img src="documentation/doc/fastreid_pipeline.png" width="640"/>
 There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software with drivers to program and deploy the environment for commanding everything from the Jetson (or computer). Firmware for the PCB (compatible with a number of architectures) is located in software/arduino-1.8.13/.
 The main code was tested on PC and Jetson for easier modular tests while programming.
 
@@ -44,18 +49,26 @@ The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52
 The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). This is because the servomotors have been made portable for the original Arduino Servo library. In addition, the ESP32Servo library is automatically selected with the board manager; the above-named architectures will be automatically selected during this step. A slowmove extension was added to AVR, enabling movement easing and bicubic interpolation (shown by the *.gif above). The script in software/jetson/install/flash_firmware_custom.sh automates the flashing process. See software/arduino-1.8.13/portable/sketchbook/libraries/Servo/readme.md and software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md for more explanations.
 
 ## ArduCAM Camarray or Raspberry Pi camera v2.1 (your choice, but the RPi cam is less expansive and requires less installs)
+<img src="documentation/doc/arducam_camarray.jpg" width="640"/>
+<img src="documentation/doc/raspberry-pi-camera-module-v2_1.jpg" width="640"/>
 An automated installation procedure and seemless handling for the driver code, all compatible with V4L2 and Gstreamer frameworks, allowing faster, easier and interchangeable inference using images, videos, a few network streaming protocols, V4L2-supported cameras (MIPI, USB, etc), etc., all accessible using the same interface.
 
 ## Custom uARM GCODE-based serial port controller in Python-3.7
+<img src="documentation/doc/gcode_flowchart.png" width="640"/>
 A custom controller communicating with the uARM firmware using a GCODE protocol through a USB connection to the serial port provides grad-scaled absolute polar coordinate positioning for easy control. There is bicubic easing, a slowmove extension, calibration, movement recording and replay, etc.
 
 ## Multi-threading and multi-process management
+<img src="documentation/doc/PID.png" width="640"/>
+<img src="documentation/doc/multi-processing-threading.jpg" width="640"/>
 For faster and simpler parallel handling of the whole ecosystem, the main entrypoint process loop runs with parallel programs excluding the manager loop: the main camera/inference loop, a PID controller for the X axis, a PID controller for the Y axis and the uARM control process. Camera input is optionally threaded in 4 ways (no threading, video get, video show and both).
 
 ## Accelerated inference using TensorRT and Numba, deployable on Nvidia Jetson platforms
+<img src="documentation/doc/tensorrt_representation.png" width="640"/>
+<img src="documentation/doc/tensorrt_pipeline.png" width="640"/>
+<img src="documentation/doc/tensorrt_optimization.png" width="640"/>
 A platform featuring YOLOv4-mish-640, KLT optical flow tracking, camera motion compensation, a Kalman filter, data association (...), with instructions for training and evaluation and deployable inference on an Nvidia Jetson (Nano or AGX Xavier) using TensorRT and Numba.
 
-# Additional documentation and instructions
+## Additional documentation and instructions
 
 <details><summary><b>CLICK ME</b> - Hardware prerequisites</summary>
 
@@ -529,4 +542,6 @@ $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/
 [[Yolov4 paper]](https://arxiv.org/abs/2004.10934)
 [[SPP paper]](https://arxiv.org/abs/1406.4729)
 [[CSPNet paper]](https://arxiv.org/abs/1911.11929)
+[[Deep SORT with deep association paper]](https://arxiv.org/abs/1703.07402)
+[[FastReID]](https://arxiv.org/abs/2006.02631)
 
