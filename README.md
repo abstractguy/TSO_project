@@ -27,7 +27,7 @@ It is available though.
 <img src="documentation/doc/ros_control.jpg" width="640"/>
 <img src="documentation/doc/ros_urdf.png" width="640"/>
 <img src="documentation/doc/ros_arm.jpg" width="640"/>
-The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic, all within Docker ( [see instructions in software/jetson/jetson-containers/README.md](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/jetson-containers/README.md) ).
+The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic, all within Docker [see instructions in software/jetson/jetson-containers/README.md](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/jetson-containers/README.md).
 If you add the Moveit plugins, simulation can run with the uARM in tandem. If you then add openai-gym to the ROS container, you can plug this environment to [FERM](https://github.com/PhilipZRH/ferm), replacing the xArm by the uArm. This was plan C, which has not been completed, as focus shifted towards implementing plans A and B. I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
 
 ## Electronics
