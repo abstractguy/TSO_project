@@ -3,7 +3,7 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fabstractguy%2FTSO_project&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com) [![License: BSD 2-clause](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## An "intelligent" robotic arm using a camera for pick and place.
-A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies ( [see software/jetson/fastmot/](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/fastmot/) ), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
+A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies [see software/jetson/fastmot/](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
 
 ## Don't forget to review the documentation in the CLICK ME's below!
 
@@ -19,36 +19,62 @@ Note: Since the impact of this on my notes was minimal and the code commenting r
 
 ## Mechanics
 <img src="documentation/doc/assembly.gif" width="640"/>
-The *.STL files can be 3D-printed [here](https://github.com/abstractguy/TSO_project/mechanics/).
+ The *.STL files can be 3D-printed
+ 
+ [here](mechanics/)
+
 This has not been attempted as I would lack the time to assemble the parts.
 It is available though.
 
 ## Simulation
-<img src="documentation/doc/ros_control.jpg" width="640"/>
 <img src="documentation/doc/ros_urdf.png" width="640"/>
+The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic, all within Docker 
+
+[see instructions in software/jetson/jetson-containers/README.md](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/jetson-containers/README.md)
+
+<img src="documentation/doc/ros_control.jpg" width="640"/>
 <img src="documentation/doc/ros_arm.jpg" width="640"/>
-The *.STL files can be converted to *.URDF for simulation using a physics engine like Gazebo (or displayed using RVIZ) in ROS Kinetic, all within Docker [see instructions in software/jetson/jetson-containers/README.md](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/jetson-containers/README.md).
-If you add the Moveit plugins, simulation can run with the uARM in tandem. If you then add openai-gym to the ROS container, you can plug this environment to [FERM](https://github.com/PhilipZRH/ferm), replacing the xArm by the uArm. This was plan C, which has not been completed, as focus shifted towards implementing plans A and B. I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
+If you add the Moveit plugins, simulation can run with the uARM in tandem. If you then add openai-gym to the ROS container, you can plug this environment to FERM.
+
+[FERM](https://github.com/PhilipZRH/ferm)
+
+Replacing the xArm by the uArm. This was plan C, which has not been completed, as focus shifted towards implementing plans A and B. I have only ran physical and simulation movements separately in ROS and put the plan aside for lack of time and points.
 
 ## Electronics
 <img src="electronics/Project Outputs for uARM/OSHPARK/top_layer.png" width="640"/>
 The minimalistic Printed Circuit Board features an ESP32 as the motor-driving microcontroller.
-Altium design files are [provided in the electronics/ folder](https://github.com/abstractguy/TSO_project/tree/master/electronics/). A standard ESP32-WROOM-32 module is the microcontroller. A CP2109 USB to serial chip is used to program it and transfer data from a Micro-USB connector. An unused SD card slot is available if more external memory is required. A MCP16311T-E/M step-down regulator taps 12 volts from the jack barrel connector to provide the 5 volts servomotors need to function. A fixed output Complementary Metal Oxide Semiconductor Low-Dropout regulator (TC1264) taps 5 volts from the USB connector to provide 3.3 volts for the other circuits. One Light Emitting Diode confirms that regulator provides the 3.3 volts. There is one GPIO-controllable LED and one push button plugged on another GPIO. Another push button is plugged to the EN pin for enabling the ESP32-WROOM-32 module.
+Altium design files are provided.
+
+[electronics/ folder](https://github.com/abstractguy/TSO_project/tree/master/electronics/)
+
+A standard ESP32-WROOM-32 module is the microcontroller. A CP2109 USB to serial chip is used to program it and transfer data from a Micro-USB connector. An unused SD card slot is available if more external memory is required. A MCP16311T-E/M step-down regulator taps 12 volts from the jack barrel connector to provide the 5 volts servomotors need to function. A fixed output Complementary Metal Oxide Semiconductor Low-Dropout regulator (TC1264) taps 5 volts from the USB connector to provide 3.3 volts for the other circuits. One Light Emitting Diode confirms that regulator provides the 3.3 volts. There is one GPIO-controllable LED and one push button plugged on another GPIO. Another push button is plugged to the EN pin for enabling the ESP32-WROOM-32 module.
 
 ## Software
 <img src="documentation/doc/fastreid_pipeline.png" width="640"/>
 <img src="documentation/doc/kalman_filtering.png" width="640"/>
 <img src="documentation/doc/klt_tracking.png" width="640"/>
-There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software with drivers to program and deploy the environment for commanding everything from the Jetson (or computer). Firmware for the PCB (compatible with a number of architectures) is [located in software/arduino-1.8.13/](https://github.com/abstractguy/TSO_project/tree/master/software/arduino-1.8.13/).
+There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc.) software with drivers to program and deploy the environment for commanding everything from the Jetson (or computer). Firmware for the PCB (compatible with a number of architectures) is provided below.
+
+[firmware](https://github.com/abstractguy/TSO_project/tree/master/software/arduino-1.8.13/)
+
 The main code was tested on PC and Jetson for easier modular tests while programming.
 
 ## uArm GCode-based Firmware
 <img src="documentation/doc/uArm_firmware_full.png" width="640"/>
-The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only [pin definitions in software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h](https://github.com/abstractguy/TSO_project/tree/master/software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h) need to be redefined in order to support your custom microcontroller. Some presets have been defined for AVR, ESP32 and ESP32-S2. The [script in software/jetson/install/flash_firmware_custom.sh](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/install/flash_firmware_custom.sh) automates the flashing process. [See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md](https://github.com/abstractguy/TSO_project/software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md) for more explanations.
+The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions below need to be redefined in order to support your custom microcontroller.
+
+[here](https://github.com/abstractguy/TSO_project/tree/master/software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/src/uArmPins.h)
+
+Some presets have been defined for AVR, ESP32 and ESP32-S2. The script below automates the flashing process.
+[software/jetson/install/flash_firmware_custom.sh](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/install/flash_firmware_custom.sh)
+
+[See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md](https://github.com/abstractguy/TSO_project/software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md) for more explanations.
 
 ## Portable and enhanced servomotor libraries for Arduino
 <img src="documentation/doc/bicubic_interpolation.gif" width="640"/>
-The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). This is because the servomotors have been made portable for the original Arduino Servo library. In addition, the ESP32Servo library is automatically selected with the board manager; the above-named architectures will be automatically selected during this step. A slowmove extension was added to AVR, enabling movement easing and bicubic interpolation (shown by the *.gif above). See [software/arduino-1.8.13/portable/sketchbook/libraries/Servo/readme.md and software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md](https://github.com/abstractguy/TSO_project/tree/master/software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md) for more explanations.
+The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). This is because the servomotors have been made portable for the original Arduino Servo library. In addition, the ESP32Servo library is automatically selected with the board manager; the above-named architectures will be automatically selected during this step. A slowmove extension was added to AVR, enabling movement easing and bicubic interpolation (shown by the *.gif above). See below for more explanations.
+
+[software/arduino-1.8.13/portable/sketchbook/libraries/Servo/readme.md and software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md](https://github.com/abstractguy/TSO_project/tree/master/software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md)
 
 ## ArduCAM Camarray or Raspberry Pi camera v2.1 (your choice, but the RPi cam is less expansive and requires less installs)
 <img src="documentation/doc/arducam_camarray.jpg" width="640"/>
