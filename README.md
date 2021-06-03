@@ -1,5 +1,6 @@
 # TSO_project
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8310ea2ac67a471a9389cdfea1a2f79b)](https://app.codacy.com/gh/abstractguy/TSO_project?utm_source=github.com&utm_medium=referral&utm_content=abstractguy/TSO_project&utm_campaign=Badge_Grade_Settings)
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fabstractguy%2FTSO_project&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![made-with-Markdown](https://img.shields.io/badge/Made%20with-Markdown-1f425f.svg)](http://commonmark.org)
