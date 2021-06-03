@@ -7,10 +7,6 @@
 [![made-with-c++](https://img.shields.io/badge/C++-Solutions-blue.svg?style=flat&logo=c%2B%2B)](https://gcc.gnu.org/)
 [![ForTheBadge powered-by-electricity](http://ForTheBadge.com/images/badges/powered-by-electricity.svg)](http://ForTheBadge.com)
 [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest)
-[![Github all releases](https://img.shields.io/github/downloads/abstractguy/StrapDown.js/total.svg)](https://GitHub.com/abstractguy/StrapDown.js/releases/)
-[![GitHub forks](https://img.shields.io/github/forks/abstractguy/StrapDown.js.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/abstractguy/StrapDown.js/network/)
-[![GitHub stars](https://img.shields.io/github/stars/abstractguy/StrapDown.js.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/abstractguy/StrapDown.js/stargazers/)
-[![GitHub watchers](https://img.shields.io/github/watchers/abstractguy/StrapDown.js.svg?style=social&label=Watch&maxAge=2592000)](https://GitHub.com/abstractguy/StrapDown.js/watchers/)
 ![Profile views](https://gpvc.arturio.dev/abstractguy)
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
