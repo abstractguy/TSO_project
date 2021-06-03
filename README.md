@@ -1,6 +1,18 @@
 # TSO_project
 
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fabstractguy%2FTSO_project&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com) [![License: BSD 2-clause](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fabstractguy%2FTSO_project&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![made-with-Markdown](https://img.shields.io/badge/Made%20with-Markdown-1f425f.svg)](http://commonmark.org)
+[![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/)
+[![made-with-c++](https://img.shields.io/badge/C++-Solutions-blue.svg?style=flat&logo=c%2B%2B)](https://gcc.gnu.org/)
+[![ForTheBadge powered-by-electricity](http://ForTheBadge.com/images/badges/powered-by-electricity.svg)](http://ForTheBadge.com)
+[![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest)
+[![Github all releases](https://img.shields.io/github/downloads/abstractguy/StrapDown.js/total.svg)](https://GitHub.com/abstractguy/StrapDown.js/releases/)
+[![GitHub forks](https://img.shields.io/github/forks/abstractguy/StrapDown.js.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/abstractguy/StrapDown.js/network/)
+[![GitHub stars](https://img.shields.io/github/stars/abstractguy/StrapDown.js.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/abstractguy/StrapDown.js/stargazers/)
+[![GitHub watchers](https://img.shields.io/github/watchers/abstractguy/StrapDown.js.svg?style=social&label=Watch&maxAge=2592000)](https://GitHub.com/abstractguy/StrapDown.js/watchers/)
+![Profile views](https://gpvc.arturio.dev/abstractguy)
+[![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
 ## An "intelligent" robotic arm using a camera for pick and place.
 A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies [see software/jetson/fastmot/](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
@@ -8,7 +20,12 @@ A preconfigured development computer (auto-install scripts and documentation inc
 ## Don't forget to review the documentation in the CLICK ME's below!
 
 ## Documentation
-[Reports](https://github.com/abstractguy/TSO_project/documentation/) in progress.
+The project timeline was obtained with the below command
+```Bash
+$ git log --pretty=format:"%h %ad | %s %d [%an]" --date=short >log.txt
+```
+[Project timeline](https://github.com/abstractguy/TSO_project/tree/master/documentation/log.txt)
+[Reports](https://github.com/abstractguy/TSO_project/tree/master/documentation/) in progress.
 
 ## Compile code and documentation to website
 <img src="documentation/doc/website_screenshot.png" width="640"/>
@@ -59,7 +76,7 @@ There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc
 
 The main code was tested on PC and Jetson for easier modular tests while programming.
 
-## uArm GCode-based Firmware
+## uArm GCode-based Firmware in C++
 <img src="documentation/doc/uArm_firmware_full.png" width="640"/>
 The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). Only pin definitions below need to be redefined in order to support your custom microcontroller.
 
@@ -70,7 +87,7 @@ Some presets have been defined for AVR, ESP32 and ESP32-S2. The script below aut
 
 [See software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md](https://github.com/abstractguy/TSO_project/software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md) for more explanations.
 
-## Portable and enhanced servomotor libraries for Arduino
+## Portable and enhanced servomotor libraries for Arduino in C++
 <img src="documentation/doc/bicubic_interpolation.gif" width="640"/>
 The firmware is portable across Arduino boards (it runs on AVR, SAM, SAMD, NRF52, STM32F4, ESP32 and ESP32-S2 microcontrollers). This is because the servomotors have been made portable for the original Arduino Servo library. In addition, the ESP32Servo library is automatically selected with the board manager; the above-named architectures will be automatically selected during this step. A slowmove extension was added to AVR, enabling movement easing and bicubic interpolation (shown by the *.gif above). See below for more explanations.
 
