@@ -24,6 +24,8 @@
 
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
+[Version française](https://github.com/abstractguy/TSO_project/tree/master/README.fr.md)
+
 ## An "intelligent" robotic arm using a camera for pick and place
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a6bed245e4c5461c932a65385525f5cb)](https://www.codacy.com/gh/abstractguy/TSO_project/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=abstractguy/TSO_project&amp;utm_campaign=Badge_Grade)
 
