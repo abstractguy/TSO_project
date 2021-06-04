@@ -51,10 +51,11 @@ Un ordinateur de développement préconfiguré (scripts d'auto-installation et d
 ## N'oubliez pas de consulter la documentation dans les CLIQUEZ-MOI ci-dessous !
 
 ## Documentation
-La timeline du projet a été obtenue avec la commande suivante
-``Bash
+La chronologie du projet a été obtenue avec la commande suivante
+```Bash
 $ git log --pretty=format :"%h %ad | %s %d [%an]" --date=short >log.txt
 ```
+
 [Chronologie du projet](https://github.com/abstractguy/TSO_project/tree/master/documentation/log.txt)
 
 [Rapports](https://github.com/abstractguy/TSO_project/tree/master/documentation/)
