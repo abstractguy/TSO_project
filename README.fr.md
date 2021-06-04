@@ -382,7 +382,7 @@ Les performances sont évaluées avec YOLOv4 en utilisant [py-motmetrics](https:
 
 FastMOT a des scores MOTA proches des trackers **state-of-the-art** du MOT Challenge. La vitesse de suivi peut atteindre jusqu'à **38 FPS** selon le nombre d'objets. Sur un CPU/GPU de bureau, les FPS devraient être beaucoup plus élevés. Des modèles plus légers peuvent être utilisés pour obtenir un meilleur compromis.
 
-Utilise des poids pré-entraînés par COCO pour faire des prédictions sur les images, mais vous pouvez [entraîner votre propre YOLOv4] (https://github.com/AlexeyAB/darknet). 
+Utilise des poids pré-entraînés par COCO pour faire des prédictions sur les images, mais vous pouvez [entraîner votre propre YOLOv4](https://github.com/AlexeyAB/darknet). 
 Le tableau ci-dessous montre les temps d'inférence lors de l'utilisation d'images à l'échelle 608x608 comme entrées. Les mesures prises par YOLOv4 montrent le temps d'inférence de cette implémentation sur Nvidia Jetson AGX Xavier.
 
 | Backbone | GPU | FPS (max lissée) | mAP@0.5 |
@@ -392,7 +392,7 @@ Le tableau ci-dessous montre les temps d'inférence lors de l'utilisation d'imag
 
 **IoU** (intersect over union) - moyenne de l'intersect over union des objets et des détections pour un certain seuil = 0.24
 
-**mAP** (mean average precision) - valeur moyenne des `précisions moyennes` pour chaque classe, où la `précision moyenne` est la valeur moyenne de 11 points sur la courbe PR pour chaque seuil possible (chaque probabilité de détection) pour la même classe (Precision-Recall en termes de PascalVOC, où Precision=TP/(TP+FP) et Recall=TP/(TP+FN) ), page-11 : http://homepages.inf.ed.ac.uk/ckiw/postscript/ijcv_voc09.pdf
+**mAP** (mean average precision) - valeur moyenne des `précisions moyennes` pour chaque classe, où la `précision moyenne` est la valeur moyenne de 11 points sur la courbe PR pour chaque seuil possible (chaque probabilité de détection) pour la même classe (Precision-Recall en termes de PascalVOC, où Precision=TP/(TP+FP) et Recall=TP/(TP+FN) ), [page-11](http://homepages.inf.ed.ac.uk/ckiw/postscript/ijcv_voc09.pdf)
 
 **mAP** est la métrique de précision par défaut dans la compétition PascalVOC, **c'est la même métrique que AP50** dans la compétition MS COCO.
 En termes de Wiki, les indicateurs Precision et Recall ont une signification légèrement différente de celle du concours PascalVOC, mais **IoU a toujours la même signification**.
@@ -403,10 +403,10 @@ YOLOv4x-mish-640
 <img src="documentation/doc/yolov4x-mish-640.onnx.png" width="767" height="24000"/>
 
 YOLOv4-608
-<img src="documentation/doc/yolov4.onnx.png" width="697" height="24000"/>>
+<img src="documentation/doc/yolov4.onnx.png" width="697" height="24000"/>
 
-#### Les résultats de la formation ressemblent à ceci
-<p align="center"><img src="software/jetson/doc/results.png" width="512"\></p>>
+#### Les résultats de l'entraînement ressemblent à ceci
+<p align="center"><img src="software/jetson/doc/results.png" width="512"\></p>
 
 #### Visualisez avec tensorboard.
 ```Bash
@@ -425,14 +425,14 @@ Il existe des fichiers de poids pour différents fichiers cfg (entraînés pour 
 FPS sur RTX 2070 (R) et Tesla V100 (V) :
 
 * [yolov4x-mish.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4x-mish.cfg) - 640x640 - **67.9% mAP@0.5 (49.4% AP@0.5:0.95) - 23(R) FPS / 50(V) FPS** - 221 BFlops (110 FMA) - 381 MB : [yolov4x-mish.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4x-mish.weights) 
-  * poids pré-entraînés pour l'entraînement : https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4x-mish.conv.166
+  * [poids pré-entraînés](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4x-mish.conv.166)
 
 * [yolov4-csp.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4-csp.cfg) - 202 MB : [yolov4-csp.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-csp.weights) papier [Scaled Yolo v4](https://arxiv.org/abs/2011.08036)
 
     Changez simplement les paramètres `width=` et `height=` dans le fichier `yolov4-csp.cfg` et utilisez le même fichier `yolov4-csp.weights` pour tous les cas :
   * `width=640 height=640` dans le cfg : **66.2% mAP@0.5 (47.5% AP@0.5:0.95) - 70(V) FPS** - 120 (60 FMA) BFlops
   * `width=512 height=512` dans le cfg : **64.8% mAP@0.5 (46.2% AP@0.5:0.95) - 93(V) FPS** - 77 (39 FMA) BFlops
-  * Poids pré-entraînés pour l'entraînement : https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-csp.conv.142
+  * [Poids pré-entraînés](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-csp.conv.142)
 
 * [yolov4.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4.cfg) - 245 MB : [yolov4.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights) (miroir Google-drive [yolov4.weights](https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT) ) papier [Yolo v4](https://arxiv.org/abs/2004.10934)
     Changez simplement les paramètres `width=` et `height=` dans le fichier `yolov4.cfg` et utilisez le même fichier `yolov4.weights` pour tous les cas :
@@ -461,11 +461,11 @@ FPS sur RTX 2070 (R) et Tesla V100 (V) :
 * [yolov3-tiny-prn.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov3-tiny-prn.cfg) - **33.1% mAP@0.5 - 370(R) FPS** - 3.5 BFlops - 18.8 MB : [yolov3-tiny-prn.weights](https://drive.google.com/file/d/18yYZWyKbo4XSDVyztmsEcF9B_6bxrhUY/view?usp=sharing)
 
 ### Modèles Yolo v2
-* `yolov2.cfg` (194 MB COCO Yolo v2) - nécessite 4 GB GPU-RAM : https://pjreddie.com/media/files/yolov2.weights
-* `yolo-voc.cfg` (194 MB VOC Yolo v2) - nécessite 4 GB GPU-RAM : http://pjreddie.com/media/files/yolo-voc.weights
-* `yolov2-tiny.cfg` (43 MB COCO Yolo v2) - nécessite 1 GB GPU-RAM : https://pjreddie.com/media/files/yolov2-tiny.weights
-* `yolov2-tiny-voc.cfg` (60 MB VOC Yolo v2) - nécessite 1 GB GPU-RAM : http://pjreddie.com/media/files/yolov2-tiny-voc.weights
-* `yolo9000.cfg` (186 MB Yolo9000-model) - nécessite 4 GB GPU-RAM : http://pjreddie.com/media/files/yolo9000.weights
+* `yolov2.cfg` (194 MB COCO Yolo v2) - nécessite 4 GB GPU-RAM : [yolov2](https://pjreddie.com/media/files/yolov2.weights)
+* `yolo-voc.cfg` (194 MB VOC Yolo v2) - nécessite 4 GB GPU-RAM : [yolo-voc](http://pjreddie.com/media/files/yolo-voc.weights)
+* `yolov2-tiny.cfg` (43 MB COCO Yolo v2) - nécessite 1 GB GPU-RAM : [yolov2-tiny](https://pjreddie.com/media/files/yolov2-tiny.weights)
+* `yolov2-tiny-voc.cfg` (60 MB VOC Yolo v2) - nécessite 1 GB GPU-RAM : [yolov2-tiny-voc](http://pjreddie.com/media/files/yolov2-tiny-voc.weights)
+* `yolo9000.cfg` (186 MB Yolo9000-model) - nécessite 4 GB GPU-RAM : [yolo9000](http://pjreddie.com/media/files/yolo9000.weights)
 
 ### Plus d'options peuvent être configurées dans cfg/mot.json
   - Définissez la `résolution` et le `frame_rate` qui correspondent aux données sources ou à la configuration de la caméra (facultatif). Ils sont requis pour la séquence d'images, les sources de caméra et l'évaluation du défi MOT. Listez toutes les configurations pour votre caméra USB/CSI :
@@ -480,9 +480,9 @@ FPS sur RTX 2070 (R) et Tesla V100 (V) :
 
 </details>
 
-<details><summary><b>CLICK ME</b> - Suivi des classes personnalisées</summary>.
+<details><summary><b>CLICK ME</b> - Tracking de classes personnalisées</summary>.
 
-FastMOT prend en charge le suivi multi-classes et peut être facilement étendu aux classes personnalisées (par exemple, le véhicule). Vous devez entraîner à la fois YOLO et un modèle ReID sur vos classes d'objets. Consultez [Darknet](https://github.com/AlexeyAB/darknet) pour entraîner YOLO et [fast-reid](https://github.com/JDAI-CV/fast-reid) pour entraîner ReID. Après l'entraînement, convertissez le modèle au format ONNX et placez-le dans fastmot/models. Pour convertir YOLO en ONNX, utilisez [tensorrt_demos](https://github.com/jkjung-avt/tensorrt_demos/blob/master/yolo/yolo_to_onnx.py) pour être compatible avec les plugins YOLO de TensorRT.
+FastMOT prend en charge le tracking multi-classes et peut être facilement étendu aux classes personnalisées (par exemple, véhicule). Vous devez entraîner à la fois YOLO et un modèle ReID sur vos classes d'objets. Consultez [Darknet](https://github.com/AlexeyAB/darknet) pour entraîner YOLO et [fast-reid](https://github.com/JDAI-CV/fast-reid) pour entraîner ReID. Après l'entraînement, convertissez le modèle au format ONNX et placez-le dans fastmot/models. Pour convertir YOLO en ONNX, utilisez [tensorrt_demos](https://github.com/jkjung-avt/tensorrt_demos/blob/master/yolo/yolo_to_onnx.py) pour être compatible avec les plugins YOLO de TensorRT.
 ### Ajouter des YOLOv3/v4 personnalisés
 1. Sous-classez `YOLO` comme ici : https://github.com/GeekAlexis/FastMOT/blob/4e946b85381ad807d5456f2ad57d1274d0e72f3d/fastmot/models/yolo.py#L94
     ```
@@ -508,7 +508,7 @@ FastMOT prend en charge le suivi multi-classes et peut être facilement étendu 
     ```
     Notez que les ancres peuvent ne pas suivre le même ordre dans le fichier cfg de Darknet. Vous devez masquer les ancres pour chaque couche yolo en utilisant les indices dans `mask` dans Darknet cfg.
     Contrairement à YOLOv4, les ancres sont généralement inversées pour YOLOv3 et tiny.
-2. Remplacez les étiquettes de classe [ici] (https://github.com/GeekAlexis/FastMOT/blob/master/fastmot/models/label.py) par vos classes d'objets.
+2. Remplacez les étiquettes de classe [ici](https://github.com/GeekAlexis/FastMOT/blob/master/fastmot/models/label.py) par vos classes d'objets.
 3. Modifiez cfg/mot.json : mettez `model` dans `yolo_detector` à la classe Python ajoutée et mettez `class_ids` que vous voulez détecter. Vous pouvez jouer avec `conf_thresh` en fonction de la précision de votre modèle.
 ### Ajouter un ReID personnalisé
 1. Sous-classez `ReID` comme ici : https://github.com/GeekAlexis/FastMOT/blob/aa707888e39d59540bb70799c7b97c58851662ee/fastmot/models/reid.py#L51
@@ -555,33 +555,40 @@ $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/
   ```Bash
   $ sudo python3 main.py --input_uri /dev/video0
   ```
+ 
 - Caméra MIPI CSI :
   ```Bash
   $ sudo python3 main.py --input_uri csi://0
   ```
+ 
 - Flux RTSP :
   Sur l'hôte :
-  ``Bash
+  ```Bash
   $ #ffmpeg -re -loop -1 -i /dev/video0 -c copy -f rtsp -rtsp_transport tcp rtsp://localhost:1337/live.sdp
   $ vlc v4l2:///dev/video0 --sout '#transcode {vcodec=h264,acodec=mp3,samplerate=44100}:std{access=http,mux=ffmpeg{mux=h264},dst=127.0.0.1:1337/live.sdp}''.
   ```
+ 
   Sur le périphérique :
   ```Bash
   $ #sudo python3 main.py --input_uri rtsp://<user>:<password>@<ip>:<port>/<path>
   $ sudo python3 main.py --input_uri rtsp://samuel@192.168.55.100:1337/live.sdp
   ```
+ 
 - Flux HTTP :
   ```Bash
   $ sudo python3 main.py --input_uri http://<user>:<password>@<ip>:<port>/<path>
   ```
+ 
 - Séquence d'images :
   ```Bash
   $ sudo python3 main.py --input_uri img_%06d.jpg
   ```
+ 
 - Fichier vidéo :
   ```Bash
   $ sudo python3 main.py --input_uri video.mp4
   ```
+ 
 - Utilisez `--help` pour l'aide et `--output_uri` pour sauvegarder la sortie.
 - Pour désactiver le backend GStreamer, mettez `WITH_GSTREAMER = False` [ici](https://github.com/GeekAlexis/FastMOT/blob/3a4cad87743c226cf603a70b3f15961b9baf6873/fastmot/videoio.py#L11)
 - Notez que la première exécution sera lente à cause de la compilation Numba.
