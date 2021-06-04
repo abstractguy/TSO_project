@@ -48,7 +48,7 @@ Un ordinateur de développement préconfiguré (scripts d'auto-installation et d
 - [ ] Si vous voulez que le uArm ait des objets de perspective et de saisie, il est recommandé de reconvertir les coordonnées polaires (longueur, angle, hauteur) en coordonnées cartésiennes (x, y, z) (fonctions de réutilisation dans pyuarm) pour faire correspondre exactement les coordonnées de la caméra et de la portée du uArm (les portées entières étaient activées, mais ne correspondaient pas à la position initiale de la caméra en coordonnées cartésiennes).
 - [ ] Régler la hauteur de la position initiale pour mettre à l'échelle la vue de la caméra et enregistrer les coordonnées de portée du uArm et de la caméra de manière égale.
 
-## N'oubliez pas de consulter la documentation dans les CLIQUEZ-MOI ci-dessous !
+## N'oubliez pas de consulter la documentation dans les CLICK ME ci-dessous !
 
 ## Documentation
 La chronologie du projet a été obtenue avec la commande suivante
@@ -86,7 +86,7 @@ Les fichiers *.STL peuvent être convertis en *.URDF pour être simulés à l'ai
 <img src="documentation/doc/ros_arm.jpg" width="640"/>
 Si vous ajoutez les plugins Moveit, la simulation peut fonctionner avec l'uARM en tandem. Si vous ajoutez ensuite openai-gym au conteneur ROS, vous pouvez brancher cet environnement à FERM, en remplaçant le xArm par le uArm. C'était le plan C, qui n'a pas été achevé, car l'attention s'est portée sur la mise en œuvre des plans A et B. J'ai seulement exécuté les mouvements physiques et de simulation séparément dans ROS et j'ai mis le plan de côté par manque de temps et de points.
 
-FERM](https://github.com/PhilipZRH/ferm)
+[FERM](https://github.com/PhilipZRH/ferm)
 
 ## Électronique
 <img src="electronics/Project Outputs for uARM/OSHPARK/top_layer.png" width="640"/>
@@ -116,11 +116,13 @@ Le firmware est portable sur toutes les cartes Arduino (il fonctionne sur les mi
 Certains presets ont été définis pour AVR, ESP32 et ESP32-S2. Le script ci-dessous automatise le processus de flashage.
 [software/jetson/install/flash_firmware_custom.sh](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/install/flash_firmware_custom.sh)
 
-Voir software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md](https://github.com/abstractguy/TSO_project/software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md) pour plus d'explications.
+[Voir software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md](https://github.com/abstractguy/TSO_project/software/arduino-1.8.13/portable/sketchbook/libraries/UArmForArduino/README.md) pour plus d'explications.
 
-## Bibliothèques de servomoteurs portables et améliorées pour Arduino en C++.
+## Librairies de servomoteurs portables et améliorées pour Arduino en C++.
 <img src="documentation/doc/bicubic_interpolation.gif" width="640"/>
 Le firmware est portable sur toutes les cartes Arduino (il fonctionne sur les microcontrôleurs AVR, SAM, SAMD, NRF52, STM32F4, ESP32 et ESP32-S2). Ceci est dû au fait que les servomoteurs ont été rendus portables pour la bibliothèque originale de servo Arduino. En outre, la bibliothèque ESP32Servo est automatiquement sélectionnée avec le gestionnaire de cartes ; les architectures susmentionnées seront automatiquement sélectionnées au cours de cette étape. Une extension slowmove a été ajoutée à AVR, permettant l'assouplissement des mouvements avec l'interpolation bicubique (montré par le *.gif ci-dessus). Voir ci-dessous pour plus d'explications.
+
+[software/arduino-1.8.13/portable/sketchbook/libraries/Servo/readme.md](https://github.com/abstractguy/TSO_project/tree/master/software/arduino-1.8.13/portable/sketchbook/libraries/Servo/readme.md)
 
 [software/arduino-1.8.13/portable/sketchbook/libraries/Servo/readme.md et software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md](https://github.com/abstractguy/TSO_project/tree/master/software/arduino-1.8.13/portable/sketchbook/libraries/ESP32Servo/README.md)
 
@@ -197,7 +199,7 @@ Une plateforme comprenant YOLOv4-mish-640, le suivi de flux optique KLT, la comp
     Aucune qui ne soit pas couverte par ce guide.
 
 ##### Mettez à jour les références des paquets du dépôt apt (assurez vous que le système sera à jour)
-``Bash
+```Bash
 $ sudo apt update
 ```
 
@@ -216,12 +218,12 @@ $ mkdir -p ~/workspace
 $ cd ~/workspace
 ```
 
-##### Télécharger le code du référentiel
-``Bash
+##### Télécharger le code du projet
+```Bash
 $ git clone https://github.com/abstractguy/TSO_project.git
 ```
 
-##### Aller sur le chemin du logiciel de l'unité centrale de TSO_project
+##### Aller dans le dossier logiciels de l'unité centrale de TSO_project
 ```Bash
 $ cd TSO_project/software/jetson
 ```
@@ -230,7 +232,7 @@ $ cd TSO_project/software/jetson
 <details><summary><b>CLICK ME</b> - Téléchargez et installez le live *.iso d'Ubuntu 18.04.5 LTS pour x86_64 (depuis ici https://unetbootin.github.io)</summary>.
 
 ##### Si vous utilisez déjà Linux :
-``Bash
+```Bash
 $ sudo -H bash install/install_unetbootin.sh
 ```
 
@@ -245,7 +247,7 @@ $ sudo -H bash install/install_unetbootin.sh
 ##### Téléchargez Windows 10 Enterprise Edition pour VirtualBox (https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/)
 
 ##### Installer VirtualBox 6.1.22 pour l'exécution des programmes Windows 10
-``Bash
+```Bash
 $ cd ~/workspace/TSO_project/software/jetson && bash install/install_virtualbox.sh
 ```
 
@@ -254,7 +256,7 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_virtualbox.
 ##### Vous pouvez maintenant utiliser Windows 10 Enterprise Edition pour exécuter des applications Windows 10 à partir d'un hôte Linux, comme Altium pour le développement de circuits imprimés.
 
 ##### Installer les composants Nvidia pour JetPack 4.4
-``Bash
+```Bash
 $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_prerequisites.sh
 ```
 
@@ -263,7 +265,7 @@ $ sudo -H bash ~/workspace/TSO_project/software/jetson/install/install_jetpack_p
 ## Installer les pré-requis pour le développement de Python3
 
 ##### Installer miniconda3
-``Bash
+```Bash
 $ cd && bash ~/workspace/TSO_project/software/jetson/install/install_conda.sh
 ```
 
@@ -276,7 +278,7 @@ $ cd ~/workspace/TSO_project/software/jetson && bash install/install_conda_envir
 <details><summary><b>CLICK ME</b> - Flashage du firmware uArm</summary>.
 
 ##### Flash le uARM avec le firmware personnalisé
-``Bash
+```Bash
 $ cd ~/workspace/jetson && bash install/flash_uarm_custom.sh
 ```
 
@@ -292,7 +294,7 @@ $ cd ~/workspace/jetson && bash install/flash_uarm.sh
 ##### Dans l'attente d'un appui sur le bouton D7, placez la pompe directement sur la table, le uARM face au centre de son axe en X.
 
 ##### En attendant d'appuyer sur le bouton D4, placez la pompe directement sur la table, le uARM aligné à 45 degrés (pi/4 rad) par rapport à l'extrémité du sens horaire.
-``Bash
+```Bash
 $ sudo /opt/conda/envs/school/bin/python3 -m pyuarm.tools.calibration.calibrate --port /dev/ttyUSB0
 ```
 </details>
@@ -308,24 +310,24 @@ $ cd software/jetson && bash install/install_jetson_nano_sd_card.sh
 
 
 ### Suivez les instructions sur l'écran ou tapez ceci ci-dessous, après avoir branché une souris, un clavier, un écran HDMI et le type de connecteur réseau que vous avez choisi.
-``Bash
+```Bash
 $ screen /dev/ttyACM0
 ```
 
 #### Si vous ne parvenez pas à vous connecter en SSH à la Jetson, c'est que vous avez sauté l'étape précédente ; refaites-la et l'installation reprendra après
 
 ##### Créez le répertoire workspace sur le Jetson (à partir du x86_64)
-``Bash
+```Bash
 $ ssh sam@192.168.55.1 'mkdir -p ~/workspace' (en anglais)
 ```
 
 ##### Préparer les répertoires sur le Jetson (à partir du x86_64)
-``Bash
+```Bash
 $ scp -r ~/workspace/TSO_project/software/jetson sam@192.168.55.1:/home/sam/workspace
 ```
 
 ##### Installer les pré-requis Jetson (remplacer <JETSON_PASSWORD> par le mot de passe de votre utilisateur Jetson)
-``Bash
+```Bash
 $ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.sh <JETSON_PASSWORD>''.
 ```
 </details>
@@ -333,7 +335,7 @@ $ ssh -t sam@192.168.55.1 'cd ~/workspace/jetson && bash install/install_jetson.
 <details><summary><b>CLICK ME</b> - Installation de Docker pour Ubuntu 18.04 sur Jetson (pas nécessaire)</summary>.
 
 Assurez-vous d'avoir installé [nvidia-docker](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker). L'image nécessite une version du pilote NVIDIA >= 450. Construisez et exécutez l'image docker :
-  ``Bash
+  ```Bash
   $ cd ~/workspace/jetson
   $ docker build -t project:latest .
   $ docker run --rm --gpus all -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY project:latest
@@ -406,7 +408,7 @@ YOLOv4-608
 <p align="center"><img src="software/jetson/doc/results.png" width="512"\></p>>
 
 #### Visualisez avec tensorboard.
-``Bash
+```Bash
 $ tensorboard --logdir=runs
 ```
 <p align="center"><img src="software/jetson/doc/tensorboard_example.png" width="512"</p></p>
@@ -466,7 +468,7 @@ FPS sur RTX 2070 (R) et Tesla V100 (V) :
 
 ### Plus d'options peuvent être configurées dans cfg/mot.json
   - Définissez la `résolution` et le `frame_rate` qui correspondent aux données sources ou à la configuration de la caméra (facultatif). Ils sont requis pour la séquence d'images, les sources de caméra et l'évaluation du défi MOT. Listez toutes les configurations pour votre caméra USB/CSI :
-    ``Bash
+    ```Bash
     $ v4l2-ctl -d /dev/video0 --list-formats-ext
     ```
   - Pour changer de détecteur, modifiez `detector_type`. Cela peut être soit `YOLO`, soit `SSD`.
@@ -523,7 +525,7 @@ FastMOT prend en charge le suivi multi-classes et peut être facilement étendu 
 
 ##### Télécharger le jeu de données COV pour la calibration INT8
 Nécessaire uniquement si vous voulez utiliser le SSD (pas dans ce cas).
-``Bash
+```Bash
 $ install/download_data.sh
 ```
 
@@ -540,7 +542,7 @@ $ cd ~/workspace/jetson && python3 utils/yolo_to_onnx.py --model fastmot/models/
 ```
 
 ##### Sur votre TV, ouvrez un terminal et exécutez tout ce qu'il faut pour convertir yolov4x-mish-640 de ONNX *.onnx en TensorRT *.trt et lancer l'inférence
-``Bash
+```Bash
 $ cd ~/workspace/jetson && sudo python3 main.py --test-type nano
 $ cd ~/workspace/jetson && sudo python3 main.py --test-type xavier
 $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/python3 main.py --test-type x86_64
@@ -568,15 +570,15 @@ $ cd ~/workspace/TSO_project/software/jetson && sudo /opt/conda/envs/school/bin/
   $ sudo python3 main.py --input_uri rtsp://samuel@192.168.55.100:1337/live.sdp
   ```
 - Flux HTTP :
-  ``Bash
+  ```Bash
   $ sudo python3 main.py --input_uri http://<user>:<password>@<ip>:<port>/<path>
   ```
 - Séquence d'images :
-  ``Bash
+  ```Bash
   $ sudo python3 main.py --input_uri img_%06d.jpg
   ```
 - Fichier vidéo :
-  ``Bash
+  ```Bash
   $ sudo python3 main.py --input_uri video.mp4
   ```
 - Utilisez `--help` pour l'aide et `--output_uri` pour sauvegarder la sortie.
