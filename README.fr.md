@@ -35,7 +35,7 @@ Les bras robotiques utilisant des capteurs de proximité sont notoirement ineffi
 ### La solution
 Au lieu de cela, les progrès contemporains en matière de vision industrielle permettent à la machine de localiser et de saisir l'objet complexe directement après un seul regard, en temps réel, sans avoir recours à des capteurs unidimensionnels à proximité immédiate.
 
-<a href="../../questions/new">:speech_balloon : Posez une question</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ; <a href="../../issues?q=is%3Aissue+is%3Aclosed+sort%3Aupdated-desc">:livre : Lire les questions</a>
+<a href="../../issues/new">:speech_balloon: Posez une question</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../../issues?q=is%3Aissue+is%3Aclosed+sort%3Aupdated-desc">:book: Lisez les questions</a>
 </h2>
 
 ### Le résumé
