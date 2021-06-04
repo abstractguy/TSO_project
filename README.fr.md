@@ -44,9 +44,9 @@ Un ordinateur de développement préconfiguré (scripts d'auto-installation et d
 ### TODO si vous voulez l'utiliser avec votre propre microcontrôleur (revoir les presets avant d'implémenter les vôtres !)
 - [ ] Ajouter un #ifdef pour identifier les broches PWM, ADC et GPIO de votre microcontrôleur dans uArmPin.h dans UArmForArduino (seulement nécessaire si votre application n'utilise pas le même pinout)
 - [ ] Si votre microcontrôleur ne définit pas de timers, ajoutez-le à la version modifiée de la bibliothèque Servo Arduino avec l'extension slowmove en la comparant avec l'implémentation AVR (AtMega) fournie qui a été ajoutée (pas nécessaire mais recommandé)
-- Utilisez les méthodes grab() et drop() de pyuarm pour compléter le pick and place dans le processus set_servos() (seul le fetch, la partie la plus difficile, est réglé dans la boucle principale).
+- [ ] Utilisez les méthodes grab() et drop() de pyuarm pour compléter le pick and place dans le processus set_servos() (seul le fetch, la partie la plus difficile, est réglé dans la boucle principale).
 - [ ] Si vous voulez que le uArm ait des objets de perspective et de saisie, il est recommandé de reconvertir les coordonnées polaires (longueur, angle, hauteur) en coordonnées cartésiennes (x, y, z) (fonctions de réutilisation dans pyuarm) pour faire correspondre exactement les coordonnées de la caméra et de la portée du uArm (les portées entières étaient activées, mais ne correspondaient pas à la position initiale de la caméra en coordonnées cartésiennes).
-- Régler la hauteur de la position initiale pour mettre à l'échelle la vue de la caméra et enregistrer les coordonnées de portée du uArm et de la caméra de manière égale.
+- [ ] Régler la hauteur de la position initiale pour mettre à l'échelle la vue de la caméra et enregistrer les coordonnées de portée du uArm et de la caméra de manière égale.
 
 ## N'oubliez pas de consulter la documentation dans les CLIQUEZ-MOI ci-dessous !
 
