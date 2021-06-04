@@ -24,6 +24,7 @@
 
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
+### Cliquez ci-dessous pour la version française
 [Version française](https://github.com/abstractguy/TSO_project/tree/master/README.fr.md)
 
 ## An "intelligent" robotic arm using a camera for pick and place

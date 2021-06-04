@@ -24,6 +24,7 @@
 
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
+### Click below for the english version
 [English version](https://github.com/abstractguy/TSO_project/tree/master/README.md)
 
 ### Un bras robotisé "intelligent" utilisant une caméra pour le prélèvement et le placement.
