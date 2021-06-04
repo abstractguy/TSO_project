@@ -11,14 +11,29 @@
 ![Profile views](https://gpvc.arturio.dev/abstractguy)
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 
-## An "intelligent" robotic arm using a camera for pick and place.
+## An "intelligent" robotic arm using a camera for pick and place
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a6bed245e4c5461c932a65385525f5cb)](https://www.codacy.com/gh/abstractguy/TSO_project/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=abstractguy/TSO_project&amp;utm_campaign=Badge_Grade)
-A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with an Arducam camera array shield tiling up to 4 cameras (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies [see software/jetson/fastmot/](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
+
+### The problem
+Robotic arms using proximity sensors are notoriously inefficient at the pick and place task. Proximity sensors do not enable the user to select the category of objects to displace. Moreover, they fail to estimate the exact position of the object precisely in one pass without resorting to a long scanning procedure, equivalent to a blind person asking his dog to tell him where the car keys are by covering the whole field by foot.
+
+### The solution
+Instead, contemporary progress in machine vision allows the machine to locate and seize the complex object directly after one look, in real time, without resorting to one-dimensional, close proximity sensors.
+
+### The summary
+A preconfigured development computer (auto-install scripts and documentation included) connects by SSH to a preconfigured Nvidia Jetson Nano (auto-install scripts and documentation included) with a Raspberry Pi camera v2.1 or a Arducam Camarray Hat (auto-install scripts and documentation included). Only one is attached by a 1 meter MIPI ribbon cable with a repeater extension to the tip of the uArm. The USB-controlled Jetson becomes the central controlling unit in this topology. The x86_64 (but could be other architectures) flashes the firmware on the ESP32 microcontroller (soldered on the Altium-designed Printed Circuit Board) through another USB port. This firmware (without going into the details or extras just yet) listens to the UART for GCODE which it then executes and effects using 3 Pulse Width Modulation outputs to 3 proprietary servomotors (the only uArm part which has not been (re)defined in this project). 4 analog inputs provide angle feedback to the firmware. The valve is strapped to VCC and the pump is driven with a GPIO by flipping the logical levels. The uARM (the name of the robotic arm used in this project) initializes to a position in the middle of its servomotor angle range. It can be controlled using GCODE from the UART to pick up objects using absolute, relative or polar coordinates (polar coordinates simplify the X and Y axis PIDs and are normalized to grads to represent the whole uArm range by all axes scaled by a +/- 100 range). It can then pick up a single selected class of common objects labeled from the COCO dataset (80 classes) and a bunch of goodies [see software/jetson/fastmot/](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/fastmot/), using neural network detection feedback from a camera. It then places and drops the object to a predefined location and loops...
+
+### TODO if you want to use it with your own microcontroller (review presets before implementing your own!)
+- [ ] Add an #ifdef to identify your microcontroller pin PWM, ADC and GPIO in uArmPin.h in UArmForArduino (only necessary if your application does not use the same pinout)
+- [ ] If your microcontroller does not define timers, add it to the modified version of the Servo Arduino library with the slowmove extension by comparing it with the AVR (AtMega) implementation which has it (not necessary but recommended)
+- [ ] Use the grab() and drop() methods in pyuarm to complete the pick and place in the set_servos() process (only the fetch, the hardest part, is set in the main loop)
+- [ ] If you want the uArm to have perspective and grab objects, converting back from Polar(length, angle, height) back to Cartesian(x, y, z) (reuse functions in pyuarm) is recommended to match camera and uArm range coordinates exactly (the whole ranges were enabled, but not matched back with the initial camera position in cartesian coordinates)
+- [ ] Tune the initial position height to scale the camera view and register the range coordinates of the uArm and of the camera equally
 
 ## Don't forget to review the documentation in the CLICK ME's below!
 
 ## Documentation
-The project timeline was obtained with the below command
+The project timeline was obtained with the folowing command
 ```Bash
 $ git log --pretty=format:"%h %ad | %s %d [%an]" --date=short >log.txt
 ```
@@ -72,7 +87,7 @@ There is PC-compatible (Windows, MACOSX, Linux, Raspbian, other ARM flavors, etc
 
 [firmware](https://github.com/abstractguy/TSO_project/tree/master/software/arduino-1.8.13/)
 
-The main code was tested on PC and Jetson for easier modular tests while programming.
+The main code was tested on PC and Jetson for easier modular tests while programming. Code quality and reproducibility are hallmarks of this project.
 
 ## uArm GCode-based Firmware in C++
 <img src="documentation/doc/uArm_firmware_full.png" width="640"/>
