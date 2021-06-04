@@ -34,13 +34,13 @@
 Les bras robotiques utilisant des capteurs de proximité sont notoirement inefficaces pour la tâche de prélèvement et de placement. Les capteurs de proximité ne permettent pas à l'utilisateur de sélectionner la catégorie d'objets à déplacer. De plus, ils ne parviennent pas à estimer la position exacte de l'objet en un seul passage sans recourir à une longue procédure de balayage, équivalente à celle d'un aveugle demandant à son chien de lui dire où se trouvent les clés de la voiture en parcourant tout le terrain à pied.
 
 ### La solution
-Au lieu de cela, les progrès contemporains en matière de vision industrielle permettent à la machine de localiser et de saisir l'objet complexe directement après un seul regard, en temps réel, sans avoir recours à des capteurs unidimensionnels à proximité immédiate.
+Au lieu de cela, les progrès contemporains en matière de vision machine permettent à la machine de localiser et de saisir l'objet complexe directement après un seul regard, en temps réel, sans avoir recours à des capteurs unidimensionnels à proximité rapprochée.
 
 <a href="../../issues/new">:speech_balloon: Posez une question</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="../../issues?q=is%3Aissue+is%3Aclosed+sort%3Aupdated-desc">:book: Lisez les questions</a>
 </h2>
 
 ### Le résumé
-Un ordinateur de développement préconfiguré (scripts d'auto-installation et documentation inclus) se connecte par SSH à un Nvidia Jetson Nano préconfiguré (scripts d'auto-installation et documentation inclus) avec une caméra Raspberry Pi v2.1 ou un Arducam Camarray Hat (scripts d'auto-installation et documentation inclus). Un seul est attaché par un câble ruban MIPI de 1 mètre avec une extension répétitrice à l'extrémité du uArm. Le Jetson contrôlé par USB devient l'unité centrale de contrôle dans cette topologie. Le x86_64 (mais il pourrait s'agir d'autres architectures) flashe le micrologiciel sur le microcontrôleur ESP32 (soudé sur le circuit imprimé conçu par Altium) via un autre port USB. Ce micrologiciel (sans entrer dans les détails ou les extras pour l'instant) écoute l'UART pour le GCODE qu'il exécute ensuite et effectue en utilisant 3 sorties de modulation de largeur d'impulsion vers 4 servomoteurs propriétaires (la seule partie du uArm qui n'a pas été (re)définie dans ce projet). 4 entrées analogiques fournissent un retour d'angle au firmware. La valve est reliée à VCC pour économiser les broches et la pompe est pilotée par un GPIO en inversant les niveaux logiques. Le uARM (le nom du bras robotique utilisé dans ce projet) s'initialise à une position au milieu de la plage d'angle de son servomoteur. Il peut être contrôlé en utilisant GCODE à partir de l'UART pour ramasser des objets en utilisant des coordonnées absolues, relatives ou polaires (les coordonnées polaires simplifient les PIDs des axes X et Y et sont normalisées en gradins pour représenter la gamme entière du uArm par tous les axes mis à l'échelle par une gamme de +/- 100). Il peut ensuite ramasser une seule classe sélectionnée d'objets communs étiquetés à partir de l'ensemble de données COCO (80 classes) et d'un tas de trucs d'apprentissage automatique [voir software/jetson/fastmot/](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/fastmot/), en utilisant le retour d'information de la détection par réseau neuronal d'une caméra. Il place et dépose ensuite l'objet à un endroit prédéfini et boucle...
+Un ordinateur de développement préconfiguré (scripts d'auto-installation et documentation inclus) se connecte par SSH à un Nvidia Jetson Nano préconfiguré (scripts d'auto-installation et documentation inclus) avec une caméra Raspberry Pi v2.1 ou un Arducam Camarray Hat (scripts d'auto-installation et documentation inclus). Une seule caméra est attachée par un câble à ruban MIPI de 1 mètre avec une extension de répéteur à l'extrémité du uArm. Le Jetson contrôlé par USB devient l'unité centrale de contrôle dans cette topologie. Le x86_64 (mais il pourrait s'agir d'autres architectures) flashe le micrologiciel sur le microcontrôleur ESP32 (soudé sur le circuit imprimé conçu par Altium) via un autre port USB. Ce micrologiciel (sans entrer dans les détails ou les extras pour l'instant) écoute le UART pour le GCODE qu'il exécute ensuite et effectue en utilisant 3 sorties de modulation de largeur d'impulsion vers 4 servomoteurs propriétaires (la seule partie du uArm qui n'a pas été (re)définie dans ce projet). 4 entrées analogiques fournissent un retour d'angle au firmware. La valve est reliée à VCC pour économiser les broches et la pompe est pilotée par un GPIO en inversant les niveaux logiques. Le uARM (le nom du bras robotique utilisé dans ce projet) s'initialise à une position au milieu de la plage d'angle de son servomoteur. Il peut être contrôlé en utilisant GCODE à partir de l'UART pour ramasser des objets en utilisant des coordonnées absolues, relatives ou polaires (les coordonnées polaires simplifient les PIDs des axes X et Y et sont normalisées en gradins pour représenter la gamme entière du uArm par tous les axes mis à l'échelle par une gamme de +/- 100). Il peut ensuite ramasser une seule classe sélectionnée d'objets communs étiquetés à partir de l'ensemble de données COCO (80 classes) et d'un tas de trucs d'apprentissage automatique [voir software/jetson/fastmot/](https://github.com/abstractguy/TSO_project/tree/master/software/jetson/fastmot/), en utilisant le retour d'information de la détection par réseau neuronal d'une caméra. Il place et dépose ensuite l'objet à un endroit prédéfini et boucle...
 
 ### TODO si vous voulez l'utiliser avec votre propre microcontrôleur (revoir les presets avant d'implémenter les vôtres !)
 - [ ] Ajouter un #ifdef pour identifier les broches PWM, ADC et GPIO de votre microcontrôleur dans uArmPin.h dans UArmForArduino (seulement nécessaire si votre application n'utilise pas le même pinout)
@@ -145,7 +145,7 @@ Pour un traitement parallèle plus rapide et plus simple de l'ensemble de l'éco
 <img src="documentation/doc/tensorrt_representation.png" width="640"/>
 <img src="documentation/doc/tensorrt_pipeline.png" width="640"/>
 <img src="documentation/doc/tensorrt_optimization.png" width="640"/>
-Une plateforme comprenant YOLOv4-mish-640, le suivi de flux optique KLT, la compensation de mouvement de la caméra, un filtre de Kalman, l'association de données (...), avec des instructions pour l'entraînement et l'évaluation et l'inférence déployable sur un Nvidia Jetson (Nano ou AGX Xavier) en utilisant TensorRT et Numba.
+Une plateforme comprenant YOLOv4-mish-640, le tracking de flux optique KLT, la compensation de mouvement de la caméra, un filtre de Kalman, l'association de données (...), avec des instructions pour l'entraînement et l'évaluation et l'inférence déployable sur un Nvidia Jetson (Nano ou AGX Xavier) en utilisant TensorRT et Numba.
 
 ## Documentation et instructions supplémentaires.
 
@@ -352,7 +352,7 @@ L'utilisation de FastMOT comme tracker personnalisé d'objets multiples (ici pos
   - Détecteur YOLO
   - Détecteur SSD
   - SORT profond + OSNet ReID
-  - Suivi du flux optique KLT
+  - Tracking du flux optique KLT
   - Compensation du mouvement de la caméra
   - Support des modèles YOLOv4 à l'échelle
   - DIoU-NMS pour YOLO (+1% MOTA)
@@ -380,7 +380,7 @@ Le détecteur et l'extracteur de caractéristiques utilisent tous deux le backen
 
 Les performances sont évaluées avec YOLOv4 en utilisant [py-motmetrics](https://github.com/cheind/py-motmetrics). Notez que ni YOLOv4 ni OSNet n'ont été entraînés ou affinés sur le jeu de données MOT20, les résultats de l'ensemble d'entraînement devraient donc pouvoir être généralisés. Les résultats FPS sont obtenus sur Jetson Xavier NX. 
 
-FastMOT a des scores MOTA proches des trackers **state-of-the-art** du MOT Challenge. La vitesse de suivi peut atteindre jusqu'à **38 FPS** selon le nombre d'objets. Sur un CPU/GPU de bureau, les FPS devraient être beaucoup plus élevés. Des modèles plus légers peuvent être utilisés pour obtenir un meilleur compromis.
+FastMOT a des scores MOTA proches des trackers **state-of-the-art** du MOT Challenge. La vitesse de tracking peut atteindre jusqu'à **38 FPS** selon le nombre d'objets. Sur un CPU/GPU de bureau, les FPS devraient être beaucoup plus élevés. Des modèles plus légers peuvent être utilisés pour obtenir un meilleur compromis.
 
 Utilise des poids pré-entraînés par COCO pour faire des prédictions sur les images, mais vous pouvez [entraîner votre propre YOLOv4](https://github.com/AlexeyAB/darknet). 
 Le tableau ci-dessous montre les temps d'inférence lors de l'utilisation d'images à l'échelle 608x608 comme entrées. Les mesures prises par YOLOv4 montrent le temps d'inférence de cette implémentation sur Nvidia Jetson AGX Xavier.
@@ -476,7 +476,7 @@ FPS sur RTX 2070 (R) et Tesla V100 (V) :
   - Pour changer de classe, définissez `class_ids` sous le bon détecteur. La classe par défaut est `1`, qui correspond à la personne
   - Pour changer de modèle, modifiez `model` sous un détecteur. Pour SSD, vous pouvez choisir entre `SSDInceptionV2`, `SSDMobileNetV1`, ou `SSDMobileNetV2`.
   - Notez qu'avec SSD, le détecteur divise une image en tuiles et les traite par lots pour une meilleure précision. Changez `tiling_grid` en `[2, 2]`, `[2, 1]`, ou `[1, 1]` si vous préférez une taille de lot plus petite.
-  - Si vous souhaitez plus de précision et que la puissance de traitement n'est pas un problème, réduisez `detector_frame_skip`. De même, augmentez `detector_frame_skip` pour accélérer le suivi au détriment de la précision. Vous pouvez également vouloir modifier `max_age` de sorte que `max_age × detector_frame_skip ≈ 30`.
+  - Si vous souhaitez plus de précision et que la puissance de traitement n'est pas un problème, réduisez `detector_frame_skip`. De même, augmentez `detector_frame_skip` pour accélérer le tracking au détriment de la précision. Vous pouvez également vouloir modifier `max_age` de sorte que `max_age × detector_frame_skip ≈ 30`.
 
 </details>
 
